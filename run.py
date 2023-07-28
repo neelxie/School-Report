@@ -1,7 +1,8 @@
 from flask.json import jsonify
 from app.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
-from flask import Flask, config, redirect
+from flask import Flask
 import os
+from flask_cors import CORS
 from app.auth import auth, db
 from app.question import questions
 from flask_jwt_extended import JWTManager
@@ -21,6 +22,9 @@ def create_app(test_config=None):
         )
     else:
         app.config.from_mapping(test_config)
+    
+    # allow cross-domain requests
+    CORS(app)
 
     db.app = app
     db.init_app(app)
