@@ -37,8 +37,7 @@ def handle_questions():
                     {
                         "error": "Both sentence and language must be provided for each question"
                     }
-                ),
-                HTTP_400_BAD_REQUEST,
+                ),HTTP_400_BAD_REQUEST,
             )
         # elif len(sentence) < 12:
         #     return {
@@ -110,15 +109,15 @@ def handle_questions():
 @jwt_required()
 def upload_json_file():
     if request.method == "POST":
-        file_json = request.files.get("file")
+        file_json = request.files.get('file')
         json_data = json.load(file_json)
 
         current_user = get_jwt_identity()
         dup_count = 0
 
         for obj in json_data:
-            sentence = obj["sentence"]
-            language = obj["language"]
+            sentence = obj['sentence']
+            language = obj['language']
 
             if Question.query.filter_by(sentence=sentence).first():
                 dup_count += 1
@@ -132,8 +131,7 @@ def upload_json_file():
         num_questions = Question.query.filter_by(user_id=current_user).count()
 
         return (
-            jsonify({"duplicate_questions": dup_count, "num_questions": num_questions}),
-            HTTP_200_OK,
+            jsonify({"duplicate_questions": dup_count, "num_questions": num_questions}), HTTP_200_OK,
         )
 
 

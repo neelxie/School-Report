@@ -13,9 +13,12 @@ from flask_jwt_extended import (
     create_refresh_token,
     get_jwt_identity,
 )
+from sqlalchemy import func
 import datetime
+from datetime import date
 from app.models import User, Question, db
 from app.helper import admin_required
+
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -122,19 +125,26 @@ def login():
     password = request.json.get("password", "")
 
     user = User.query.filter_by(phone_number=password).first()
+    today = datetime.date.today()
 
     if user:
         is_pass_correct = user.phone_number == password
 
         if is_pass_correct:
-            access = create_access_token(
-                identity=user.id, expires_delta=datetime.timedelta(days=0)
-            )
+            access = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=0))
             num_questions = Question.query.filter_by(user_id=user.id).count()
+            questions_submitted_today = (Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == today).all())
+            num_questions_today = (Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == date.today()).count())
 
             return (
-                jsonify({"access_token": access, "num_questions": num_questions}),
-                HTTP_200_OK,
+                jsonify(
+                    {
+                        "access_token": access,
+                        "num_questions": num_questions,
+                        "todays_questions": questions_submitted_today,
+                        "total_questions_today": num_questions_today
+                    }
+                ), HTTP_200_OK,
             )
 
     return jsonify({"error": "Wrong credentials"}), HTTP_401_UNAUTHORIZED
