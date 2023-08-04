@@ -11,6 +11,7 @@ from flask.json import jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.models import Question, db, User
 import datetime
+import json
 from sqlalchemy import func
 from app.helper import admin_required
 
@@ -24,37 +25,41 @@ def handle_questions():
         sentence = question_data.get("sentence", "")
         language = question_data.get("language", "")
 
-        if language not in ["english", "luganda"]:
+        if language not in ["English", "Luganda"]:
             return (
                 jsonify({"error": "Invalid language selection"}),
                 HTTP_400_BAD_REQUEST,
             )
 
         if not sentence or not language:
-            return {
-                "error": "Both sentence and language must be provided for each question"
-            }, HTTP_400_BAD_REQUEST
-        elif len(sentence) < 12:
-            return {
-                "error": "Enter a valid sentence for each question"
-            }, HTTP_400_BAD_REQUEST
+            return (
+                jsonify(
+                    {
+                        "error": "Both sentence and language must be provided for each question"
+                    }
+                ),
+                HTTP_400_BAD_REQUEST,
+            )
+        # elif len(sentence) < 12:
+        #     return {
+        #         "error": "Enter a valid sentence for each question"
+        #     }, HTTP_400_BAD_REQUEST
         elif Question.query.filter_by(sentence=sentence).first():
-            return {
-                "error": "Sentence already exists for one of the questions"
-            }, HTTP_409_CONFLICT
+            return (
+                jsonify({"error": "Sentence already exists for one of the questions"}),
+                HTTP_409_CONFLICT,
+            )
         else:
             question = Question(
                 sentence=sentence, language=language, user_id=current_user
             )
             db.session.add(question)
             db.session.flush()
+
+            num_questions = Question.query.filter_by(user_id=current_user).count()
+
             return {
-                "id": question.id,
-                "sentence": question.sentence,
-                "language": question.language,
-                "answer": question.answer,
-                "created_at": question.created_at,
-                "updated_at": question.updated_at,
+                "num_questions": num_questions,
             }, HTTP_201_CREATED
 
     current_user = get_jwt_identity()
@@ -78,7 +83,7 @@ def handle_questions():
         else:  # If it's a single question
             result = process_single_question(data, current_user)
             db.session.commit()
-            return jsonify(result), HTTP_201_CREATED
+            return result
 
     else:
         questions = Question.query.filter_by(user_id=current_user).all()
@@ -99,6 +104,37 @@ def handle_questions():
             )
 
         return jsonify({"data": returned_data}), HTTP_200_OK
+
+
+@questions.route("/file_upload/", methods=["POST"])
+@jwt_required()
+def upload_json_file():
+    if request.method == "POST":
+        file_json = request.files.get("file")
+        json_data = json.load(file_json)
+
+        current_user = get_jwt_identity()
+        dup_count = 0
+
+        for obj in json_data:
+            sentence = obj["sentence"]
+            language = obj["language"]
+
+            if Question.query.filter_by(sentence=sentence).first():
+                dup_count += 1
+            else:
+                question = Question(
+                    sentence=sentence, language=language, user_id=current_user
+                )
+                db.session.add(question)
+                db.session.commit()
+
+        num_questions = Question.query.filter_by(user_id=current_user).count()
+
+        return (
+            jsonify({"duplicate_questions": dup_count, "num_questions": num_questions}),
+            HTTP_200_OK,
+        )
 
 
 @questions.get("/<int:id>")
@@ -150,6 +186,7 @@ def top_users_with_most_questions():
 
     return jsonify(top_users_data), HTTP_200_OK
 
+
 @jwt_required()
 @questions.get("/stats")
 @admin_required
@@ -160,16 +197,23 @@ def list_questions():
     #     all_questions = db.sessionQuestion).all()
     print(all_questions)
     total_questions = len(all_questions)
-    questions_per_language = db.session.query(Question.language, func.count(Question.id)).group_by(Question.language).all()
+    questions_per_language = (
+        db.session.query(Question.language, func.count(Question.id))
+        .group_by(Question.language)
+        .all()
+    )
 
     #     # # Calculate average daily questions
     # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
-    average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
-
+    average_daily_questions = total_questions / (
+        Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1
+    )
 
     #     # # Calculate average weekly questions
     one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
-    average_weekly_questions = total_questions / (Question.query.filter(Question.created_at >= one_week_ago).count() or 1)
+    average_weekly_questions = total_questions / (
+        Question.query.filter(Question.created_at >= one_week_ago).count() or 1
+    )
 
     #     # # Calculate average questions per user
     total_users = User.query.count()
@@ -177,13 +221,23 @@ def list_questions():
 
     #     # Prepare the response data
     response_data = {
-        'total_questions': total_questions,
-        'questions_per_language': [{'language': lang, 'count': count} for lang, count in questions_per_language],
-        'average_daily_questions': average_daily_questions,
-        'average_weekly_questions': average_weekly_questions,
-        'average_questions_per_user': average_questions_per_user,
-        'questions': [{'id': question.id, 'answer': question.answer, 'sentence': question.sentence, 'language': question.language,
-                               'created_at': question.created_at} for question in all_questions]
+        "total_questions": total_questions,
+        "questions_per_language": [
+            {"language": lang, "count": count} for lang, count in questions_per_language
+        ],
+        "average_daily_questions": average_daily_questions,
+        "average_weekly_questions": average_weekly_questions,
+        "average_questions_per_user": average_questions_per_user,
+        "questions": [
+            {
+                "id": question.id,
+                "answer": question.answer,
+                "sentence": question.sentence,
+                "language": question.language,
+                "created_at": question.created_at,
+            }
+            for question in all_questions
+        ],
     }
 
     return jsonify(response_data), HTTP_200_OK

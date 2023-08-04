@@ -13,10 +13,12 @@ from flask_jwt_extended import (
     create_refresh_token,
     get_jwt_identity,
 )
+import datetime
 from app.models import User, Question, db
 from app.helper import admin_required
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
+
 
 def validate_values(data):
     required_fields = [
@@ -80,14 +82,14 @@ def register():
     age_group = request.json["age_group"]
     gender = request.json["gender"]
 
-    if age_group not in ["0-18", "19-30", "31-50", "51-65", "65+"]:
-        return (
-            jsonify({"error": "Invalid age group"}),
-            HTTP_400_BAD_REQUEST,
-        )
+    # if age_group not in ["0-18", "19-30", "31-50", "51-65", "65+"]:
+    #     return (
+    #         jsonify({"error": "Invalid age group"}),
+    #         HTTP_400_BAD_REQUEST,
+    #     )
 
     if User.query.filter_by(phone_number=phone_number).first() is not None:
-        return jsonify({"error": "Phone number is taken"}), HTTP_409_CONFLICT
+        return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
 
     # Generate username by concatenating firstname and lastname
     username = f"{firstname.lower()}{lastname.lower()}"
@@ -109,12 +111,7 @@ def register():
     db.session.commit()
 
     return (
-        jsonify(
-            {
-                "message": "User created",
-                "user": {"username": username, "phone_number": phone_number},
-            }
-        ),
+        username,
         HTTP_201_CREATED,
     )
 
@@ -130,24 +127,13 @@ def login():
         is_pass_correct = user.phone_number == password
 
         if is_pass_correct:
-            refresh = create_refresh_token(identity=user.id)
-            access = create_access_token(identity=user.id)
+            access = create_access_token(
+                identity=user.id, expires_delta=datetime.timedelta(days=0)
+            )
             num_questions = Question.query.filter_by(user_id=user.id).count()
 
             return (
-                jsonify(
-                    {
-                        "user": {
-                            "refresh": refresh,
-                            "access": access,
-                            "username": user.username,
-                            "phone_number": user.phone_number,
-                            "role": user.role,
-                            "num_questions": num_questions
-
-                        }
-                    }
-                ),
+                jsonify({"access_token": access, "num_questions": num_questions}),
                 HTTP_200_OK,
             )
 
@@ -224,4 +210,4 @@ def user_statistics():
         "users_per_location": users_per_location,
         "users_per_age_group": users_per_age_group,
     }
-    return jsonify({"data":response_data}), HTTP_200_OK
+    return jsonify({"data": response_data}), HTTP_200_OK
