@@ -133,15 +133,22 @@ def login():
         if is_pass_correct:
             access = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=0))
             num_questions = Question.query.filter_by(user_id=user.id).count()
-            questions_submitted_today = (Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == today).all())
-            num_questions_today = (Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == date.today()).count())
+            questions = Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == today).all()
+            num_questions_today = Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == date.today()).count()
+
+            question_objects = []
+            for question in questions:
+                question_objects.append({
+                    'sentence': question.sentence,
+                    'date': question.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                })
 
             return (
                 jsonify(
                     {
                         "access_token": access,
                         "num_questions": num_questions,
-                        "todays_questions": questions_submitted_today,
+                        "todays_questions": question_objects,
                         "total_questions_today": num_questions_today
                     }
                 ), HTTP_200_OK,
