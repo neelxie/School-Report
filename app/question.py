@@ -25,6 +25,7 @@ def handle_questions():
     def process_single_question(question_data, current_user):
         sentence = question_data.get("sentence", "")
         language = question_data.get("language", "")
+        today = datetime.date.today()
 
         if language not in ["English", "Luganda"]:
             return (
@@ -54,9 +55,22 @@ def handle_questions():
             db.session.flush()
 
             num_questions = Question.query.filter_by(user_id=current_user).count()
+            today = datetime.date.today()
+            questions = Question.query.filter_by(user_id=current_user).filter(func.date(Question.created_at) == today).all()
+            todaysQuestions = []
+            for question in questions:
+                todaysQuestions.append(
+                {
+                    "id": question.id,
+                    "sentnce": question.sentence,
+                    "language": question.language,
+                    "created_at": question.created_at,
+                }
+            )
 
             return {
                 "num_questions": num_questions,
+                "questions": todaysQuestions
             }, HTTP_201_CREATED
 
     current_user = get_jwt_identity()
@@ -83,7 +97,8 @@ def handle_questions():
             return result
 
     else:
-        questions = Question.query.filter_by(user_id=current_user).all()
+        today = datetime.date.today()
+        questions = Question.query.filter_by(user_id=current_user).filter(func.date(Question.created_at) == today).all()
 
         returned_data = []
 
