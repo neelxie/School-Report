@@ -1,0 +1,25 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const token = "YOUR_JWT_TOKEN"; // Replace with your actual JWT token
+
+      fetch("/user_stats", {
+          headers: {
+              "Authorization": `Bearer ${token}`
+          }
+      })
+          .then(response => response.json())
+          .then(data => {
+              const userStatsDiv = document.getElementById("userStats");
+              const userStatsData = data.data;
+
+              // Update the DOM with fetched data
+              userStatsDiv.innerHTML = `
+                  <p>Total Locations: ${userStatsData.total_locations}</p>
+                  <p>Total Male Users: ${userStatsData.total_male_users}</p>
+                  <p>Total Female Users: ${userStatsData.total_female_users}</p>
+                  <!-- Display other statistics as needed -->
+              `;
+          })
+          .catch(error => console.error("Error fetching data:", error));
+  });
+</script>
