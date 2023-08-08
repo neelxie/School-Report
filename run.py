@@ -2,6 +2,8 @@ from flask.json import jsonify
 from app.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from flask import Flask, render_template, request
 import os
+import secrets
+from datetime import timedelta
 from flask_cors import CORS
 from app.auth import auth, db
 from app.question import questions
@@ -23,6 +25,9 @@ def create_app(test_config=None):
         )
     else:
         app.config.from_mapping(test_config)
+
+    app.config['SECRET_KEY'] = secrets.token_hex(16)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
     
     # allow cross-domain requests
     CORS(app)

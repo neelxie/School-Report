@@ -2,11 +2,11 @@
 content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
         <div class="card-header bg-success">Login</div>
         <div class="card-body border border-success">
-          <form>
+          <form method="POST" action="{{ url_for('web.index') }}">
             <div class="form-group">
               <label for="username">Username</label>
               <input
@@ -29,9 +29,24 @@ content %}
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
+          {% if error_message %}
+          <div
+            class="p-2 mt-3 d-flex justify-content-center badge badge-danger"
+          >
+            {{ error_message }}
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+  function clearLocalStorageOnLoad() {
+    localStorage.clear();
+  }
+
+  window.addEventListener("load", clearLocalStorageOnLoad);
+</script>
+
 {% endblock %}

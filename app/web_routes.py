@@ -1,11 +1,46 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from app.models import User, Question, db
+import datetime
+from flask_jwt_extended import (
+    create_access_token,
+)
+
 
 web_bp = Blueprint('web', __name__)
 
-@web_bp.route('/')
+@web_bp.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        error_message = None
+
+        user = User.query.filter_by(phone_number=password).first()
+
+        if user and user.phone_number == password:
+            access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=0))
+            if user.role == 'admin':
+                flash('Access granted.')
+                session['token'] = access_token
+                session['role'] = user.role
+                session['username'] = user.username
+                return redirect(url_for('web.admin'))
+                # return render_template('admin.html', token=access_token, role=user.role, user=user.username)
+
+            elif user.role == 'recommender':
+                return render_template('recommender.html', token=access_token, role=user.role, user=user.username)
+            else:
+                pass
+        if not user:
+            error_message = "Wrong Credentials. You don't have access to the admin or recommender area."
+            return render_template('login.html', error_message=error_message)
+
     return render_template('login.html')
 
+
 @web_bp.route('/admin')
-def about():
-    return render_template('admin.html')
+def admin():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('admin.html', token=access_token, role=role, user=username)

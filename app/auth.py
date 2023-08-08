@@ -85,12 +85,6 @@ def register():
     age_group = request.json["age_group"]
     gender = request.json["gender"]
 
-    # if age_group not in ["0-18", "19-30", "31-50", "51-65", "65+"]:
-    #     return (
-    #         jsonify({"error": "Invalid age group"}),
-    #         HTTP_400_BAD_REQUEST,
-    #     )
-
     if User.query.filter_by(phone_number=phone_number).first() is not None:
         return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
 
