@@ -38,10 +38,7 @@ def handle_questions():
                 jsonify({"error": "Both sentence and language must be provided for each question"}),
                 HTTP_400_BAD_REQUEST,
             )
-        # elif len(sentence) < 12:
-        #     return {
-        #         "error": "Enter a valid sentence for each question"
-        #     }, HTTP_400_BAD_REQUEST
+
         elif Question.query.filter_by(sentence=sentence).first():
             return (
                 jsonify({"error": "This question already exists"}),
@@ -115,7 +112,7 @@ def handle_questions():
                 }
             )
 
-        return jsonify({"data": returned_data}), HTTP_200_OK
+        return jsonify(returned_data), HTTP_200_OK
 
 
 @questions.route("/file_upload/", methods=["POST"])
@@ -210,13 +207,12 @@ def top_users_with_most_questions():
 
 @jwt_required()
 @questions.get("/stats")
-@admin_required
+# @admin_required
 def list_questions():
     #     query_result = session.query(Question).filter(Question.user_id == user_id, Question.id == question_id).limit(1).all()
 
     all_questions = Question.query.all()
     #     all_questions = db.sessionQuestion).all()
-    print(all_questions)
     total_questions = len(all_questions)
     questions_per_language = db.session.query(Question.language, func.count(Question.id)).group_by(Question.language).all()
 
@@ -239,7 +235,7 @@ def list_questions():
         'questions_per_language': [{'language': lang, 'count': count} for lang, count in questions_per_language],
         'average_daily_questions': average_daily_questions,
         'average_weekly_questions': average_weekly_questions,
-        'average_questions_per_user': average_questions_per_user,
+        'average_questions_per_user': round(average_questions_per_user, 2),
         'questions': [{'id': question.id, 'answer': question.answer, 'sentence': question.sentence, 'language': question.language,
                                'created_at': question.created_at} for question in all_questions]
     }
