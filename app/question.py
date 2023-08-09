@@ -98,7 +98,7 @@ def handle_questions():
 
     else:
         today = datetime.date.today()
-        questions = Question.query.filter_by(user_id=current_user).filter(func.date(Question.created_at) == today).all()
+        questions = Question.query.filter_by(user_id=current_user).all()
 
         returned_data = []
 
