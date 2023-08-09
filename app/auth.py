@@ -180,10 +180,8 @@ def refresh_users_token():
 
     return jsonify({"access": access}), HTTP_200_OK
 
-
-@auth.get("/user_stats")
 @jwt_required()
-@admin_required
+@auth.get("/user_stats")
 def user_statistics():
     # Fetch all locations and count the total number of locations
     all_locations = User.query.with_entities(User.location).distinct().all()
