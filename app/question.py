@@ -25,6 +25,7 @@ def handle_questions():
     def process_single_question(question_data, current_user):
         sentence = question_data.get("sentence", "")
         language = question_data.get("language", "")
+        topic = question_data.get("topic", "")
         today = datetime.date.today()
 
         if language not in ["English", "Luganda"]:
@@ -46,7 +47,7 @@ def handle_questions():
             )
         else:
             question = Question(
-                sentence=sentence, language=language, user_id=current_user
+                sentence=sentence, language=language, user_id=current_user, topic=topic
             )
             db.session.add(question)
             db.session.flush()
@@ -59,9 +60,10 @@ def handle_questions():
                 todaysQuestions.append(
                 {
                     "id": question.id,
-                    "sentnce": question.sentence,
+                    "sentence": question.sentence,
                     "language": question.language,
                     "created_at": question.created_at,
+                    "topics": question.topic,
                 }
             )
 
@@ -106,9 +108,10 @@ def handle_questions():
             returned_data.append(
                 {
                     "id": question.id,
-                    "sentnce": question.sentence,
+                    "sentence": question.sentence,
                     "language": question.language,
                     "created_at": question.created_at,
+                    "topics": question.topic,
                 }
             )
 
@@ -129,6 +132,8 @@ def upload_json_file():
         for obj in json_data:
             sentence = obj['sentence']
             language = obj['language']
+            topic = obj['topic']
+
 
             if Question.query.filter_by(sentence=sentence).first():
                 dup_count += 1
@@ -137,7 +142,7 @@ def upload_json_file():
                 })
             else:
                 question = Question(
-                    sentence=sentence, language=language, user_id=current_user
+                    sentence=sentence, language=language, user_id=current_user, topic=topic
                 )
                 db.session.add(question)
                 db.session.commit()
@@ -236,7 +241,7 @@ def list_questions():
         'average_daily_questions': average_daily_questions,
         'average_weekly_questions': average_weekly_questions,
         'average_questions_per_user': round(average_questions_per_user, 2),
-        'questions': [{'id': question.id, 'answer': question.answer, 'sentence': question.sentence, 'language': question.language,
+        'questions': [{'id': question.id, 'topic': question.topic, 'sentence': question.sentence, 'language': question.language,
                                'created_at': question.created_at} for question in all_questions]
     }
 
