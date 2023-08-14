@@ -183,6 +183,30 @@ def get_question(id):
         HTTP_200_OK,
     )
 
+@jwt_required()
+@questions.get("/all")
+def get_questions():
+
+    questions = Question.query.all()
+
+    if not questions:
+        return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
+
+    returned_data = []
+
+    for question in questions:
+        returned_data.append(
+            {
+                "id": question.id,
+                "sentence": question.sentence,
+                "language": question.language,
+                "created_at": question.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                "topic": question.topic,
+            }
+        )
+
+    return jsonify(returned_data), HTTP_200_OK
+
 
 @jwt_required()
 @questions.get("/top_users")
@@ -202,6 +226,9 @@ def top_users_with_most_questions():
         top_users_data.append(
             {
                 "user_id": user.id,
+                "location": user.location,
+                "firstname": user.firstname,
+                "lastname": user.lastname,
                 "username": user.username,
                 "phone_number": user.phone_number,
                 "total_questions": len(user.questions),

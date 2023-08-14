@@ -112,6 +112,43 @@ def register():
         HTTP_201_CREATED,
     )
 
+@jwt_required()
+@auth.post('/register_expert')
+def register_expert():
+    data = request.get_json()
+
+    phone_number = data["phone_number"]
+    lastname = data["lastname"]
+    firstname = data["firstname"]
+    location = data["location"]
+    gender = data["gender"]
+    age_group = data["age"]
+
+    if User.query.filter_by(phone_number=phone_number).first():
+        return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
+
+    # Generate username by concatenating firstname and lastname
+    username = f"{firstname.lower()}{lastname.lower()}"
+
+    # Use phone number as the initial password
+    password = phone_number
+
+    expert = User(
+        username=username,
+        password=password,
+        phone_number=phone_number,
+        lastname=lastname,
+        firstname=firstname,
+        location=location,
+        age_group=age_group,
+        gender=gender,
+        role="expert"  
+    )
+
+    db.session.add(expert)
+    db.session.commit()
+
+    return jsonify({"message": "Expert registered successfully"}), HTTP_201_CREATED
 
 @auth.post("/login")
 def login():
@@ -171,6 +208,51 @@ def me():
         HTTP_200_OK,
     )
 
+@jwt_required()
+@auth.get("/farmers")
+def farmers():
+    farmers = User.query.filter_by(role="farmer").all()
+    farmer_objects = []
+    for farmer in farmers:
+        farmer_objects.append({
+                "user_id": farmer.id,
+                "username": farmer.username,
+                "phone_number": farmer.phone_number,
+                "lastname": farmer.lastname,
+                "firstname": farmer.firstname,
+                "location": farmer.location,
+                "questions": len(farmer.questions),
+                "gender": farmer.gender,
+        })
+    return (
+        jsonify(
+            farmer_objects
+        ),
+        HTTP_200_OK,
+    )
+
+@jwt_required()
+@auth.get("/experts")
+def get_experts():
+    experts = User.query.filter_by(role="expert").all()
+    farmer_objects = []
+    for farmer in experts:
+        farmer_objects.append({
+                "user_id": farmer.id,
+                "username": farmer.username,
+                "phone_number": farmer.phone_number,
+                "lastname": farmer.lastname,
+                "firstname": farmer.firstname,
+                "location": farmer.location,
+                "gender": farmer.gender,
+        })
+    return (
+        jsonify(
+            farmer_objects
+        ),
+        HTTP_200_OK,
+    )
+
 
 @auth.get("/token/refresh")
 @jwt_required(refresh=True)
@@ -184,29 +266,31 @@ def refresh_users_token():
 @auth.get("/user_stats")
 def user_statistics():
     # Fetch all locations and count the total number of locations
-    all_locations = User.query.with_entities(User.location).distinct().all()
+    all_locations = User.query.filter_by(role='farmer').with_entities(User.location).distinct().all()
     locations_data = [dict(location=row[0]) for row in all_locations]
     total_locations = len(all_locations)
 
     # Count the total number of male and female users
-    total_male_users = User.query.filter_by(gender="male").count()
-    total_female_users = User.query.filter_by(gender="female").count()
+    total_male_users = User.query.filter_by(gender="male", role="farmer").count()
+    total_female_users = User.query.filter_by(gender="female", role="farmer").count()
+
+    agricExperts = User.query.filter_by(role="expert").count()
 
     # Count the total number of users
-    total_users = User.query.count()
+    total_users = User.query.filter_by(role='farmer').count()
 
     # Count the number of users per location
     users_per_location = []
     for location in all_locations:
         location_name = location[0]
-        user_count = User.query.filter_by(location=location_name).count()
+        user_count = User.query.filter_by(location=location_name, role="farmer").count()
         users_per_location.append({"location": location_name, "user_count": user_count})
 
     # Count the number of users per age group
     age_groups = ["0-18", "19-30", "31-50", "51-65", "65+"]
     users_per_age_group = []
     for age_group in age_groups:
-        user_count = User.query.filter_by(age_group=age_group).count()
+        user_count = User.query.filter_by(age_group=age_group, role="farmer").count()
         users_per_age_group.append({"age_group": age_group, "user_count": user_count})
 
     # Prepare the response data
@@ -218,5 +302,6 @@ def user_statistics():
         "total_users": total_users,
         "users_per_location": users_per_location,
         "users_per_age_group": users_per_age_group,
+        "experts": agricExperts
     }
     return jsonify({"data": response_data}), HTTP_200_OK

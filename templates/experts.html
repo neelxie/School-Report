@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Questions Page{% endblock %} {% block
+{% extends "base.html" %} {% block title %}Experts Page{% endblock %} {% block
 content %}
 
 <div
@@ -171,61 +171,145 @@ content %}
   <div class="app-main">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <div class="row mb-3 d-flex justify-content-between pl-3 pr-3">
-          <a
-            type="button"
-            class="btn btn-outline-success"
-            href="{{ url_for('web.admin') }}"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-bar-left"
-              viewBox="0 0 16 16"
+        <div class="row">
+          <div class="col-md-6 col-xl-6 mb-3">
+            <a
+              type="button"
+              class="btn btn-outline-success"
+              href="{{ url_for('web.admin') }}"
             >
-              <path
-                fill-rule="evenodd"
-                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-              ></path>
-            </svg>
-            Admin Dashboard
-          </a>
-
-          <button type="button" class="btn btn-primary" id="downloadButton">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-down-short"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
-              ></path>
-            </svg>
-            Download
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-arrow-bar-left"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+                ></path>
+              </svg>
+              Admin Dashboard
+            </a>
+          </div>
         </div>
+        <div class="row">
+          <div class="col mb-3">
+            <div class="card shadow-lg">
+              <div class="card-header bg-malibu-beach">Add Expert</div>
+              <div class="card-body">
+                <form id="apiForm" method="POST">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="firstname">First name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firstname"
+                          name="firstname"
+                          placeholder="Enter first name"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="lastname">Last name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="lastname"
+                          name="lastname"
+                          placeholder="Last name"
+                        />
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="location">Location</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="location"
+                          name="location"
+                          placeholder="Enter Location"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="phone"
+                          name="phone"
+                          placeholder="Phone Number"
+                        />
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="dropdown">Gender</label>
+                        <select
+                          id="gender"
+                          name="gender"
+                          class="form-control"
+                          required
+                        >
+                          <option disabled selected value>Select</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Age Group</label>
+                        <select
+                          id="age"
+                          name="age"
+                          class="form-control"
+                          required
+                        >
+                          <option disabled selected value>Select</option>
+                          <option value="0-18">0-18</option>
+                          <option value="19-30">19-30</option>
+                          <option value="31-50">31-50</option>
+                          <option value="50-65">50-65</option>
+                          <option value="65+">65+</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
 
+                  <button type="submit" class="btn btn-primary">
+                    Add Expert
+                  </button>
+                </form>
+                {% if error_message %}
+                <div
+                  class="p-2 mt-3 d-flex justify-content-center badge badge-danger"
+                >
+                  {{ error_message }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-md-12">
             <div class="main-card mb-3 card">
-              <div class="card-header">Farmers</div>
+              <div class="card-header">Experts</div>
               <div class="table-responsive">
                 <table
-                  class="align-middle mb-0 table table-borderless table-striped table-hover questions"
+                  class="align-middle mb-0 table table-borderless table-striped table-hover experts"
                 >
                   <thead>
                     <tr>
                       <th class="text-center">#</th>
-                      <th>Question</th>
-                      <th class="text-center">Topic</th>
-                      <th class="text-center">Language</th>
-                      <th class="text-center">Date</th>
+                      <th>Name</th>
+                      <th class="text-center">Phone</th>
+                      <th class="text-center">Location</th>
+                      <!-- <th class="text-center">Total Questions</th> -->
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -251,7 +335,55 @@ content %}
     </div>
   </div>
 </div>
-<script></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("apiForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const token = localStorage.getItem("token");
+
+    apiForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const firstname = document.getElementById("firstname").value;
+      const lastname = document.getElementById("lastname").value;
+      const gender = document.getElementById("gender").value;
+      const phone = document.getElementById("phone").value;
+      const age = document.getElementById("age").value;
+      const location = document.getElementById("location").value;
+      const itemBody = {
+        phone_number: phone,
+        lastname: lastname,
+        firstname: firstname,
+        location: location,
+        gender: gender,
+        age: age,
+      };
+
+      const response = await fetch("/api/v1/auth/register_expert", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(itemBody),
+      });
+
+      try {
+        const responseData = await response.json();
+        if (response.ok) {
+          window.location.reload();
+          window.location.href = window.location.href;
+        } else {
+          errorMessage.textContent = responseData.error;
+        }
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.reload();
+      }
+    });
+  });
+</script>
 
 <script>
   function logout() {
@@ -272,32 +404,31 @@ content %}
     const token = localStorage.getItem("token"); // Get the token from local storage
 
     // Fetch top users data
-    fetch("/api/v1/questions/all", {
+    fetch("/api/v1/auth/experts", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
-      .then((questionsData) => {
-        const tableBody = document.querySelector(".questions tbody");
-        questionsData.forEach((question, index) => {
+      .then((topUsersData) => {
+        const tableBody = document.querySelector(".experts tbody");
+        topUsersData.forEach((user, index) => {
           const tableRow = document.createElement("tr");
           tableRow.innerHTML = `
-                <td class="text-center text-muted">${question.id}</td>
+                <td class="text-center text-muted">${user.user_id}</td>
                 <td>
                   <div class="widget-content p-0">
                     <div class="widget-content-wrapper">
                       <div class="widget-content-left flex2">
-                        <div class="widget-subheading opacity-7">${question.sentence}</div>
+                        <div class="widget-heading">${user.firstname} ${user.lastname}</div>
+                        <div class="widget-subheading opacity-7">${user.username}</div>
                       </div>
                     </div>
                   </div>
                 </td>
-                <td class="text-center">${question.topic}</td>
-                <td class="text-center">
-                  <div class="font-weight-bold" >${question.language} </div>
-                </td>
-                <td class="text-center">${question.created_at}</td>`;
+    
+                <td class="text-center">${user.phone_number}</td>
+                <td class="text-center">${user.location}</td>`;
 
           tableBody.appendChild(tableRow);
         });
@@ -305,33 +436,4 @@ content %}
       .catch((error) => console.error("Error fetching top users data:", error));
   });
 </script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const downloadButton = document.getElementById("downloadButton");
-    const token = localStorage.getItem("token");
-
-    downloadButton.addEventListener("click", async function () {
-      
-      try {
-        const response = await fetch("/api/v1/questions/all", {headers: {Authorization: `Bearer ${token}`,}});
-        const jsonData = await response.json();
-
-        const blob = new Blob([JSON.stringify(jsonData)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "data.json";
-        a.click();
-
-        URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error downloading JSON:", error);
-      }
-    });
-  });
-</script>
-
 {% endblock %}
