@@ -44,3 +44,24 @@ def admin():
     role = session.get('user_role')
     username = session.get('username')
     return render_template('admin.html', token=access_token, role=role, user=username)
+
+@web_bp.route('/farmers')
+def farmers():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('farmers.html', token=access_token, role=role, user=username)
+
+@web_bp.route('/questions')
+def questions():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('questions.html', token=access_token, role=role, user=username)
+
+@web_bp.route('/experts')
+def experts():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('experts.html', token=access_token, role=role, user=username)
