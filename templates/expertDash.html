@@ -254,12 +254,26 @@ block content %}
                             </fieldset>
                             <fieldset>
                               <div class="form-card">
-                                <h3 class="fs-title">Is this question grammatically correct?</h3>
-                                
+                                <h2 class="fs-title">Personal Information</h2>
+                                <input
+                                  type="text"
+                                  name="fname"
+                                  placeholder="First Name"
+                                />
+                                <input
+                                  type="text"
+                                  name="lname"
+                                  placeholder="Last Name"
+                                />
+                                <input
+                                  type="text"
+                                  name="phno"
+                                  placeholder="Contact No."
+                                />
                                 <input
                                   type="text"
                                   name="phno_2"
-                                  placeholder="Correct Question"
+                                  placeholder="Alternate Contact No."
                                 />
                               </div>
                               <input
@@ -277,20 +291,64 @@ block content %}
                             </fieldset>
                             <fieldset>
                               <div class="form-card">
-                                <h3 class="fs-title">Is the question topic accurate?</h3>
-                                <label class="pay">If not pick a new topic</label>
+                                <h2 class="fs-title">Payment Information</h2>
+                                <label class="pay">Card Holder Name*</label>
                                 <input
                                   type="text"
                                   name="holdername"
                                   placeholder=""
                                 />
-                                
+                                <div class="row">
+                                  <div class="col-9">
+                                    <label class="pay">Card Number*</label>
+                                    <input
+                                      type="text"
+                                      name="cardno"
+                                      placeholder=""
+                                    />
+                                  </div>
+                                  <div class="col-3">
+                                    <label class="pay">CVC*</label>
+                                    <input
+                                      type="password"
+                                      name="cvcpwd"
+                                      placeholder="***"
+                                    />
+                                  </div>
+                                </div>
                                 <div class="row">
                                   <div class="col-3">
-                                    <label class="pay">Expiry Date*</label>
+                                    <label class="pay"
+                                      >Pick correct Topic</label
+                                    >
                                   </div>
                                   <div class="col-9">
-                                    
+                                    <select
+                                      class="list-dt"
+                                      id="month"
+                                      name="expmonth"
+                                    >
+                                      <option selected>Month</option>
+                                      <option>January</option>
+                                      <option>February</option>
+                                      <option>March</option>
+                                      <option>April</option>
+                                      <option>May</option>
+                                      <option>June</option>
+                                      <option>July</option>
+                                      <option>August</option>
+                                      <option>September</option>
+                                      <option>October</option>
+                                      <option>November</option>
+                                      <option>December</option>
+                                    </select>
+                                    <select
+                                      class="list-dt"
+                                      id="year"
+                                      name="expyear"
+                                    >
+                                      <option selected>Year</option>
+                                    </select>
                                   </div>
                                 </div>
                               </div>
@@ -322,7 +380,7 @@ block content %}
                                 <br /><br />
                                 <div class="row justify-content-center">
                                   <div class="col-7 text-center">
-                                    <h5> Successfully Reviewed</h5>
+                                    <h5>Successfully Reviewed</h5>
                                   </div>
                                 </div>
                               </div>
@@ -339,7 +397,36 @@ block content %}
                   role="tabpanel"
                   aria-labelledby="profile-tab"
                 >
-                  bad
+                  <div class="justify-content-center">
+                    <div
+                      class="card px-4 col-9 mx-auto mt-3 mb-3 border border-success"
+                    >
+                      <div class="row">
+                        <div class="col-md-12 mx-0">
+                          <form id="msasnwerform" class="py-5">
+                            <div class="h3 text-success">
+                              <strong>Add an answer to this question.</strong>
+                            </div>
+                            <div>
+                              <span class="h4 my-3"
+                                >What causes Cassava Mosaic?</span
+                              >
+                            </div>
+                            <input
+                              type="text"
+                              name="answer"
+                              placeholder="Add answer"
+                              class="form-control mb-3 my-4"
+                            />
+
+                            <button name="next" class="btn btn-primary mb-2">
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div
                   class="tab-pane fade"
@@ -347,7 +434,37 @@ block content %}
                   role="tabpanel"
                   aria-labelledby="contact-tab"
                 >
-                  boy
+                  <div class="justify-content-center text-center">
+                    <div
+                      class="card px-4 col-9 mx-auto mt-3 mb-3 border border-success"
+                    >
+                      <div class="row">
+                        <div class="col-md-12 mx-0">
+                          <form id="msasnwerform">
+                            <fieldset>
+                              <div class="form-card border border-success">
+                                <h3 class="fs-title">
+                                  Add an answer to this question.
+                                </h3>
+                                <h4>
+                                  <span>What causes Cassava Mosaic?</span>
+                                </h4>
+                                <input
+                                  type="text"
+                                  name="answer"
+                                  placeholder="Add answer"
+                                  class="form-control"
+                                />
+                              </div>
+                              <button name="next" class="btn btn-primary">
+                                Submit
+                              </button>
+                            </fieldset>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
