@@ -132,7 +132,7 @@ def upload_json_file():
         for obj in json_data:
             sentence = obj['sentence']
             language = obj['language']
-            topic = obj['topic']
+            topic = obj['topics']
 
 
             if Question.query.filter_by(sentence=sentence).first():

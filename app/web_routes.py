@@ -27,8 +27,8 @@ def index():
                 return redirect(url_for('web.admin'))
                 # return render_template('admin.html', token=access_token, role=user.role, user=user.username)
 
-            elif user.role == 'recommender':
-                return render_template('recommender.html', token=access_token, role=user.role, user=user.username)
+            elif user.role == 'expert':
+                return render_template('expertDash.html', token=access_token, role=user.role, user=user.username)
             else:
                 pass
         if not user:
@@ -65,3 +65,10 @@ def experts():
     role = session.get('user_role')
     username = session.get('username')
     return render_template('experts.html', token=access_token, role=role, user=username)
+
+@web_bp.route('/expert_dash')
+def expert_dashoard():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('expertDash.html', token=access_token, role=role, user=username)
