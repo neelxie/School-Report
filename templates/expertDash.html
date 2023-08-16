@@ -217,153 +217,92 @@ block content %}
                             <strong>Grammar</strong>
                           </li>
                           <li id="payment"><strong>Topic</strong></li>
-                          <li id="confirm"><strong>Finish</strong></li>
                         </ul>
                         <!-- fieldsets -->
                         <fieldset>
                           <div class="form-card rounded">
-                            <div class="h3 text-success">
-                              Is this question about Agriculture?
+                            <div class="h4 text-success">
+                              Does this question pertain to Agriculture? If it
+                              does click "Yes", if not click "No."
                             </div>
-                            <h4><span>How is the weather?</span></h4>
-                          </div>
-                          <input
-                            type="button"
-                            name="next"
-                            class="next action-button derek"
-                            value="Next Step"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div class="form-card">
-                            <h2 class="fs-title">Personal Information</h2>
-                            <input
-                              type="text"
-                              name="fname"
-                              placeholder="First Name"
-                            />
-                            <input
-                              type="text"
-                              name="lname"
-                              placeholder="Last Name"
-                            />
-                            <input
-                              type="text"
-                              name="phno"
-                              placeholder="Contact No."
-                            />
-                            <input
-                              type="text"
-                              name="phno_2"
-                              placeholder="Alternate Contact No."
-                            />
-                          </div>
-                          <input
-                            type="button"
-                            name="previous"
-                            class="previous action-button-previous Prevv"
-                            value="Previous"
-                          />
-                          <input
-                            type="button"
-                            name="next"
-                            class="next action-button derek"
-                            value="Next Step"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div class="form-card">
-                            <h2 class="fs-title">Payment Information</h2>
-                            <label class="pay">Card Holder Name*</label>
-                            <input
-                              type="text"
-                              name="holdername"
-                              placeholder=""
-                            />
-                            <div class="row">
-                              <div class="col-9">
-                                <label class="pay">Card Number*</label>
-                                <input
-                                  type="text"
-                                  name="cardno"
-                                  placeholder=""
-                                />
-                              </div>
-                              <div class="col-3">
-                                <label class="pay">CVC*</label>
-                                <input
-                                  type="password"
-                                  name="cvcpwd"
-                                  placeholder="***"
-                                />
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-3">
-                                <label class="pay">Pick correct Topic</label>
-                              </div>
-                              <div class="col-9">
-                                <select
-                                  class="list-dt"
-                                  id="month"
-                                  name="expmonth"
-                                >
-                                  <option selected>Month</option>
-                                  <option>January</option>
-                                  <option>February</option>
-                                  <option>March</option>
-                                  <option>April</option>
-                                  <option>May</option>
-                                  <option>June</option>
-                                  <option>July</option>
-                                  <option>August</option>
-                                  <option>September</option>
-                                  <option>October</option>
-                                  <option>November</option>
-                                  <option>December</option>
-                                </select>
-                                <select
-                                  class="list-dt"
-                                  id="year"
-                                  name="expyear"
-                                >
-                                  <option selected>Year</option>
-                                </select>
-                              </div>
+                            <div class="h4 text-dark">
+                              <span>What causes cassava mosaic?</span>
                             </div>
                           </div>
                           <input
                             type="button"
                             name="previous"
-                            class="previous action-button-previous"
-                            value="Previous"
+                            class="btn btn-warning mr-5 px-5"
+                            value="No"
                           />
                           <input
                             type="button"
-                            name="make_payment"
-                            class="next action-button"
-                            value="Confirm"
+                            name="next"
+                            class="next action-button derek ml-5"
+                            value="Yes"
                           />
                         </fieldset>
                         <fieldset>
                           <div class="form-card">
-                            <h2 class="fs-title text-center">Success !</h2>
-                            <br /><br />
-                            <div class="row justify-content-center">
-                              <div class="col-3">
-                                <img
-                                  src="https://img.icons8.com/color/96/000000/ok--v2.png"
-                                  class="fit-image"
-                                />
-                              </div>
+                            <div class="h4 text-success">
+                              Is the question grammatically correct? If not
+                              rephrase the question below.
                             </div>
-                            <br /><br />
-                            <div class="row justify-content-center">
-                              <div class="col-7 text-center">
-                                <h5>Successfully Reviewed</h5>
-                              </div>
+                            <div class="h4 py-3 text-dark">
+                              <span>What causes cassava mosaic?</span>
                             </div>
+                            <input
+                              type="text"
+                              name="rephrased"
+                              class="form-control"
+                              placeholder="Rephrase the question here."
+                            />
                           </div>
+                          <input
+                            type="button"
+                            name="previous"
+                            class="previous action-button-previous Prevv mr-5"
+                            value="Previous"
+                          />
+                          <input
+                            type="button"
+                            name="next"
+                            class="next action-button derek ml-5"
+                            value="Next Step"
+                          />
+                        </fieldset>
+                        <fieldset>
+                          <div class="form-card">
+                            <div class="h4 text-success">
+                              Does the current question topic align/match
+                              accurately? If not, add a new topic.
+                            </div>
+                            <div class="h4 text-dark pb-2">
+                              <span class="text-secondary mr-3">Topic:</span
+                              ><strong>Crop Diseases</strong>
+                            </div>
+                            <div class="h4 text-dark py-2">
+                              <span>What causes cassava mosaic?</span>
+                            </div>
+                            <input
+                              type="text"
+                              name="topic"
+                              placeholder="Add a new topic"
+                              class="form-control"
+                            />
+                          </div>
+                          <input
+                            type="button"
+                            name="previous"
+                            class="previous action-button-previous Prevv mr-5"
+                            value="Previous"
+                          />
+                          <input
+                            type="button"
+                            name="submit"
+                            class="next action-button derek ml-5"
+                            value="Submit"
+                          />
                         </fieldset>
                       </form>
                     </div>
