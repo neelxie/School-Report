@@ -40,6 +40,7 @@ class Question(db.Model):
     reviewer_id = db.Column(db.Integer, db.ForeignKey("user_accounts.id"), nullable=True)
     rephrased = db.Column(db.Text, nullable=True)
     reviewed = db.Column(db.Boolean, default=False)
+    correct = db.Column(db.Boolean, default=False)
 
     def __repr__(self) -> str:
         return "Question>>> {self.sentence}"

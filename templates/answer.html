@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Experts Dash Page{% endblock %} {%
-block content %}
+{% extends "base.html" %} {% block title %}Answer Questions Page{% endblock %}
+{% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -173,17 +173,17 @@ block content %}
       <div class="app-main__inner">
         <div class="row">
           <div class="col-md-9">
-            <ul class="nav nav-pills nav-fill">
+            <ul class="nav nav-pills nav-fill justify-content-around">
               <li class="nav-item">
                 <a
-                  class="nav-link active"
+                  class="nav-link text-success"
                   href="{{ url_for('web.expert_dashoard') }}"
                   >Review Questions</a
                 >
               </li>
               <li class="nav-item">
                 <a
-                  class="nav-link text-success"
+                  class="nav-link active"
                   href="{{ url_for('web.answer_questions') }}"
                   >Answer Questions</a
                 >
@@ -200,175 +200,34 @@ block content %}
         </div>
         <div class="row">
           <div class="col-md-12">
-            <div class="main-card mb-3 card">
-              <div class="justify-content-center text-center">
-                <div
-                  class="card px-4 col-9 mx-auto mt-3 mb-3 border border-success"
-                >
-                  <div class="row">
-                    <div class="col-md-12 mx-0">
-                      <form id="msform">
-                        <!-- progressbar -->
-                        <ul id="progressbar">
-                          <li class="active" id="account">
-                            <strong>Agriculture</strong>
-                          </li>
-                          <li id="personal">
-                            <strong>Grammar</strong>
-                          </li>
-                          <li id="payment"><strong>Topic</strong></li>
-                          <li id="confirm"><strong>Finish</strong></li>
-                        </ul>
-                        <!-- fieldsets -->
-                        <fieldset>
-                          <div class="form-card rounded">
-                            <div class="h3 text-success">
-                              Is this question about Agriculture?
-                            </div>
-                            <h4><span>How is the weather?</span></h4>
-                          </div>
-                          <input
-                            type="button"
-                            name="next"
-                            class="next action-button derek"
-                            value="Next Step"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div class="form-card">
-                            <h2 class="fs-title">Personal Information</h2>
-                            <input
-                              type="text"
-                              name="fname"
-                              placeholder="First Name"
-                            />
-                            <input
-                              type="text"
-                              name="lname"
-                              placeholder="Last Name"
-                            />
-                            <input
-                              type="text"
-                              name="phno"
-                              placeholder="Contact No."
-                            />
-                            <input
-                              type="text"
-                              name="phno_2"
-                              placeholder="Alternate Contact No."
-                            />
-                          </div>
-                          <input
-                            type="button"
-                            name="previous"
-                            class="previous action-button-previous Prevv"
-                            value="Previous"
-                          />
-                          <input
-                            type="button"
-                            name="next"
-                            class="next action-button derek"
-                            value="Next Step"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div class="form-card">
-                            <h2 class="fs-title">Payment Information</h2>
-                            <label class="pay">Card Holder Name*</label>
-                            <input
-                              type="text"
-                              name="holdername"
-                              placeholder=""
-                            />
-                            <div class="row">
-                              <div class="col-9">
-                                <label class="pay">Card Number*</label>
-                                <input
-                                  type="text"
-                                  name="cardno"
-                                  placeholder=""
-                                />
-                              </div>
-                              <div class="col-3">
-                                <label class="pay">CVC*</label>
-                                <input
-                                  type="password"
-                                  name="cvcpwd"
-                                  placeholder="***"
-                                />
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-3">
-                                <label class="pay">Pick correct Topic</label>
-                              </div>
-                              <div class="col-9">
-                                <select
-                                  class="list-dt"
-                                  id="month"
-                                  name="expmonth"
-                                >
-                                  <option selected>Month</option>
-                                  <option>January</option>
-                                  <option>February</option>
-                                  <option>March</option>
-                                  <option>April</option>
-                                  <option>May</option>
-                                  <option>June</option>
-                                  <option>July</option>
-                                  <option>August</option>
-                                  <option>September</option>
-                                  <option>October</option>
-                                  <option>November</option>
-                                  <option>December</option>
-                                </select>
-                                <select
-                                  class="list-dt"
-                                  id="year"
-                                  name="expyear"
-                                >
-                                  <option selected>Year</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <input
-                            type="button"
-                            name="previous"
-                            class="previous action-button-previous"
-                            value="Previous"
-                          />
-                          <input
-                            type="button"
-                            name="make_payment"
-                            class="next action-button"
-                            value="Confirm"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div class="form-card">
-                            <h2 class="fs-title text-center">Success !</h2>
-                            <br /><br />
-                            <div class="row justify-content-center">
-                              <div class="col-3">
-                                <img
-                                  src="https://img.icons8.com/color/96/000000/ok--v2.png"
-                                  class="fit-image"
-                                />
-                              </div>
-                            </div>
-                            <br /><br />
-                            <div class="row justify-content-center">
-                              <div class="col-7 text-center">
-                                <h5>Successfully Reviewed</h5>
-                              </div>
-                            </div>
-                          </div>
-                        </fieldset>
-                      </form>
-                    </div>
+            <div class="main-card mb-3 card pt-3 pb-5">
+              <div class="card px-4 col-9 mx-auto my-3">
+                <form id="msasnwerform ">
+                  <div class="h3 text-success py-2">
+                    Add an answer to this question.
                   </div>
-                </div>
+                  <div class="h4">
+                    <span>What causes Cassava Mosaic?</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="answer"
+                    placeholder="Add answer"
+                    class="form-control my-3"
+                  />
+                  <div class="d-flex justify-content-between">
+                    <button name="next" class="btn btn-warning my-3">
+                      Skip
+                    </button>
+                    <button
+                      name="next"
+                      class="btn btn-primary my-3"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
@@ -497,24 +356,24 @@ block content %}
         topUsersData.forEach((user, index) => {
           const tableRow = document.createElement("tr");
           tableRow.innerHTML = `
-                <td class="text-center text-muted">${user.user_id}</td>
-                <td>
-                  <div class="widget-content p-0">
-                    <div class="widget-content-wrapper">
-                      <div class="widget-content-left flex2">
-                        <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                        <div class="widget-subheading opacity-7">${user.username}</div>
+                  <td class="text-center text-muted">${user.user_id}</td>
+                  <td>
+                    <div class="widget-content p-0">
+                      <div class="widget-content-wrapper">
+                        <div class="widget-content-left flex2">
+                          <div class="widget-heading">${user.firstname} ${user.lastname}</div>
+                          <div class="widget-subheading opacity-7">${user.username}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-    
-                <td class="text-center">${user.phone_number}</td>
-                <td class="text-center">${user.location}</td>
-                <td class="text-center">${user.gender}</td>
-                <td class="text-center">
-                  <div class="font-weight-bold" >${user.questions} </div>
-                </td>`;
+                  </td>
+      
+                  <td class="text-center">${user.phone_number}</td>
+                  <td class="text-center">${user.location}</td>
+                  <td class="text-center">${user.gender}</td>
+                  <td class="text-center">
+                    <div class="font-weight-bold" >${user.questions} </div>
+                  </td>`;
 
           tableBody.appendChild(tableRow);
         });

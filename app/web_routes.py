@@ -72,3 +72,17 @@ def expert_dashoard():
     role = session.get('user_role')
     username = session.get('username')
     return render_template('expertDash.html', token=access_token, role=role, user=username)
+
+@web_bp.route('/answer')
+def answer_questions():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('answer.html', token=access_token, role=role, user=username)
+
+@web_bp.route('/rank')
+def rank_answers():
+    access_token = session.get('user_token')
+    role = session.get('user_role')
+    username = session.get('username')
+    return render_template('rank.html', token=access_token, role=role, user=username)
