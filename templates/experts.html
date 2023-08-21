@@ -226,13 +226,13 @@ content %}
                     </div>
                     <div class="col">
                       <div class="form-group">
-                        <label for="location">Location</label>
+                        <label for="organisation">Organisation</label>
                         <input
                           type="text"
                           class="form-control"
-                          id="location"
-                          name="location"
-                          placeholder="Enter Location"
+                          id="organisation"
+                          name="organisation"
+                          placeholder="Enter Organisation"
                         />
                       </div>
                       <div class="form-group">
@@ -301,15 +301,15 @@ content %}
               <div class="card-header">Experts</div>
               <div class="table-responsive">
                 <table
-                  class="align-middle mb-0 table table-borderless table-striped table-hover experts"
+                  class="align-middle mb-0 table table-bordered table-striped table-hover experts"
                 >
                   <thead>
                     <tr>
                       <th class="text-center">#</th>
                       <th>Name</th>
                       <th class="text-center">Phone</th>
-                      <th class="text-center">Location</th>
-                      <!-- <th class="text-center">Total Questions</th> -->
+                      <th class="text-center">Organisation</th>
+                      <th class="text-center">Email</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -354,9 +354,9 @@ content %}
         phone_number: phone,
         lastname: lastname,
         firstname: firstname,
-        location: location,
+        organisation: organisation,
         gender: gender,
-        age: age,
+        email: email,
       };
 
       const response = await fetch("/api/v1/auth/register_expert", {
@@ -428,7 +428,8 @@ content %}
                 </td>
     
                 <td class="text-center">${user.phone_number}</td>
-                <td class="text-center">${user.location}</td>`;
+                <td class="text-center">${user.organisation?user.organisation:'None'}</td>
+                <td class="text-center">${user.email?user.email:'None'}</td>`;
 
           tableBody.appendChild(tableRow);
         });

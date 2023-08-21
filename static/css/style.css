@@ -8,8 +8,14 @@ html {
 
 body {
   background: #ccc3;
+  font-size: 1.1rem;
+  line-height: 2rem;
+  font-weight: 500;
 }
 
+.btn {
+  font-size: 1rem;
+}
 .fullscreen-bg {
   position: relative;
   width: 100%;
@@ -89,27 +95,13 @@ body {
 
 #msform input,
 #msform textarea {
-  padding: 0px 8px 4px 8px;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  border-radius: 0px;
   margin-bottom: 25px;
-  margin-top: 2px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #2c3e50;
-  letter-spacing: 1px;
 }
 
 #msform input:focus,
 #msform textarea:focus {
-  -moz-box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
-  border: none;
   font-weight: bold;
   border-bottom: 2px solid #3f6ad8;
-  outline-width: 0;
 }
 
 /*Blue Buttons*/
@@ -138,8 +130,8 @@ body {
   box-shadow: 0 0 0 0 rgba(92, 128, 222, 0.5);
 }
 
-.Prevv{
-  background-color: #6c757d!important;
+.Prevv {
+  background-color: #6c757d !important;
   font-size: 0.8rem !important;
   width: 20% !important;
   padding: 0.375rem 0.75rem !important;
@@ -162,7 +154,7 @@ body {
   border-radius: 0.25rem;
   cursor: pointer;
   transition: color 0.15s, background-color 0.15s, border-color 0.15s,
-  box-shadow 0.15s;
+    box-shadow 0.15s;
 }
 
 #msform .action-button-previous:hover,

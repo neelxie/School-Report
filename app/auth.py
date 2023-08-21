@@ -120,9 +120,9 @@ def register_expert():
     phone_number = data["phone_number"]
     lastname = data["lastname"]
     firstname = data["firstname"]
-    location = data["location"]
+    email = data["email"]
     gender = data["gender"]
-    age_group = data["age"]
+    organisation = data["organisation"]
 
     if User.query.filter_by(phone_number=phone_number).first():
         return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
@@ -139,10 +139,12 @@ def register_expert():
         phone_number=phone_number,
         lastname=lastname,
         firstname=firstname,
-        location=location,
-        age_group=age_group,
+        location="Makerere",
+        age_group="19-30",
         gender=gender,
-        role="expert"  
+        role="expert",
+        organisation=organisation,
+        email=email 
     )
 
     db.session.add(expert)
@@ -243,8 +245,9 @@ def get_experts():
                 "phone_number": farmer.phone_number,
                 "lastname": farmer.lastname,
                 "firstname": farmer.firstname,
-                "location": farmer.location,
+                "organisation": farmer.organisation,
                 "gender": farmer.gender,
+                "email":farmer.email
         })
     return (
         jsonify(

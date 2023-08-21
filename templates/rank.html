@@ -201,29 +201,52 @@ block content %}
         <div class="row">
           <div class="col-md-12">
             <div class="main-card mb-3 card">
-              <div class="justify-content-center ">
+              <div class="justify-content-center">
                 <form id="rank-form" class="py-5 px-5">
                   <fieldset>
-                    <div class="h3 text-success mt-1">Rank these answers.</div>
-                    <ul class="list-group ">
+                    <div class="h3 text-success mt-1">
+                      Please assign a ranking to these answers, with 1
+                      indicating the best answer.
+                    </div>
+                    <ul class="list-group">
                       <li class="list-group-item bg-success text-center">
-                        What causes Cassava Mosaic?
+                        <strong>What causes Cassava Mosaic?</strong>
                       </li>
-                      <li class="list-group-item">
+                      <li
+                        class="list-group-item d-flex justify-content-around align-items-baseline"
+                      >
                         Black flies cause cassava mosaic
-                        <input type="number" class="rank-input" disabled />
+                        <input
+                          type="number"
+                          class="rank-input form-control"
+                          style="width: 5rem"
+                        />
                       </li>
-                      <li class="list-group-item">
+                      <li
+                        class="list-group-item d-flex justify-content-around align-items-baseline"
+                      >
                         Rotting of cassava roots cause Cassava mosaic
-                        <input type="number" class="rank-input" />
+                        <input
+                          type="number"
+                          class="rank-input form-control"
+                          style="width: 5rem"
+                        />
                       </li>
-                      <li class="list-group-item">
+                      <li class="list-group-item d-flex justify-content-around">
                         Intercropping with legumes causes cassava mosaic
-                        <input type="number" class="rank-input" />
+                        <input
+                          type="number"
+                          class="rank-input form-control"
+                          style="width: 5rem"
+                        />
                       </li>
-                      <li class="list-group-item">
+                      <li class="list-group-item d-flex justify-content-around">
                         Termites and rodents cause cassava mosaic
-                        <input type="number" class="rank-input" />
+                        <input
+                          type="number"
+                          class="rank-input form-control"
+                          style="width: 5rem"
+                        />
                       </li>
                     </ul>
                     <button name="next" class="btn btn-primary mt-3">
