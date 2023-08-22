@@ -427,7 +427,7 @@ content %}
               <div class="card-header">Top Farmers</div>
               <div class="table-responsive">
                 <table
-                  class="align-middle mb-0 table table-borderless table-striped table-hover"
+                  class="align-middle mb-0 table table-bordered table-striped table-hover border"
                 >
                   <thead>
                     <tr>
@@ -438,7 +438,7 @@ content %}
                       <th class="text-center">Total Questions</th>
                     </tr>
                   </thead>
-                  <tbody class="bg-heavy-rain"></tbody>
+                  <tbody class="bg-neutral-warning"></tbody>
                 </table>
               </div>
             </div>
@@ -497,7 +497,7 @@ content %}
     const token = localStorage.getItem("token"); // Get the token from local storage
 
     // Fetch top users data
-    fetch("/api/v1/questions/top_users", {
+    fetch("/api/v1/auth/farmers", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -523,7 +523,7 @@ content %}
             <td class="text-center">${user.phone_number}</td>
             <td class="text-center">${user.location}</td>
             <td class="text-center">
-              <div class="font-weight-bold" >${user.total_questions} </div>
+              <div class="font-weight-bold" >${user.questions} </div>
             </td>`;
 
           tableBody.appendChild(tableRow);

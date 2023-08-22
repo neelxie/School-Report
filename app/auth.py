@@ -112,8 +112,9 @@ def register():
         HTTP_201_CREATED,
     )
 
+
 @jwt_required()
-@auth.post('/register_expert')
+@auth.post("/register_expert")
 def register_expert():
     data = request.get_json()
 
@@ -144,13 +145,14 @@ def register_expert():
         gender=gender,
         role="expert",
         organisation=organisation,
-        email=email 
+        email=email,
     )
 
     db.session.add(expert)
     db.session.commit()
 
     return jsonify({"message": "Expert registered successfully"}), HTTP_201_CREATED
+
 
 @auth.post("/login")
 def login():
@@ -164,17 +166,29 @@ def login():
         is_pass_correct = user.phone_number == password
 
         if is_pass_correct:
-            access = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=0))
+            access = create_access_token(
+                identity=user.id, expires_delta=datetime.timedelta(days=0)
+            )
             num_questions = Question.query.filter_by(user_id=user.id).count()
-            questions = Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == today).all()
-            num_questions_today = Question.query.filter_by(user_id=user.id).filter(func.date(Question.created_at) == date.today()).count()
+            questions = (
+                Question.query.filter_by(user_id=user.id)
+                .filter(func.date(Question.created_at) == today)
+                .all()
+            )
+            num_questions_today = (
+                Question.query.filter_by(user_id=user.id)
+                .filter(func.date(Question.created_at) == date.today())
+                .count()
+            )
 
             question_objects = []
             for question in questions:
-                question_objects.append({
-                    'sentence': question.sentence,
-                    'date': question.created_at.strftime('%Y-%m-%d %H:%M:%S')
-                })
+                question_objects.append(
+                    {
+                        "sentence": question.sentence,
+                        "date": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    }
+                )
 
             return (
                 jsonify(
@@ -182,9 +196,10 @@ def login():
                         "access_token": access,
                         "num_questions": num_questions,
                         "todays_questions": question_objects,
-                        "total_questions_today": num_questions_today
+                        "total_questions_today": num_questions_today,
                     }
-                ), HTTP_200_OK,
+                ),
+                HTTP_200_OK,
             )
 
     return jsonify({"error": "Wrong credentials"}), HTTP_401_UNAUTHORIZED
@@ -210,13 +225,22 @@ def me():
         HTTP_200_OK,
     )
 
+
 @jwt_required()
 @auth.get("/farmers")
 def farmers():
+    users = (
+        User.query.filter_by(role="farmer")
+        .join(Question, User.id == Question.user_id, isouter=True)
+        .group_by(User.id)
+        .order_by(func.count(Question.id).desc())
+        .all()
+    )
     farmers = User.query.filter_by(role="farmer").all()
     farmer_objects = []
-    for farmer in farmers:
-        farmer_objects.append({
+    for farmer in users:
+        farmer_objects.append(
+            {
                 "user_id": farmer.id,
                 "username": farmer.username,
                 "phone_number": farmer.phone_number,
@@ -225,13 +249,13 @@ def farmers():
                 "location": farmer.location,
                 "questions": len(farmer.questions),
                 "gender": farmer.gender,
-        })
+            }
+        )
     return (
-        jsonify(
-            farmer_objects
-        ),
+        jsonify(farmer_objects),
         HTTP_200_OK,
     )
+
 
 @jwt_required()
 @auth.get("/experts")
@@ -239,7 +263,8 @@ def get_experts():
     experts = User.query.filter_by(role="expert").all()
     farmer_objects = []
     for farmer in experts:
-        farmer_objects.append({
+        farmer_objects.append(
+            {
                 "user_id": farmer.id,
                 "username": farmer.username,
                 "phone_number": farmer.phone_number,
@@ -247,12 +272,11 @@ def get_experts():
                 "firstname": farmer.firstname,
                 "organisation": farmer.organisation,
                 "gender": farmer.gender,
-                "email":farmer.email
-        })
+                "email": farmer.email,
+            }
+        )
     return (
-        jsonify(
-            farmer_objects
-        ),
+        jsonify(farmer_objects),
         HTTP_200_OK,
     )
 
@@ -265,23 +289,33 @@ def refresh_users_token():
 
     return jsonify({"access": access}), HTTP_200_OK
 
+
 @jwt_required()
 @auth.get("/user_stats")
 def user_statistics():
     # Fetch all locations and count the total number of locations
-    all_locations = User.query.filter_by(role='farmer').with_entities(User.location).distinct().all()
+    all_locations = (
+        User.query.filter_by(role="farmer")
+        .with_entities(User.location)
+        .distinct()
+        .all()
+    )
     locations_data = [dict(location=row[0]) for row in all_locations]
     total_locations = len(all_locations)
 
     # Count the total number of male and female users
     # total_male_users = User.query.filter_by(gender="male", role="farmer").count()
-    total_male_users = User.query.filter(func.lower(User.gender) == "male", User.role == "farmer").count()
-    total_female_users = User.query.filter(func.lower(User.gender) == "female", User.role =="farmer").count()
+    total_male_users = User.query.filter(
+        func.lower(User.gender) == "male", User.role == "farmer"
+    ).count()
+    total_female_users = User.query.filter(
+        func.lower(User.gender) == "female", User.role == "farmer"
+    ).count()
 
     agricExperts = User.query.filter_by(role="expert").count()
 
     # Count the total number of users
-    total_users = User.query.filter_by(role='farmer').count()
+    total_users = User.query.filter_by(role="farmer").count()
 
     # Count the number of users per location
     users_per_location = []
@@ -306,6 +340,6 @@ def user_statistics():
         "total_users": total_users,
         "users_per_location": users_per_location,
         "users_per_age_group": users_per_age_group,
-        "experts": agricExperts
+        "experts": agricExperts,
     }
     return jsonify({"data": response_data}), HTTP_200_OK

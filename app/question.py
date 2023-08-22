@@ -104,26 +104,29 @@ def handle_questions():
             return result
 
     else:
-        today = datetime.date.today()
-        questions = Question.query.filter_by(user_id=current_user).all()
+        user = User.query.filter_by(id=current_user).first()
+        if user:
+            questions = user.questions
 
-        returned_data = []
+            returned_data = []
 
-        if not questions:
-            return jsonify({"error": "No data yet"}), HTTP_204_NO_CONTENT
+            if not questions:
+                return jsonify({"error": "No data yet"}), HTTP_204_NO_CONTENT
 
-        for question in questions:
-            returned_data.append(
-                {
-                    "id": question.id,
-                    "sentence": question.sentence,
-                    "language": question.language,
-                    "created_at": question.created_at,
-                    "topics": question.topic,
-                }
-            )
+            for question in questions:
+                returned_data.append(
+                    {
+                        "id": question.id,
+                        "sentence": question.sentence,
+                        "language": question.language,
+                        "created_at": question.created_at,
+                        "topics": question.topic,
+                    }
+                )
 
-        return jsonify(returned_data), HTTP_200_OK
+            return jsonify(returned_data), HTTP_200_OK
+        else:
+            return jsonify({"error": "User not found"}), HTTP_404_NOT_FOUND
 
 
 @questions.route("/file_upload/", methods=["POST"])
@@ -219,16 +222,12 @@ def get_questions():
 @jwt_required()
 @questions.get("/top_users")
 def top_users_with_most_questions():
-    # Fetch data from the database to get the top five users with the most questions
     users_with_most_questions = (
         User.query.join(Question, User.id == Question.user_id)
         .group_by(User.id)
         .order_by(db.func.count(Question.id).desc())
-        .limit(5)
         .all()
     )
-
-    # Prepare the response data with user information
     top_users_data = []
     for user in users_with_most_questions:
         top_users_data.append(
