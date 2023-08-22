@@ -11,7 +11,7 @@ from app.status import (
 from flask import Blueprint, request
 from flask.json import jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from app.models import Question, db, User
+from app.models import Question, db, User, Answer
 import datetime
 from sqlalchemy import func
 from app.helper import admin_required
@@ -298,3 +298,73 @@ def list_questions():
     }
 
     return jsonify(response_data), HTTP_200_OK
+
+
+@questions.route("/random_question", methods=["GET"])
+@jwt_required()
+def random_question_and_add_answer():
+    user_id = get_jwt_identity()
+    # random_question = Question.query.order_by(db.func.random()).first()
+    # answered_question_ids = [answer.question_id for answer in Answer.query.filter_by(user_id=user_id).all()]
+
+    # # Query for a random question that the user has not answered yet
+    # random_question = Question.query.filter(~Question.id.in_(answered_question_ids)).order_by(db.func.random()).first()
+    # a = aliased(Answer)
+
+    # # Subquery to find questions with answers from source "expert"
+    # questions_with_expert_answers = (
+    #     db.session.query(Question)
+    #     .join(a, a.question_id == Question.id)
+    #     .filter(a.source == "expert")
+    #     .subquery()
+    # )
+
+    # # Retrieve a random question that is not in the subquery result
+    # random_question = (
+    #     Question.query
+    #     .filter(Question.id.notin_(questions_with_expert_answers))
+    #     .order_by(db.func.random())
+    #     .first()
+    # )
+    random_question = (
+        Question.query.filter(~Question.answers.any(Answer.source == "expert"))
+        .order_by(db.func.random())
+        .first()
+    )
+
+    if random_question:
+        question_data = {
+            "id": random_question.id,
+            "sentence": random_question.sentence,
+            "language": random_question.language,
+            "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topic": random_question.topic,
+        }
+        return jsonify(question_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+
+@questions.post("/add_answer/<int:question_id>")
+@jwt_required()
+def add_answer(question_id):
+    data = request.get_json()
+    user_id = get_jwt_identity()
+    answer_text = request.json["answer"].strip()
+    # source = request.json["source"].strip()
+
+    question = Question.query.get(question_id)
+    if not question:
+        return jsonify({"message": "Question not found."}), HTTP_404_NOT_FOUND
+
+    new_answer = Answer(
+        question_id=question_id,
+        user_id=user_id,
+        answer_text=answer_text,
+        source="expert",
+    )
+
+    db.session.add(new_answer)
+    db.session.commit()
+
+    return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED

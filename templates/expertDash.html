@@ -214,19 +214,28 @@ block content %}
                             <strong>Agriculture</strong>
                           </li>
                           <li id="personal">
-                            <strong>Grammar</strong>
+                            <strong>Clarity/Grammar</strong>
                           </li>
                           <li id="payment"><strong>Topic</strong></li>
                         </ul>
                         <!-- fieldsets -->
                         <fieldset>
+                          <div
+                            class="card mb-3 ml-3 col-11 text-left text-warning font-weight-bold mx-4 my-4"
+                          >
+                            <span>1. Read the Question.</span
+                            ><span
+                              >2. If the question is related to agriculture,
+                              click "Yes."</span
+                            ><span>
+                              3. If the question is not related to agriculture,
+                              click "No."</span
+                            >
+                          </div>
                           <div class="form-card rounded">
-                            <div class="h4 text-success">
-                              Does this question pertain to Agriculture? If it
-                              does click "Yes", if not click "No."
-                            </div>
-                            <div class="h4 text-dark">
-                              <span>What causes cassava mosaic?</span>
+                            <div class="h4 text-dark font-weight-bold">
+                              <span class="text-success mr-3">Question:</span
+                              >What causes cassava mosaic?
                             </div>
                           </div>
                           <input
@@ -243,13 +252,25 @@ block content %}
                           />
                         </fieldset>
                         <fieldset>
-                          <div class="form-card">
-                            <div class="h4 text-success">
-                              Is the question grammatically correct? If not
-                              rephrase the question below.
-                            </div>
-                            <div class="h4 py-3 text-dark">
-                              <span>What causes cassava mosaic?</span>
+                          <div
+                            class="card mb-3 ml-3 col-11 text-left font-weight-bold text-warning mx-4 my-4"
+                          >
+                            <span>
+                              1. Determine if the question is clear and
+                              grammatically correct.</span
+                            ><span>
+                              2. If the question is clear and grammatically
+                              correct, click "Next."</span
+                            ><span
+                              >3. If the question needs improvement, rewrite it
+                              correctly it to improve clarity and grammar.
+                            </span>
+                            <span>4. Click Next.</span>
+                          </div>
+                          <div class="form-card rounded">
+                            <div class="h4 text-dark font-weight-bold">
+                              <span class="text-success mr-3">Question:</span
+                              >What causes cassava mosaic?
                             </div>
                             <input
                               type="text"
@@ -405,7 +426,6 @@ block content %}
     });
   });
 </script>
-
 <script>
   function logout() {
     // Clear the user token from localStorage
@@ -415,50 +435,90 @@ block content %}
     window.location.href = "/"; // Redirect to the index page
   }
 
+  function reload() {
+    window.location.reload();
+  }
+
   // Attach the logout function to the logout button/link
   const logoutButton = document.getElementById("logoutButton");
   if (logoutButton) {
     logoutButton.addEventListener("click", logout);
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token"); // Get the token from local storage
+  function showFormWithQuestionId(questionId) {
+    // Display the form and set the question ID as a data attribute
+    var form = document.getElementById("answerForm");
+    form.style.display = "block";
+    form.setAttribute("data-question-id", questionId);
+  }
 
-    // Fetch top users data
-    fetch("/api/v1/auth/farmers", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((topUsersData) => {
-        const tableBody = document.querySelector(".farmers tbody");
-        topUsersData.forEach((user, index) => {
-          const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                <td class="text-center text-muted">${user.user_id}</td>
-                <td>
-                  <div class="widget-content p-0">
-                    <div class="widget-content-wrapper">
-                      <div class="widget-content-left flex2">
-                        <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                        <div class="widget-subheading opacity-7">${user.username}</div>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-    
-                <td class="text-center">${user.phone_number}</td>
-                <td class="text-center">${user.location}</td>
-                <td class="text-center">${user.gender}</td>
-                <td class="text-center">
-                  <div class="font-weight-bold" >${user.questions} </div>
-                </td>`;
+  document
+    .addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("token"); // Get the token from local storage
 
-          tableBody.appendChild(tableRow);
-        });
+      // Fetch top users data
+      fetch("/api/v1/questions/random_question", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((error) => console.error("Error fetching top users data:", error));
+        .then((response) => response.json())
+        .then((randomQuestion) => {
+          const oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = randomQuestion.sentence;
+          const questionLanguage = document.getElementById("questionLanguage");
+          questionLanguage.textContent = randomQuestion.language;
+          const questionTopic = document.getElementById("questionTopic");
+          questionTopic.textContent = randomQuestion.topic
+            ? randomQuestion.topic
+            : "No Topic";
+          var questionId = randomQuestion.id;
+          showFormWithQuestionId(questionId);
+        });
+    })
+    .catch((error) => console.error("Error fetching question:"));
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("answerForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const token = localStorage.getItem("token");
+
+    answerForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      var questionIdButton = this.getAttribute("data-question-id");
+      let questionId = parseInt(questionIdButton);
+      let answer = document.getElementById("answer").value;
+      const itemBody = {
+        answer: answer,
+      };
+      console.log(answer);
+      const response = await fetch(
+        `/api/v1/questions/add_answer/${questionId}`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(itemBody),
+        }
+      );
+
+      try {
+        const responseData = await response.json();
+        if (response.ok) {
+          window.location.reload();
+          window.location.href = window.location.href;
+        } else {
+          errorMessage.textContent = responseData.error;
+        }
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.reload();
+      }
+    });
   });
 </script>
 {% endblock %}

@@ -78,10 +78,10 @@ def register():
         return validation_result
     # must add a validator function for phone number here
 
-    phone_number = request.json["phone_number"]
-    lastname = request.json["lastname"]
-    firstname = request.json["firstname"]
-    location = request.json["location"]
+    phone_number = request.json["phone_number"].strip()
+    lastname = request.json["lastname"].strip()
+    firstname = request.json["firstname"].strip()
+    location = request.json["location"].strip()
     age_group = request.json["age_group"]
     gender = request.json["gender"]
 
@@ -118,12 +118,12 @@ def register():
 def register_expert():
     data = request.get_json()
 
-    phone_number = data["phone_number"]
-    lastname = data["lastname"]
-    firstname = data["firstname"]
-    email = data["email"]
+    phone_number = data["phone_number"].strip()
+    lastname = data["lastname"].strip()
+    firstname = data["firstname"].strip()
+    email = data["email"].strip()
     gender = data["gender"]
-    organisation = data["organisation"]
+    organisation = data["organisation"].strip()
 
     if User.query.filter_by(phone_number=phone_number).first():
         return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT

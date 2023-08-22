@@ -202,22 +202,40 @@
           <div class="col-md-12">
             <div class="main-card mb-3 card pt-3 pb-5">
               <div class="card px-4 col-9 mx-auto my-3">
-                <form id="msasnwerform ">
+                <form id="answerForm">
                   <div class="h3 text-success py-2">
-                    Provide an answer to this question in the input field
-                    below, or you can choose to skip it.
+                    Provide an answer to this question in the input field below,
+                    or you can choose to skip it.
                   </div>
-                  <div class="h4">
-                    <span>What causes Cassava Mosaic?</span>
-                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th class="text-success pr-3">Language:</th>
+                        <td id="questionLanguage" class="font-weight-bold"></td>
+                      </tr>
+                      <tr>
+                        <th class="text-success pr-3">Topic:</th>
+                        <td id="questionTopic" class="font-weight-bold"></td>
+                      </tr>
+                      <tr>
+                        <th class="text-success pr-3">Question:</th>
+                        <td id="oneQuestion" class="font-weight-bold"></td>
+                      </tr>
+                    </tbody>
+                  </table>
                   <input
                     type="text"
                     name="answer"
+                    id="answer"
                     placeholder="Add answer"
                     class="form-control my-3"
                   />
                   <div class="d-flex justify-content-between">
-                    <button name="next" class="btn btn-warning my-3">
+                    <button
+                      name="next"
+                      class="btn btn-warning my-3"
+                      onclick="reloadPage()"
+                    >
                       Skip
                     </button>
                     <button
@@ -251,83 +269,6 @@
   </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var current_fs, next_fs, previous_fs; // fieldsets
-    var opacity;
-
-    var nextButtons = document.querySelectorAll(".next");
-    var previousButtons = document.querySelectorAll(".previous");
-    var progressBarItems = document.querySelectorAll("#progressbar li");
-    var radioButtons = document.querySelectorAll(".radio-group .radio");
-    var submitButton = document.querySelector(".submit");
-
-    nextButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        current_fs = this.parentElement;
-        next_fs = this.parentElement.nextElementSibling;
-
-        progressBarItems[
-          Array.from(document.querySelectorAll("fieldset")).indexOf(next_fs)
-        ].classList.add("active");
-
-        next_fs.style.display = "block";
-        current_fs.style.opacity = 0;
-
-        var animationInterval = setInterval(function () {
-          opacity = parseFloat(current_fs.style.opacity);
-          if (opacity <= 0) {
-            clearInterval(animationInterval);
-            current_fs.style.display = "none";
-            next_fs.style.opacity = 1;
-          } else {
-            current_fs.style.opacity = (opacity - 0.05).toString();
-          }
-        }, 10);
-      });
-    });
-
-    previousButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        current_fs = this.parentElement;
-        previous_fs = this.parentElement.previousElementSibling;
-
-        progressBarItems[
-          Array.from(document.querySelectorAll("fieldset")).indexOf(current_fs)
-        ].classList.remove("active");
-
-        previous_fs.style.display = "block";
-        current_fs.style.opacity = 0;
-
-        var animationInterval = setInterval(function () {
-          opacity = parseFloat(current_fs.style.opacity);
-          if (opacity <= 0) {
-            clearInterval(animationInterval);
-            current_fs.style.display = "none";
-            previous_fs.style.opacity = 1;
-          } else {
-            current_fs.style.opacity = (opacity - 0.05).toString();
-          }
-        }, 10);
-      });
-    });
-
-    radioButtons.forEach(function (radio) {
-      radio.addEventListener("click", function () {
-        var radioGroup = this.parentElement;
-        radioGroup.querySelectorAll(".radio").forEach(function (radioItem) {
-          radioItem.classList.remove("selected");
-        });
-        this.classList.add("selected");
-      });
-    });
-
-    submitButton.addEventListener("click", function () {
-      return false;
-    });
-  });
-</script>
-
-<script>
   function logout() {
     // Clear the user token from localStorage
     localStorage.clear();
@@ -336,50 +277,91 @@
     window.location.href = "/"; // Redirect to the index page
   }
 
+  function reload() {
+    window.location.reload();
+  }
+
   // Attach the logout function to the logout button/link
   const logoutButton = document.getElementById("logoutButton");
   if (logoutButton) {
     logoutButton.addEventListener("click", logout);
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token"); // Get the token from local storage
+  function showFormWithQuestionId(questionId) {
+    // Display the form and set the question ID as a data attribute
+    var form = document.getElementById("answerForm");
+    form.style.display = "block";
+    form.setAttribute("data-question-id", questionId);
+  }
 
-    // Fetch top users data
-    fetch("/api/v1/auth/farmers", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((topUsersData) => {
-        const tableBody = document.querySelector(".farmers tbody");
-        topUsersData.forEach((user, index) => {
-          const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                  <td class="text-center text-muted">${user.user_id}</td>
-                  <td>
-                    <div class="widget-content p-0">
-                      <div class="widget-content-wrapper">
-                        <div class="widget-content-left flex2">
-                          <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                          <div class="widget-subheading opacity-7">${user.username}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-      
-                  <td class="text-center">${user.phone_number}</td>
-                  <td class="text-center">${user.location}</td>
-                  <td class="text-center">${user.gender}</td>
-                  <td class="text-center">
-                    <div class="font-weight-bold" >${user.questions} </div>
-                  </td>`;
+  document
+    .addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("token"); // Get the token from local storage
 
-          tableBody.appendChild(tableRow);
-        });
+      // Fetch top users data
+      fetch("/api/v1/questions/random_question", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((error) => console.error("Error fetching top users data:", error));
+        .then((response) => response.json())
+        .then((randomQuestion) => {
+          const oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = randomQuestion.sentence;
+          const questionLanguage = document.getElementById("questionLanguage");
+          questionLanguage.textContent = randomQuestion.language;
+          const questionTopic = document.getElementById("questionTopic");
+          questionTopic.textContent = randomQuestion.topic
+            ? randomQuestion.topic
+            : "No Topic";
+          var questionId = randomQuestion.id;
+          showFormWithQuestionId(questionId);
+          console.log(questionId);
+        });
+    })
+    .catch((error) => console.error("Error fetching question:"));
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("answerForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const token = localStorage.getItem("token");
+
+    answerForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      var questionIdButton = this.getAttribute("data-question-id");
+      let questionId = parseInt(questionIdButton);
+      let answer = document.getElementById("answer").value;
+      const itemBody = {
+        answer: answer,
+      };
+      console.log(answer)
+      const response = await fetch(
+        `/api/v1/questions/add_answer/${questionId}`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(itemBody),
+        }
+      );
+
+      try {
+        const responseData = await response.json();
+        if (response.ok) {
+          window.location.reload();
+          window.location.href = window.location.href;
+        } else {
+          errorMessage.textContent = responseData.error;
+        }
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.reload();
+      }
+    });
   });
 </script>
 {% endblock %}
