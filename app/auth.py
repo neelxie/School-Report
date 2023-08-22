@@ -274,8 +274,9 @@ def user_statistics():
     total_locations = len(all_locations)
 
     # Count the total number of male and female users
-    total_male_users = User.query.filter_by(gender="male", role="farmer").count()
-    total_female_users = User.query.filter_by(gender="female", role="farmer").count()
+    # total_male_users = User.query.filter_by(gender="male", role="farmer").count()
+    total_male_users = User.query.filter(func.lower(User.gender) == "male", User.role == "farmer").count()
+    total_female_users = User.query.filter(func.lower(User.gender) == "female", User.role =="farmer").count()
 
     agricExperts = User.query.filter_by(role="expert").count()
 
