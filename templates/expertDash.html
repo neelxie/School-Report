@@ -221,8 +221,11 @@ block content %}
                         <!-- fieldsets -->
                         <fieldset>
                           <div
-                            class="card mb-3 ml-3 col-11 text-left text-warning font-weight-bold mx-4 my-4"
+                            class="card mb-3 ml-3 col-11 text-left text-warning font-weight-bold mx-4 my-4 p-2 border"
                           >
+                            <span class="text-center text-dark"
+                              >Instructions:</span
+                            >
                             <span>1. Read the Question.</span
                             ><span
                               >2. If the question is related to agriculture,
@@ -235,7 +238,7 @@ block content %}
                           <div class="form-card rounded">
                             <div class="h4 text-dark font-weight-bold">
                               <span class="text-success mr-3">Question:</span
-                              >What causes cassava mosaic?
+                              ><span id="oneQuestion"></span>
                             </div>
                           </div>
                           <input
@@ -243,6 +246,7 @@ block content %}
                             name="previous"
                             class="btn btn-warning mr-5 px-5"
                             value="No"
+                            id="incorrectQuestion"
                           />
                           <input
                             type="button"
@@ -253,8 +257,11 @@ block content %}
                         </fieldset>
                         <fieldset>
                           <div
-                            class="card mb-3 ml-3 col-11 text-left font-weight-bold text-warning mx-4 my-4"
+                            class="card mb-3 ml-3 col-11 text-left font-weight-bold text-warning mx-4 my-4 border"
                           >
+                            <span class="text-center text-dark"
+                              >Instructions:</span
+                            >
                             <span>
                               1. Determine if the question is clear and
                               grammatically correct.</span
@@ -270,7 +277,7 @@ block content %}
                           <div class="form-card rounded">
                             <div class="h4 text-dark font-weight-bold">
                               <span class="text-success mr-3">Question:</span
-                              >What causes cassava mosaic?
+                              ><span id="oneQuestion1"></span>
                             </div>
                             <input
                               type="text"
@@ -293,24 +300,76 @@ block content %}
                           />
                         </fieldset>
                         <fieldset>
+                          <div
+                            class="card mb-3 ml-3 col-11 text-left font-weight-bold text-warning mx-4 my-4 border"
+                          >
+                            <span class="text-center text-dark"
+                              >Instructions:</span
+                            ><span>
+                              1. Determine if the topic accurately represents
+                              the question.</span
+                            ><span>
+                              2. If accurate, click the "Submit" button below.
+                            </span>
+                            <span>
+                              3. If inaccurate or not provided, select an
+                              accurate topic from the dropdown menu.
+                            </span>
+                            <span
+                              >4. After selecting the correct topic, click the
+                              "Submit" button.</span
+                            >
+                          </div>
                           <div class="form-card">
-                            <div class="h4 text-success">
-                              Does the current question topic align/match
-                              accurately? If not, add a new topic.
-                            </div>
                             <div class="h4 text-dark pb-2">
-                              <span class="text-secondary mr-3">Topic:</span
-                              ><strong>Crop Diseases</strong>
+                              <span class="text-success mr-3 font-weight-bold"
+                                >Topic:</span
+                              ><strong id="questionTopic"></strong>
                             </div>
-                            <div class="h4 text-dark py-2">
-                              <span>What causes cassava mosaic?</span>
+                            <div class="h4 text-dark font-weight-bold">
+                              <span class="text-success mr-3">Question:</span
+                              ><span id="oneQuestion2"></span>
                             </div>
-                            <input
-                              type="text"
-                              name="topic"
-                              placeholder="Add a new topic"
-                              class="form-control"
-                            />
+                            <div class="form-group">
+                              <label for="dropdown">Choose a Topic</label>
+                              <select
+                                id="topic"
+                                name="topic"
+                                class="form-control"
+                                required
+                              >
+                                <option disabled selected value>Select</option>
+                                <option value="Irrigation">Irrigation</option>
+                                <option value="Pest Control">
+                                  Pest control
+                                </option>
+                                <option value="Crop Rotation">
+                                  Crop rotation
+                                </option>
+                                <option value="Fertilizers">Fertilizers</option>
+                                <option value="Livestock">Livestock</option>
+                                <option value="Aquaculture">Aquaculture</option>
+                                <option value="Soil Health">Soil health</option>
+                                <option value="Food Security">
+                                  Food security
+                                </option>
+                                <option value="Cultivation">Cultivation</option>
+                                <option value="Pesticides">Pesticides</option>
+                                <option value="Weeds">Weeds</option>
+                                <option value="Planting">Planting</option>
+                                <option value="Harvesting">Harvesting</option>
+                                <option value="Erosion">Erosion</option>
+                                <option value="Cropping">Cropping</option>
+                                <option value="Seeds">Seeds</option>
+                                <option value="Animals">Animals</option>
+                                <option value="Soil">Soil</option>
+                                <option value="Water">Water</option>
+                                <option value="Tools">Tools</option>
+                                <option value="Tractor">Tractor</option>
+                                <option value="Germination">Germination</option>
+                                <option value="Farming">Farming</option>
+                              </select>
+                            </div>
                           </div>
                           <input
                             type="button"
@@ -447,61 +506,86 @@ block content %}
 
   function showFormWithQuestionId(questionId) {
     // Display the form and set the question ID as a data attribute
-    var form = document.getElementById("answerForm");
+    var form = document.getElementById("msform");
     form.style.display = "block";
     form.setAttribute("data-question-id", questionId);
   }
 
-  document
-    .addEventListener("DOMContentLoaded", function () {
-      const token = localStorage.getItem("token"); // Get the token from local storage
+  document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token"); // Get the token from local storage
 
-      // Fetch top users data
-      fetch("/api/v1/questions/random_question", {
+    // Fetch top users data
+    fetch("/api/v1/questions/random_question_review", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((randomQuestion) => {
+        const oneQuestion = document.getElementById("oneQuestion");
+        oneQuestion.textContent = randomQuestion.sentence;
+        const oneQuestion1 = document.getElementById("oneQuestion1");
+        oneQuestion1.textContent = randomQuestion.sentence;
+        const oneQuestion2 = document.getElementById("oneQuestion2");
+        oneQuestion2.textContent = randomQuestion.sentence;
+        const questionTopic = document.getElementById("questionTopic");
+        questionTopic.textContent = randomQuestion.topic
+          ? randomQuestion.topic
+          : "No Topic";
+        var questionId = randomQuestion.id;
+        // console.log(questionId);
+        const incorrectQuestion = document.getElementById("incorrectQuestion");
+        if (incorrectQuestion) {
+          incorrectQuestion.addEventListener("click", async function (event) {
+            event.preventDefault();
+            let questionId1 = parseInt(questionId); // Use the questionId obtained earlier
+            console.log(questionId1);
+            await updateQuestion(questionId1);
+          });
+        }
+      })
+      .catch((error) => console.error("Error fetching question:"));
+
+    function updateQuestion(questionId) {
+      const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
+        method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => response.json())
-        .then((randomQuestion) => {
-          const oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = randomQuestion.sentence;
-          const questionLanguage = document.getElementById("questionLanguage");
-          questionLanguage.textContent = randomQuestion.language;
-          const questionTopic = document.getElementById("questionTopic");
-          questionTopic.textContent = randomQuestion.topic
-            ? randomQuestion.topic
-            : "No Topic";
-          var questionId = randomQuestion.id;
-          showFormWithQuestionId(questionId);
-        });
-    })
-    .catch((error) => console.error("Error fetching question:"));
+        .then((responseData) => {
+          if (response) {
+            window.location.reload();
+          } else {
+            console.error("Error updating question:");
+          }
+        })
+        .catch((error) => console.error("Error parsing response:", error));
+    }
+  });
 </script>
-<script>
+<!-- <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("answerForm");
+    const incorrectQuestion = document.getElementById("incorrectQuestion");
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
 
-    answerForm.addEventListener("submit", async function (event) {
+    incorrectQuestion.addEventListener("click", async function (event) {
       event.preventDefault();
-      var questionIdButton = this.getAttribute("data-question-id");
-      let questionId = parseInt(questionIdButton);
-      let answer = document.getElementById("answer").value;
-      const itemBody = {
-        answer: answer,
-      };
-      console.log(answer);
+      let questionId1 = parseInt(this.getAttribute("data-question-id"));
+      console.log(questionId1);
+      await updateQuestion(questionId1);
+    });
+
+    async function updateQuestion(questionId) {
       const response = await fetch(
-        `/api/v1/questions/add_answer/${questionId}`,
+        `/api/v1/questions/incorrect/${questionId}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
-            "content-type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(itemBody),
         }
       );
 
@@ -509,16 +593,13 @@ block content %}
         const responseData = await response.json();
         if (response.ok) {
           window.location.reload();
-          window.location.href = window.location.href;
         } else {
-          errorMessage.textContent = responseData.error;
+          console.error("Error updating question:", responseData.error);
         }
       } catch (error) {
-        console.error("Error parsing response:");
-      } finally {
-        window.location.reload();
+        console.error("Error parsing response:", error);
       }
-    });
+    }
   });
-</script>
+</script> -->
 {% endblock %}

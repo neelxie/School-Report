@@ -304,28 +304,6 @@ def list_questions():
 @jwt_required()
 def random_question_and_add_answer():
     user_id = get_jwt_identity()
-    # random_question = Question.query.order_by(db.func.random()).first()
-    # answered_question_ids = [answer.question_id for answer in Answer.query.filter_by(user_id=user_id).all()]
-
-    # # Query for a random question that the user has not answered yet
-    # random_question = Question.query.filter(~Question.id.in_(answered_question_ids)).order_by(db.func.random()).first()
-    # a = aliased(Answer)
-
-    # # Subquery to find questions with answers from source "expert"
-    # questions_with_expert_answers = (
-    #     db.session.query(Question)
-    #     .join(a, a.question_id == Question.id)
-    #     .filter(a.source == "expert")
-    #     .subquery()
-    # )
-
-    # # Retrieve a random question that is not in the subquery result
-    # random_question = (
-    #     Question.query
-    #     .filter(Question.id.notin_(questions_with_expert_answers))
-    #     .order_by(db.func.random())
-    #     .first()
-    # )
     random_question = (
         Question.query.filter(~Question.answers.any(Answer.source == "expert"))
         .order_by(db.func.random())
@@ -339,6 +317,26 @@ def random_question_and_add_answer():
             "language": random_question.language,
             "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             "topic": random_question.topic,
+        }
+        return jsonify(question_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+
+@questions.route("/random_question_review", methods=["GET"])
+@jwt_required()
+def random_question_for_review():
+    random_unreviewed_question = (
+        Question.query.filter_by(reviewed=False).order_by(func.random()).first()
+    )
+
+    if random_unreviewed_question:
+        question_data = {
+            "id": random_unreviewed_question.id,
+            "sentence": random_unreviewed_question.sentence,
+            "language": random_unreviewed_question.language,
+            "created_at": random_unreviewed_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topic": random_unreviewed_question.topic,
         }
         return jsonify(question_data), HTTP_200_OK
     else:
@@ -368,3 +366,21 @@ def add_answer(question_id):
     db.session.commit()
 
     return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
+
+
+@questions.route("/incorrect/<int:question_id>", methods=["PUT"])
+@jwt_required()
+def mark_question_as_reviewed(question_id):
+    user_id = get_jwt_identity()
+    question = Question.query.get(question_id)
+
+    if question:
+        question.reviewed = True
+        question.correct = False
+        question.reviewer_id = user_id
+
+        db.session.commit()
+
+        return jsonify({"message": "Question attributes updated"})
+    else:
+        return jsonify({"message": "Question not found"})
