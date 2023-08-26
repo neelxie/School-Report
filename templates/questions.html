@@ -193,6 +193,22 @@ content %}
             Admin Dashboard
           </a>
 
+          <button type="button" class="btn btn-primary" id="CSVButton">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-down-short"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
+              ></path>
+            </svg>
+            Download CSV
+          </button>
           <button type="button" class="btn btn-primary" id="downloadButton">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -207,7 +223,7 @@ content %}
                 d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"
               ></path>
             </svg>
-            Download
+            Download JSON
           </button>
         </div>
 
@@ -306,16 +322,34 @@ content %}
   });
 </script>
 <script>
+  function convertJsonToCsv(jsonData) {
+    const headers = Object.keys(jsonData[0]).join(",");
+    const rows = jsonData.map((obj) => Object.values(obj).join(","));
+    return headers + "\n" + rows.join("\n");
+  }
   document.addEventListener("DOMContentLoaded", function () {
     const downloadButton = document.getElementById("downloadButton");
+    const CSVButton = document.getElementById("CSVButton");
     const token = localStorage.getItem("token");
 
-    downloadButton.addEventListener("click", async function () {
-      
-      try {
-        const response = await fetch("/api/v1/questions/all", {headers: {Authorization: `Bearer ${token}`,}});
-        const jsonData = await response.json();
+    const apiUrl = "/api/v1/questions/all";
 
+    async function fetchData() {
+      try {
+        const response = await fetch(apiUrl, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return await response.json();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        return null;
+      }
+    }
+
+    downloadButton.addEventListener("click", async function () {
+      const jsonData = await fetchData();
+
+      if (jsonData !== null) {
         const blob = new Blob([JSON.stringify(jsonData)], {
           type: "application/json",
         });
@@ -323,12 +357,31 @@ content %}
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "data.json";
+        a.download = "questions.json";
         a.click();
 
         URL.revokeObjectURL(url);
-      } catch (error) {
-        console.error("Error downloading JSON:", error);
+      }
+    });
+
+    CSVButton.addEventListener("click", async function () {
+      const jsonData = await fetchData();
+
+      if (jsonData !== null) {
+        // Assuming you have a function to convert JSON to CSV
+        const csvData = convertJsonToCsv(jsonData);
+
+        const blob = new Blob([csvData], {
+          type: "text/csv",
+        });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "questions.csv";
+        a.click();
+
+        URL.revokeObjectURL(url);
       }
     });
   });

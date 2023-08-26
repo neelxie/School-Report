@@ -335,7 +335,9 @@ def random_question_for_review():
             "id": random_unreviewed_question.id,
             "sentence": random_unreviewed_question.sentence,
             "language": random_unreviewed_question.language,
-            "created_at": random_unreviewed_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "created_at": random_unreviewed_question.created_at.strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
             "topic": random_unreviewed_question.topic,
         }
         return jsonify(question_data), HTTP_200_OK
@@ -378,6 +380,41 @@ def mark_question_as_reviewed(question_id):
         question.reviewed = True
         question.correct = False
         question.reviewer_id = user_id
+
+        db.session.commit()
+
+        return jsonify({"message": "Question attributes updated"})
+    else:
+        return jsonify({"message": "Question not found"})
+
+
+@questions.route("/question_review/<int:question_id>", methods=["PUT"])
+@jwt_required()
+def question_review(question_id):
+    user_id = get_jwt_identity()
+    question = Question.query.get(question_id)
+
+    if question:
+        question.reviewed = True
+        question.correct = True  # Mark the question as correct
+        question.reviewer_id = user_id
+
+        rephrased_data = request.json.get(
+            "rephrased"
+        )  # Assuming rephrased data is sent in the request JSON
+        if rephrased_data:
+            question.rephrased = rephrased_data
+
+        new_topic = request.json.get(
+            "topic"
+        )  # Assuming new topic data is sent in the request JSON
+        if question.topic:
+            if new_topic:
+                new_topic += (
+                    ", " + question.topic
+                )  # Append new topic to the current topic
+        else:
+            question.topic = new_topic  # Set new topic if no current topic exists
 
         db.session.commit()
 

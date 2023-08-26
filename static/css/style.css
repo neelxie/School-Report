@@ -53,6 +53,10 @@ body {
   border-radius: 0.25rem !important;
 }
 
+#user-info {
+  margin-bottom: -0.7rem;
+}
+
 /*form styles*/
 #msform {
   text-align: center;
