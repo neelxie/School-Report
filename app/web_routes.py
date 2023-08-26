@@ -28,6 +28,11 @@ def index():
                 # return render_template('admin.html', token=access_token, role=user.role, user=user.username)
 
             elif user.role == 'expert':
+                flash('Access granted.')
+                session['token'] = access_token
+                session['role'] = user.role
+                session['username'] = user.username
+                # return redirect(url_for('web.expert_dashoard'))
                 return render_template('expertDash.html', token=access_token, role=user.role, user=user.username)
             else:
                 pass
