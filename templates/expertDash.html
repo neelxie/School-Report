@@ -184,197 +184,173 @@ block content %}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
-            <div class="main-card mb-3 card">
-              <div class="justify-content-center text-center">
-                <div
-                  class="card px-4 col-9 mx-auto mt-3 mb-3 border border-success"
+          <div class="col-md-12 main-card card mx-4">
+            <h1 class="text-center fs-4">Question Evaluation</h1>
+            <form id="signUpForm" class="col-9">
+              <!-- start step indicators -->
+              <div class="form-header d-flex mb-4 font-weight-bold h3">
+                <span class="stepIndicator font-weight-bold h5"
+                  >Agriculture</span
                 >
-                  <div class="row">
-                    <div class="col-md-12 mx-0">
-                      <form id="msform">
-                        <!-- progressbar -->
-                        <ul id="progressbar">
-                          <li class="active" id="account">
-                            <strong>Agriculture</strong>
-                          </li>
-                          <li id="personal">
-                            <strong>Clarity/Grammar</strong>
-                          </li>
-                          <li id="payment"><strong>Topic</strong></li>
-                        </ul>
-                        <!-- fieldsets -->
-                        <fieldset>
-                          <div
-                            class="card mb-3 ml-3 col-11 text-left text-warning font-weight-bold mx-4 my-4 p-2 border"
-                          >
-                            <span class="text-center text-dark"
-                              >Instructions:</span
-                            >
-                            <span>1. Read the Question.</span
-                            ><span
-                              >2. If the question is related to agriculture,
-                              click "Yes."</span
-                            ><span>
-                              3. If the question is not related to agriculture,
-                              click "No."</span
-                            >
-                          </div>
-                          <div class="form-card rounded">
-                            <div class="h4 text-dark font-weight-bold">
-                              <span class="text-success mr-3">Question:</span
-                              ><span id="oneQuestion"></span>
-                            </div>
-                          </div>
-                          <input
-                            type="button"
-                            name="previous"
-                            class="btn btn-warning mr-5 px-5"
-                            value="No"
-                            id="incorrectQuestion"
-                          />
-                          <input
-                            type="button"
-                            name="next"
-                            class="next action-button derek ml-5"
-                            value="Yes"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div
-                            class="card mb-3 ml-3 col-11 text-left font-weight-bold text-primary mx-4 my-4 border"
-                          >
-                            <span class="text-center text-dark"
-                              >Instructions:</span
-                            >
-                            <span>
-                              1. Determine if the question is clear and
-                              grammatically correct.</span
-                            ><span>
-                              2. If the question is clear and grammatically
-                              correct, click "Next."</span
-                            ><span
-                              >3. If the question needs improvement, rewrite it
-                              correctly it to improve clarity and grammar.
-                            </span>
-                            <span>4. Click Next.</span>
-                          </div>
-                          <div class="form-card rounded">
-                            <div class="h4 text-dark font-weight-bold">
-                              <span class="text-success mr-3">Question:</span
-                              ><span id="oneQuestion1"></span>
-                            </div>
-                            <input
-                              type="text"
-                              name="rephrased"
-                              class="form-control"
-                              placeholder="Rephrase the question here."
-                            />
-                          </div>
-                          <input
-                            type="button"
-                            name="previous"
-                            class="previous action-button-previous Prevv mr-5"
-                            value="Previous"
-                          />
-                          <input
-                            type="button"
-                            name="next"
-                            class="next action-button derek ml-5"
-                            value="Next Step"
-                          />
-                        </fieldset>
-                        <fieldset>
-                          <div
-                            class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
-                          >
-                            <span class="text-center text-primary"
-                              >Instructions:</span
-                            ><span>
-                              1. Determine if the topic accurately represents
-                              the question.</span
-                            ><span>
-                              2. If accurate, click the "Submit" button below.
-                            </span>
-                            <span>
-                              3. If inaccurate or not provided, select an
-                              accurate topic from the dropdown menu.
-                            </span>
-                            <span
-                              >4. After selecting the correct topic, click the
-                              "Submit" button.</span
-                            >
-                          </div>
-                          <div class="form-card">
-                            <div class="h4 text-dark pb-2">
-                              <span class="text-success mr-3 font-weight-bold"
-                                >Topic:</span
-                              ><strong id="questionTopic"></strong>
-                            </div>
-                            <div class="h4 text-dark font-weight-bold">
-                              <span class="text-success mr-3">Question:</span
-                              ><span id="oneQuestion2"></span>
-                            </div>
-                            <div class="form-group">
-                              <label for="dropdown">Choose a Topic</label>
-                              <select
-                                id="topic"
-                                name="topic"
-                                class="form-control"
-                                required
-                              >
-                                <option disabled selected value>Select</option>
-                                <option value="Irrigation">Irrigation</option>
-                                <option value="Pest Control">
-                                  Pest control
-                                </option>
-                                <option value="Crop Rotation">
-                                  Crop rotation
-                                </option>
-                                <option value="Fertilizers">Fertilizers</option>
-                                <option value="Livestock">Livestock</option>
-                                <option value="Aquaculture">Aquaculture</option>
-                                <option value="Soil Health">Soil health</option>
-                                <option value="Food Security">
-                                  Food security
-                                </option>
-                                <option value="Cultivation">Cultivation</option>
-                                <option value="Pesticides">Pesticides</option>
-                                <option value="Weeds">Weeds</option>
-                                <option value="Planting">Planting</option>
-                                <option value="Harvesting">Harvesting</option>
-                                <option value="Erosion">Erosion</option>
-                                <option value="Cropping">Cropping</option>
-                                <option value="Seeds">Seeds</option>
-                                <option value="Animals">Animals</option>
-                                <option value="Soil">Soil</option>
-                                <option value="Water">Water</option>
-                                <option value="Tools">Tools</option>
-                                <option value="Tractor">Tractor</option>
-                                <option value="Germination">Germination</option>
-                                <option value="Farming">Farming</option>
-                              </select>
-                            </div>
-                          </div>
-                          <input
-                            type="button"
-                            name="previous"
-                            class="previous action-button-previous Prevv mr-5"
-                            value="Previous"
-                          />
-                          <input
-                            type="button"
-                            name="submit"
-                            class="next action-button derek ml-5"
-                            value="Submit"
-                          />
-                        </fieldset>
-                      </form>
-                    </div>
+                <span class="stepIndicator font-weight-bold h5"
+                  >Clarity/Grammar</span
+                >
+                <span class="stepIndicator font-weight-bold h5">Topic</span>
+              </div>
+              <!-- end step indicators -->
+
+              <!-- step one -->
+              <div class="step">
+                <div
+                  class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
+                >
+                  <span class="text-center text-primary h3 font-weight-bold"
+                    >Instructions:</span
+                  >
+                  <span>1. Read the Question.</span
+                  ><span
+                    >2. If the question is related to agriculture, click
+                    "Next."</span
+                  ><span>
+                    3. If the question is not related to agriculture, click
+                    "No."</span
+                  >
+                </div>
+                <div class="mb-3">
+                  <div class="h4 text-dark font-weight-bold">
+                    <span class="text-primary mr-3">Question:</span
+                    ><span id="oneQuestion"></span>
                   </div>
                 </div>
               </div>
-            </div>
+
+              <!-- step two -->
+              <div class="step">
+                <div
+                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
+                >
+                  <span class="text-center text-primary h3 font-weight-bold"
+                    >Instructions:</span
+                  >
+                  <span>
+                    1. Determine if the question is clear and grammatically
+                    correct.</span
+                  ><span>
+                    2. If the question is clear and grammatically correct, click
+                    "Next."</span
+                  ><span
+                    >3. If the question needs improvement, rewrite it correctly
+                    it to improve clarity and grammar.
+                  </span>
+                  <span>4. Click Next.</span>
+                </div>
+                <div class="mb-3">
+                  <div class="h4 text-dark font-weight-bold">
+                    <span class="text-primary mr-3">Question:</span
+                    ><span id="oneQuestion1"></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    name="rephrased"
+                    id="rephrased"
+                    placeholder="Rephrase the question here."
+                    oninput="this.className = ''"
+                  />
+                </div>
+              </div>
+
+              <!-- step three -->
+              <div class="step">
+                <div
+                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
+                >
+                  <span class="text-center text-primary h3 font-weight-bold"
+                    >Instructions:</span
+                  ><span>
+                    1. Determine if the topic accurately represents the
+                    question.</span
+                  ><span>
+                    2. If accurate, click the "Submit" button below.
+                  </span>
+                  <span>
+                    3. If inaccurate or not provided, select an accurate topic
+                    from the dropdown menu.
+                  </span>
+                  <span
+                    >4. After selecting the correct topic, click the "Submit"
+                    button.</span
+                  >
+                </div>
+                <div class="h4 text-dark pb-2">
+                  <span class="text-primary mr-3 font-weight-bold">Topic:</span
+                  ><strong id="questionTopic"></strong>
+                </div>
+                <div class="h4 text-dark font-weight-bold mb-5">
+                  <span class="text-primary mr-3">Question:</span
+                  ><span id="oneQuestion2"></span>
+                </div>
+                <div class="mb-3">
+                  <label
+                    for="dropdown"
+                    class="h4 text-center w-100 font-weight-bold"
+                    >Choose a Topic</label
+                  >
+                  <select
+                    id="topic"
+                    name="topic"
+                    class="form-control h5"
+                    required
+                  >
+                    <option disabled selected value>Select</option>
+                    <option value="Irrigation">Irrigation</option>
+                    <option value="Pest Control">Pest control</option>
+                    <option value="Crop Rotation">Crop rotation</option>
+                    <option value="Fertilizers">Fertilizers</option>
+                    <option value="Livestock">Livestock</option>
+                    <option value="Aquaculture">Aquaculture</option>
+                    <option value="Soil Health">Soil health</option>
+                    <option value="Food Security">Food security</option>
+                    <option value="Cultivation">Cultivation</option>
+                    <option value="Pesticides">Pesticides</option>
+                    <option value="Weeds">Weeds</option>
+                    <option value="Planting">Planting</option>
+                    <option value="Harvesting">Harvesting</option>
+                    <option value="Erosion">Erosion</option>
+                    <option value="Cropping">Cropping</option>
+                    <option value="Seeds">Seeds</option>
+                    <option value="Animals">Animals</option>
+                    <option value="Soil">Soil</option>
+                    <option value="Water">Water</option>
+                    <option value="Tools">Tools</option>
+                    <option value="Tractor">Tractor</option>
+                    <option value="Germination">Germination</option>
+                    <option value="Farming">Farming</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- start previous / next buttons -->
+              <div class="form-footer d-flex">
+                <button
+                  type="button"
+                  id="prevBtn"
+                  onclick="nextPrev(-1)"
+                  class="bg-warning font-weight-bold text-white"
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  id="nextBtn"
+                  onclick="nextPrev(1)"
+                  class="font-weight-bold"
+                >
+                  Next
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -395,82 +371,6 @@ block content %}
   </div>
 </div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var current_fs, next_fs, previous_fs; // fieldsets
-    var opacity;
-
-    var nextButtons = document.querySelectorAll(".next");
-    var previousButtons = document.querySelectorAll(".previous");
-    var progressBarItems = document.querySelectorAll("#progressbar li");
-    var radioButtons = document.querySelectorAll(".radio-group .radio");
-    var submitButton = document.querySelector(".submit");
-
-    nextButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        current_fs = this.parentElement;
-        next_fs = this.parentElement.nextElementSibling;
-
-        progressBarItems[
-          Array.from(document.querySelectorAll("fieldset")).indexOf(next_fs)
-        ].classList.add("active");
-
-        next_fs.style.display = "block";
-        current_fs.style.opacity = 0;
-
-        var animationInterval = setInterval(function () {
-          opacity = parseFloat(current_fs.style.opacity);
-          if (opacity <= 0) {
-            clearInterval(animationInterval);
-            current_fs.style.display = "none";
-            next_fs.style.opacity = 1;
-          } else {
-            current_fs.style.opacity = (opacity - 0.05).toString();
-          }
-        }, 10);
-      });
-    });
-
-    previousButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        current_fs = this.parentElement;
-        previous_fs = this.parentElement.previousElementSibling;
-
-        progressBarItems[
-          Array.from(document.querySelectorAll("fieldset")).indexOf(current_fs)
-        ].classList.remove("active");
-
-        previous_fs.style.display = "block";
-        current_fs.style.opacity = 0;
-
-        var animationInterval = setInterval(function () {
-          opacity = parseFloat(current_fs.style.opacity);
-          if (opacity <= 0) {
-            clearInterval(animationInterval);
-            current_fs.style.display = "none";
-            previous_fs.style.opacity = 1;
-          } else {
-            current_fs.style.opacity = (opacity - 0.05).toString();
-          }
-        }, 10);
-      });
-    });
-
-    radioButtons.forEach(function (radio) {
-      radio.addEventListener("click", function () {
-        var radioGroup = this.parentElement;
-        radioGroup.querySelectorAll(".radio").forEach(function (radioItem) {
-          radioItem.classList.remove("selected");
-        });
-        this.classList.add("selected");
-      });
-    });
-
-    submitButton.addEventListener("click", function () {
-      return false;
-    });
-  });
-</script>
-<script>
   const token = "{{ token }}";
   const user = "{{ user }}";
   const role = "{{ role }}";
@@ -487,10 +387,11 @@ block content %}
   }
 
   const userElement = document.getElementById("user-info");
-    
+  var currentTab = 0;
+
   // Retrieve data from local storage
   const storedUser = localStorage.getItem("user");
-  
+
   if (storedUser) {
     userElement.textContent = storedUser;
   } else {
@@ -514,20 +415,117 @@ block content %}
     logoutButton.addEventListener("click", logout);
   }
 
-  function showFormWithQuestionId(questionId) {
-    // Display the form and set the question ID as a data attribute
-    var form = document.getElementById("msform");
-    form.style.display = "block";
-    form.setAttribute("data-question-id", questionId);
+  function fixStepIndicator(n) {
+    var i,
+      x = document.getElementsByClassName("stepIndicator");
+    for (i = 0; i < x.length; i++) {
+      x[i].className = x[i].className.replace(" active", "");
+    }
+    x[n].className += " active";
+  }
+  function showTab(n) {
+    var x = document.getElementsByClassName("step");
+    x[n].style.display = "block";
+
+    var prevBtn = document.getElementById("prevBtn");
+    if (n == 0) {
+      prevBtn.innerHTML = "No";
+      prevBtn.setAttribute("onclick", "nextPrev(-1, true)");
+    } else {
+      prevBtn.innerHTML = "Previous";
+      prevBtn.setAttribute("onclick", "nextPrev(-1, false)");
+    }
+
+    var nextBtn = document.getElementById("nextBtn");
+    if (n == x.length - 1) {
+      nextBtn.innerHTML = "Submit";
+    } else {
+      nextBtn.innerHTML = "Next";
+    }
+
+    fixStepIndicator(n);
+  }
+
+  function nextPrev(n) {
+    var x = document.getElementsByClassName("step");
+    if (n == 1 && !true) return false;
+    x[currentTab].style.display = "none";
+    currentTab = currentTab + n;
+    if (currentTab >= x.length) {
+      submitForm();
+      // document.getElementById("signUpForm").submit();
+
+      return false;
+    }
+    showTab(currentTab);
+  }
+
+  const mytoken = localStorage.getItem("token");
+
+  async function submitForm() {
+    event.preventDefault();
+    var form = document.getElementById("signUpForm");
+    var formData = new FormData(form);
+
+    let questionId2 = parseInt(form.getAttribute("data-question-id"));
+    let rephrased = document.getElementById("rephrased").value;
+    const topic = document.getElementById("topic").value;
+    let itemBody = {};
+
+    if (rephrased !== "" && topic !== "") {
+      itemBody = { rephrased: rephrased, topic: topic };
+    } else if (rephrased !== "") {
+      itemBody = { rephrased: rephrased };
+    } else if (topic !== "") {
+      itemBody = { topic: topic };
+    } else {
+      itemBody = {};
+    }
+
+    console.log(questionId2);
+
+    try {
+      const response = await fetch(
+        `/api/v1/questions/question_review/${questionId2}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${mytoken}`,
+          },
+          body: JSON.stringify(itemBody),
+        }
+      );
+
+      const responseData = await response.json();
+      if (response) {
+        window.location.reload();
+        // window.location.href = window.location.href;
+      } else {
+        errorMessage.textContent = responseData.error;
+      }
+    } catch (error) {
+      console.error("Error parsing response:", error);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token"); // Get the token from local storage
+    // Get the token from local storage
+    const token = localStorage.getItem("token");
+
+    function showFormWithQuestionId(questionId) {
+      // Display the form and set the question ID as a data attribute
+      var form = document.getElementById("signUpForm");
+      form.style.display = "block";
+      form.setAttribute("data-question-id", questionId);
+    }
+    // Current tab is set to be the first tab (0)
+    showTab(currentTab); // Display the current tab
 
     // Fetch top users data
     fetch("/api/v1/questions/random_question_review", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${mytoken}`,
       },
     })
       .then((response) => response.json())
@@ -544,13 +542,16 @@ block content %}
           : "No Topic";
         var questionId = randomQuestion.id;
         // console.log(questionId);
-        const incorrectQuestion = document.getElementById("incorrectQuestion");
+        showFormWithQuestionId(questionId);
+        const incorrectQuestion = document.getElementById("prevBtn");
         if (incorrectQuestion) {
           incorrectQuestion.addEventListener("click", async function (event) {
             event.preventDefault();
-            let questionId1 = parseInt(questionId); // Use the questionId obtained earlier
-            console.log(questionId1);
-            await updateQuestion(questionId1);
+            let questionId1 = parseInt(questionId);
+            // console.log(questionId1);
+            if (prevBtn.innerHTML === "No") {
+              await updateQuestion(questionId1);
+            }
           });
         }
       })
@@ -560,7 +561,7 @@ block content %}
       const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${mytoken}`,
         },
       })
         .then((response) => response.json())
@@ -573,55 +574,6 @@ block content %}
         })
         .catch((error) => console.error("Error parsing response:", error));
     }
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("msForm");
-    const errorMessage = document.getElementById("errorMessage");
-    const token = localStorage.getItem("token");
-
-    msForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-      let questionId = parseInt(form.getAttribute("data-question-id")); // Get question ID from form data attribute
-
-      let rephrased = document.getElementById("rephrased").value;
-      const topic = document.getElementById("topic").value;
-      let itemBody = {};
-
-      if (rephrased !== null && topic !== null) {
-        itemBody = { rephrased: rephrased, topic: topic };
-      } else if (rephrased !== null) {
-        itemBody = { rephrased: rephrased };
-      } else if (topic !== null) {
-        itemBody = { topic: topic };
-      } else {
-        itemBody = {};
-      }
-
-      //   const response = await fetch("/api/v1/questions/question_review", {
-      //     method: "POST",
-      //     headers: {
-      //       "content-type": "application/json",
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //     body: JSON.stringify(itemBody),
-      //   });
-
-      //   try {
-      //     const responseData = await response.json();
-      //     if (response.ok) {
-      //       window.location.reload();
-      //       window.location.href = window.location.href;
-      //     } else {
-      //       errorMessage.textContent = responseData.error;
-      //     }
-      //   } catch (error) {
-      //     console.error("Error parsing response:");
-      //   } finally {
-      //     window.location.reload();
-      //   }
-    });
   });
 </script>
 {% endblock %}
