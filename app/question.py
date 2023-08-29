@@ -451,15 +451,16 @@ def question_review(question_id):
         return jsonify({"message": "Question not found"})
 
 
-@questions.route('/random_unanswered_question', methods=['GET'])
+@questions.route("/random_unanswered_question", methods=["GET"])
 @jwt_required()
 def get_random_unanswered_question(user_id):
     user_id = get_jwt_identity()
 
     # Get a random unanswered question for the user
     random_question = (
-        Question.query
-        .outerjoin(Answer, (Answer.question_id == Question.id) & (Answer.user_id == user_id))
+        Question.query.outerjoin(
+            Answer, (Answer.question_id == Question.id) & (Answer.user_id == user_id)
+        )
         .filter(Answer.id == None)
         .order_by(func.random())
         .first()
@@ -475,3 +476,51 @@ def get_random_unanswered_question(user_id):
         return jsonify(question_data), 200
     else:
         return jsonify({"message": "No unanswered questions available"}), 404
+
+
+@questions.route("/luganda", methods=["GET"])
+@jwt_required()
+def get_luganda_questions():
+    luganda_questions = Question.query.filter(
+        func.lower(Question.language) == "luganda"
+    ).all()
+
+    if luganda_questions:
+        questions_data = []
+        for question in luganda_questions:
+            question_data = {
+                "id": question.id,
+                "sentence": question.sentence,
+                "language": question.language,
+                "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "topic": question.topic,
+            }
+            questions_data.append(question_data)
+
+        return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
+
+
+@questions.route("/english", methods=["GET"])
+@jwt_required()
+def get_english_questions():
+    english_questions = Question.query.filter(
+        func.lower(Question.language) == "english"
+    ).all()
+
+    if english_questions:
+        questions_data = []
+        for question in english_questions:
+            question_data = {
+                "id": question.id,
+                "sentence": question.sentence,
+                "language": question.language,
+                "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                "topic": question.topic,
+            }
+            questions_data.append(question_data)
+
+        return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND

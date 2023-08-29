@@ -325,7 +325,7 @@ def user_statistics():
         users_per_location.append({"location": location_name, "user_count": user_count})
 
     # Count the number of users per age group
-    age_groups = ["0-18", "19-30", "31-50", "51-65", "65+"]
+    age_groups = ["10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79"]
     users_per_age_group = []
     for age_group in age_groups:
         user_count = User.query.filter_by(age_group=age_group, role="farmer").count()
