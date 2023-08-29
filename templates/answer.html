@@ -203,22 +203,30 @@
             <div class="main-card mb-3 card pt-3 pb-5">
               <div class="card px-4 col-9 mx-auto my-3">
                 <form id="answerForm">
-                  <div class="h3 text-success py-2">
-                    Provide an answer to this question in the input field below,
-                    or you can choose to skip it.
+                  <div
+                    class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
+                  >
+                    <span class="text-center text-primary h3 font-weight-bold"
+                      >Instructions:</span
+                    >
+
+                    <span
+                      >Provide an answer to this question in the input field
+                      below, or you can choose to skip this question.</span
+                    >
                   </div>
                   <table>
                     <tbody>
                       <tr>
-                        <th class="text-success pr-3">Language:</th>
+                        <th class="text-primary pr-3">Language:</th>
                         <td id="questionLanguage" class="font-weight-bold"></td>
                       </tr>
                       <tr>
-                        <th class="text-success pr-3">Topic:</th>
+                        <th class="text-primary pr-3">Topic:</th>
                         <td id="questionTopic" class="font-weight-bold"></td>
                       </tr>
                       <tr>
-                        <th class="text-success pr-3">Question:</th>
+                        <th class="text-primary pr-3">Question:</th>
                         <td id="oneQuestion" class="font-weight-bold"></td>
                       </tr>
                     </tbody>
@@ -299,7 +307,7 @@
       const token = localStorage.getItem("token"); // Get the token from local storage
 
       // Fetch top users data
-      fetch("/api/v1/questions/random_question", {
+      fetch("/api/v1/questions/random_question_answer", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -307,7 +315,7 @@
         .then((response) => response.json())
         .then((randomQuestion) => {
           const oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = randomQuestion.sentence;
+          oneQuestion.textContent = randomQuestion.sentence?randomQuestion.sentence:"--No Questions.--";
           const questionLanguage = document.getElementById("questionLanguage");
           questionLanguage.textContent = randomQuestion.language;
           const questionTopic = document.getElementById("questionTopic");
@@ -335,7 +343,7 @@
       const itemBody = {
         answer: answer,
       };
-      console.log(answer)
+      console.log(answer);
       const response = await fetch(
         `/api/v1/questions/add_answer/${questionId}`,
         {

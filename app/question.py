@@ -345,6 +345,32 @@ def random_question_for_review():
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
 
+@questions.route("/random_question_answer", methods=["GET"])
+@jwt_required()
+def random_question_for_answer():
+    random_unreviewed_question = (
+        Question.query.filter_by(reviewed=True, correct=True)
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_unreviewed_question:
+        question_data = {
+            "id": random_unreviewed_question.id,
+            "sentence": random_unreviewed_question.rephrased
+            if random_unreviewed_question.rephrased
+            else random_unreviewed_question.sentence,
+            "language": random_unreviewed_question.language,
+            "created_at": random_unreviewed_question.created_at.strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+            "topic": random_unreviewed_question.topic,
+        }
+        return jsonify(question_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+
 @questions.post("/add_answer/<int:question_id>")
 @jwt_required()
 def add_answer(question_id):
@@ -357,17 +383,19 @@ def add_answer(question_id):
     if not question:
         return jsonify({"message": "Question not found."}), HTTP_404_NOT_FOUND
 
-    new_answer = Answer(
-        question_id=question_id,
-        user_id=user_id,
-        answer_text=answer_text,
-        source="expert",
-    )
+    if answer_text and len(answer_text) > 7:
+        new_answer = Answer(
+            question_id=question_id,
+            user_id=user_id,
+            answer_text=answer_text,
+            source="expert",
+        )
 
-    db.session.add(new_answer)
-    db.session.commit()
+        db.session.add(new_answer)
+        db.session.commit()
 
-    return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
+        return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
+    return jsonify({"message": "Failed to add answer."})
 
 
 @questions.route("/incorrect/<int:question_id>", methods=["PUT"])
@@ -421,3 +449,29 @@ def question_review(question_id):
         return jsonify({"message": "Question attributes updated"})
     else:
         return jsonify({"message": "Question not found"})
+
+
+@questions.route('/random_unanswered_question', methods=['GET'])
+@jwt_required()
+def get_random_unanswered_question(user_id):
+    user_id = get_jwt_identity()
+
+    # Get a random unanswered question for the user
+    random_question = (
+        Question.query
+        .outerjoin(Answer, (Answer.question_id == Question.id) & (Answer.user_id == user_id))
+        .filter(Answer.id == None)
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_question:
+        question_data = {
+            "id": random_question.id,
+            "sentence": random_question.sentence,
+            "language": random_question.language,
+            # answer part
+        }
+        return jsonify(question_data), 200
+    else:
+        return jsonify({"message": "No unanswered questions available"}), 404
