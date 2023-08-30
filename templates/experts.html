@@ -262,20 +262,14 @@ content %}
                         </select>
                       </div>
                       <div class="form-group">
-                        <label for="dropdown">Age Group</label>
-                        <select
-                          id="age"
-                          name="age"
+                        <label for="dropdown">Email</label>
+                        <input
+                          type="text"
                           class="form-control"
-                          required
-                        >
-                          <option disabled selected value>Select</option>
-                          <option value="0-18">0-18</option>
-                          <option value="19-30">19-30</option>
-                          <option value="31-50">31-50</option>
-                          <option value="50-65">50-65</option>
-                          <option value="65+">65+</option>
-                        </select>
+                          id="email"
+                          name="email"
+                          placeholder="Email"
+                        />
                       </div>
                     </div>
                   </div>
@@ -348,8 +342,8 @@ content %}
       const lastname = document.getElementById("lastname").value;
       const gender = document.getElementById("gender").value;
       const phone = document.getElementById("phone").value;
-      const age = document.getElementById("age").value;
-      const location = document.getElementById("location").value;
+      const organisation = document.getElementById("organisation").value;
+      const email = document.getElementById("email").value;
       const itemBody = {
         phone_number: phone,
         lastname: lastname,
@@ -420,16 +414,24 @@ content %}
                   <div class="widget-content p-0">
                     <div class="widget-content-wrapper">
                       <div class="widget-content-left flex2">
-                        <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                        <div class="widget-subheading opacity-7">${user.username}</div>
+                        <div class="widget-heading">${user.firstname} ${
+            user.lastname
+          }</div>
+                        <div class="widget-subheading opacity-7">${
+                          user.username
+                        }</div>
                       </div>
                     </div>
                   </div>
                 </td>
     
                 <td class="text-center">${user.phone_number}</td>
-                <td class="text-center">${user.organisation?user.organisation:'None'}</td>
-                <td class="text-center">${user.email?user.email:'None'}</td>`;
+                <td class="text-center">${
+                  user.organisation ? user.organisation : "None"
+                }</td>
+                <td class="text-center">${
+                  user.email ? user.email : "None"
+                }</td>`;
 
           tableBody.appendChild(tableRow);
         });
