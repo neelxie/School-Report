@@ -53,7 +53,6 @@ def index():
 
 @web_bp.route("/admin")
 def admin():
-    print(session)
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
