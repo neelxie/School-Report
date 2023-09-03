@@ -25,7 +25,10 @@ def handle_questions():
     def process_single_question(question_data, current_user):
         sentence = question_data.get("sentence", "")
         language = question_data.get("language", "")
-        topic = question_data.get("topic", "")
+        topic = question_data.get("topics", "")
+        category = question_data.get("category", "")
+        animal_crop = question_data.get("animal_crop", "")
+        location = question_data.get("location", "")
         today = datetime.date.today()
 
         if language not in ["English", "Luganda"]:
@@ -51,7 +54,13 @@ def handle_questions():
             )
         else:
             question = Question(
-                sentence=sentence, language=language, user_id=current_user, topic=topic
+                sentence=sentence,
+                language=language,
+                user_id=current_user,
+                topic=topic,
+                category=category,
+                animal_crop=animal_crop,
+                location=location,
             )
             db.session.add(question)
             db.session.flush()
@@ -72,6 +81,9 @@ def handle_questions():
                         "language": question.language,
                         "created_at": question.created_at,
                         "topics": question.topic,
+                        "category": question.category,
+                        "animal_crop": question.animal_crop,
+                        "location": question.location,
                     }
                 )
 
@@ -121,6 +133,9 @@ def handle_questions():
                         "language": question.language,
                         "created_at": question.created_at,
                         "topics": question.topic,
+                        "category": question.category,
+                        "animal_crop": question.animal_crop,
+                        "location": question.location,
                     }
                 )
 
@@ -144,6 +159,9 @@ def upload_json_file():
             sentence = obj["sentence"]
             language = obj["language"]
             topic = obj["topics"]
+            category = obj["category"]
+            animal_crop = obj["animal_crop"]
+            location = obj["location"]
 
             if Question.query.filter_by(sentence=sentence).first():
                 dup_count += 1
@@ -154,6 +172,9 @@ def upload_json_file():
                     language=language,
                     user_id=current_user,
                     topic=topic,
+                    category=category,
+                    animal_crop=animal_crop,
+                    location=location,
                 )
                 db.session.add(question)
                 db.session.commit()
@@ -189,6 +210,9 @@ def get_question(id):
                 "language": question.language,
                 "sentence": question.sentence,
                 "created_at": question.created_at,
+                "category": question.category,
+                "animal_crop": question.animal_crop,
+                "location": question.location,
             }
         ),
         HTTP_200_OK,
@@ -212,7 +236,10 @@ def get_questions():
                 "sentence": question.sentence,
                 "language": question.language,
                 "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                "topic": question.topic,
+                "topics": question.topic,
+                "category": question.category,
+                "animal_crop": question.animal_crop,
+                "location": question.location,
             }
         )
 
@@ -288,10 +315,13 @@ def list_questions():
         "questions": [
             {
                 "id": question.id,
-                "topic": question.topic,
+                "topics": question.topic,
                 "sentence": question.sentence,
                 "language": question.language,
                 "created_at": question.created_at,
+                "category": question.category,
+                "animal_crop": question.animal_crop,
+                "location": question.location,
             }
             for question in all_questions
         ],
@@ -316,7 +346,10 @@ def random_question_and_add_answer():
             "sentence": random_question.sentence,
             "language": random_question.language,
             "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-            "topic": random_question.topic,
+            "topics": random_question.topic,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
         }
         return jsonify(question_data), HTTP_200_OK
     else:
@@ -338,7 +371,10 @@ def random_question_for_review():
             "created_at": random_unreviewed_question.created_at.strftime(
                 "%Y-%m-%d %H:%M:%S"
             ),
-            "topic": random_unreviewed_question.topic,
+            "topics": random_unreviewed_question.topic,
+            "category": random_unreviewed_question.category,
+            "animal_crop": random_unreviewed_question.animal_crop,
+            "location": random_unreviewed_question.location,
         }
         return jsonify(question_data), HTTP_200_OK
     else:
@@ -365,6 +401,9 @@ def random_question_for_answer():
                 "%Y-%m-%d %H:%M:%S"
             ),
             "topic": random_unreviewed_question.topic,
+            "category": random_unreviewed_question.category,
+            "animal_crop": random_unreviewed_question.animal_crop,
+            "location": random_unreviewed_question.location,
         }
         return jsonify(question_data), HTTP_200_OK
     else:
@@ -471,6 +510,9 @@ def get_random_unanswered_question(user_id):
             "id": random_question.id,
             "sentence": random_question.sentence,
             "language": random_question.language,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
             # answer part
         }
         return jsonify(question_data), 200
@@ -493,7 +535,10 @@ def get_luganda_questions():
                 "sentence": question.sentence,
                 "language": question.language,
                 "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                "topic": question.topic,
+                "topics": question.topic,
+                "category": question.category,
+                "animal_crop": question.animal_crop,
+                "location": question.location,
             }
             questions_data.append(question_data)
 
@@ -517,7 +562,10 @@ def get_english_questions():
                 "sentence": question.sentence,
                 "language": question.language,
                 "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                "topic": question.topic,
+                "topics": question.topic,
+                "category": question.category,
+                "animal_crop": question.animal_crop,
+                "location": question.location,
             }
             questions_data.append(question_data)
 

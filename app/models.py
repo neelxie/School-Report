@@ -44,6 +44,9 @@ class Question(db.Model):
         db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
     )
     rephrased = db.Column(db.Text, nullable=True)
+    category = db.Column(db.Text, nullable=True)
+    animal_crop = db.Column(db.Text, nullable=True)
+    location = db.Column(db.String(80), nullable=True)
     reviewed = db.Column(db.Boolean, default=False)
     correct = db.Column(db.Boolean, default=False)
     answers = db.relationship("Answer", backref="question")
