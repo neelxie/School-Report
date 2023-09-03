@@ -256,7 +256,6 @@ block content %}
                     name="rephrased"
                     id="rephrased"
                     placeholder="Rephrase the question here."
-                    oninput="this.className = ''"
                   />
                 </div>
               </div>
@@ -290,6 +289,7 @@ block content %}
                 <div class="h4 text-dark font-weight-bold mb-5">
                   <span class="text-primary mr-3">Question:</span
                   ><span id="oneQuestion2"></span>
+                  <span id="displayValue"></span>
                 </div>
                 <div class="mb-3">
                   <label
@@ -461,6 +461,13 @@ block content %}
   }
 
   const mytoken = localStorage.getItem("token");
+  let rephrased = document.getElementById("rephrased");
+  let displayValue = document.getElementById("displayValue");
+  let questio = document.getElementById("oneQuestion2");
+  rephrased.addEventListener("input", function () {
+    displayValue.textContent = rephrased.value;
+    // questio.textContent = ''
+  });
 
   async function submitForm() {
     event.preventDefault();
@@ -468,8 +475,14 @@ block content %}
     var formData = new FormData(form);
 
     let questionId2 = parseInt(form.getAttribute("data-question-id"));
-    let rephrased = document.getElementById("rephrased").value;
+    const rephrased = document.getElementById("rephrased");
     const topic = document.getElementById("topic").value;
+    const displayValue = document.getElementById("displayValue");
+    // rephrased.addEventListener("input", function () {
+    //   // Update the display element with the input value
+    //   displayValue.textContent = rephrased.value;
+    //   console.log(displayValue);
+    // });
     let itemBody = {};
 
     if (rephrased !== "" && topic !== "") {
