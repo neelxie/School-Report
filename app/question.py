@@ -27,7 +27,7 @@ def handle_questions():
         language = question_data.get("language", "")
         topic = question_data.get("topics", "")
         category = question_data.get("category", "")
-        animal_crop = question_data.get("animal_crop", "")
+        animal_crop = question_data.get("crop_animal", "")
         location = question_data.get("location", "")
         today = datetime.date.today()
 
@@ -158,10 +158,10 @@ def upload_json_file():
         for obj in json_data:
             sentence = obj["sentence"]
             language = obj["language"]
-            topic = obj["topics"]
-            category = obj["category"]
-            animal_crop = obj["animal_crop"]
-            location = obj["location"]
+            topic = obj.get("topics")
+            category = obj.get("category")
+            animal_crop = obj.get("crop_animal")
+            location = obj.get("location")
 
             if Question.query.filter_by(sentence=sentence).first():
                 dup_count += 1
