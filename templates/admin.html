@@ -525,20 +525,15 @@ content %}
     })
       .then((response) => response.json())
       .then((statsData) => {
+        // console.log(statsData)
         const totalQuestions = document.getElementById("totalQuestions");
         totalQuestions.textContent = statsData.total_questions;
-
         // Display other statistics data
         const averageDailyQuestions = document.getElementById(
           "averageDailyQuestions"
         );
         averageDailyQuestions.textContent = statsData.average_daily_questions;
-
-        const averageWeeklyQuestions = document.getElementById(
-          "averageWeeklyQuestions"
-        );
-        averageWeeklyQuestions.textContent = statsData.average_weekly_questions;
-
+        
         const averageUserQuestions = document.getElementById(
           "averageUserQuestions"
         );
@@ -627,8 +622,6 @@ content %}
 
         const totalFemales = document.getElementById("totalFemales");
         totalFemales.textContent = userData.data.total_female_users;
-
-        console.log(userData.data.users_per_age_group);
         const totalLocations = document.getElementById("totalLocations");
         totalLocations.textContent = userData.data.total_locations;
       })
