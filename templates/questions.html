@@ -9,7 +9,15 @@ content %}
       <div class="" id=""></div>
       <div class="header__pane ml-auto"></div>
     </div>
-    <div class="app-header__mobile-menu"></div>
+    <div class="app-header__mobile-menu">
+      <button
+        type="button"
+        class="btn-shadow p-1 btn btn-primary btn-sm"
+        id="logoutButton"
+      >
+        Logout
+      </button>
+    </div>
     <div class="app-header__menu"></div>
     <div class="app-header__content">
       <div class="app-header-right">
@@ -309,7 +317,8 @@ content %}
                     </div>
                   </div>
                 </td>
-                <td class="text-center">${question.topic}</td>
+                <td class="text-center">${question.topics}</td>
+                
                 <td class="text-center">
                   <div class="font-weight-bold" >${question.language} </div>
                 </td>
