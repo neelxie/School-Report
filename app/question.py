@@ -572,3 +572,26 @@ def get_english_questions():
         return jsonify(questions_data), HTTP_200_OK
     else:
         return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
+
+@questions.route("/add_question_location", methods=["PUT"])
+@jwt_required()
+def update_question_locations():
+    
+    try:
+        users = User.query.filter(func.lower(User.role) == "farmer").all()
+
+        for user in users:
+            user_questions = Question.query.filter_by(user_id=user.id).all()
+
+            user_location = user.location
+
+            for question in user_questions:
+                question.location = user_location
+
+        db.session.commit()
+
+        return jsonify({'message': 'Question locations updated successfully'}), HTTP_200_OK
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'An error occurred while updating question locations'})
