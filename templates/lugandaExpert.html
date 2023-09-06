@@ -136,7 +136,6 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link active"
-                  style="font-size: 1.5rem"
                   href="{{ url_for('web.expert_dashboard') }}"
                   >Review Questions</a
                 >
@@ -144,7 +143,6 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link text-success"
-                  style="font-size: 1.5rem"
                   href="{{ url_for('web.answer_questions') }}"
                   >Answer Questions</a
                 >
@@ -152,7 +150,6 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link text-success"
-                  style="font-size: 1.5rem"
                   href="{{ url_for('web.rank_answers') }}"
                   >Rank Answers</a
                 >
@@ -161,15 +158,17 @@ block content %}
           </div>
         </div>
         <div class="row">
-          <div class="col-12 card">
+          <div class="col-sm-12 card">
             <h1 class="text-center fs-4">Question Evaluation</h1>
-            <form id="signUpForm" class="border border-dark">
+            <form id="signUpForm" class="col-9">
               <div class="form-header d-flex mb-4 font-weight-bold h3">
-                <span class="stepIndicator font-weight-bold">Agriculture</span>
-                <span class="stepIndicator font-weight-bold"
+                <span class="stepIndicator font-weight-bold h5"
+                  >Agriculture</span
+                >
+                <span class="stepIndicator font-weight-bold h5"
                   >Clarity/Grammar</span
                 >
-                <span class="stepIndicator font-weight-bold">Topic</span>
+                <span class="stepIndicator font-weight-bold h5">Topic</span>
               </div>
               <!-- end step indicators -->
 
@@ -178,23 +177,22 @@ block content %}
                 <div
                   class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
                 >
-                  <div class="text-center text-primary h2 font-weight-bold">
-                    Instructions:
-                  </div>
-                  <p class="h3">1. Read the Question.</p>
-                  <p class="h3">
-                    2. If the question is related to agriculture, click
-                    <strong>"Next."</strong>
-                  </p>
-                  <p class="h3">
+                  <span class="text-center text-primary h3 font-weight-bold"
+                    >Instructions:</span
+                  >
+                  <span>1. Read the Question.</span
+                  ><span
+                    >2. If the question is related to agriculture, click
+                    "Next."</span
+                  ><span>
                     3. If the question is not related to agriculture, click
-                    <strong>"No."</strong>
-                  </p>
+                    "No."</span
+                  >
                 </div>
                 <div class="mb-3">
                   <div class="h4 text-dark font-weight-bold">
                     <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion" class="h2 font-weight-bold"></span>
+                    ><span id="oneQuestion"></span>
                   </div>
                 </div>
               </div>
@@ -204,27 +202,25 @@ block content %}
                 <div
                   class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
                 >
-                  <p class="text-center text-primary h2 font-weight-bold">
-                    Instructions:
-                  </p>
-                  <p class="h3">
+                  <span class="text-center text-primary h3 font-weight-bold"
+                    >Instructions:</span
+                  >
+                  <span>
                     1. Determine if the question is clear and grammatically
-                    correct.
-                  </p>
-                  <p class="h3">
+                    correct.</span
+                  ><span>
                     2. If the question is clear and grammatically correct, click
-                    <strong>"Next."</strong>
-                  </p>
-                  <p class="h3">
-                    3. If the question needs improvement, rewrite it correctly
+                    "Next."</span
+                  ><span
+                    >3. If the question needs improvement, rewrite it correctly
                     it to improve clarity and grammar.
-                  </p>
-                  <p class="h3">4. Click <strong>Next.</strong></p>
+                  </span>
+                  <span>4. Click Next.</span>
                 </div>
                 <div class="mb-3">
                   <div class="h4 text-dark font-weight-bold">
                     <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion1" class="h2 font-weight-bold"></span>
+                    ><span id="oneQuestion1"></span>
                   </div>
                 </div>
                 <div class="mb-3">
@@ -232,7 +228,6 @@ block content %}
                     type="text"
                     name="rephrased"
                     id="rephrased"
-                    class="border border-dark h3"
                     placeholder="Rephrase the question here."
                   />
                 </div>
@@ -243,47 +238,31 @@ block content %}
                 <div
                   class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
                 >
-                  <p class="text-center text-primary h3 font-weight-bold">
-                    Instructions:
-                  </p>
-                  <p class="h3">
+                  <span class="text-center text-primary h3 font-weight-bold"
+                    >Instructions:</span
+                  ><span>
                     1. Determine if the topic accurately represents the
-                    question.
-                  </p>
-                  <p class="h3">
-                    2. If accurate, click the <strong>"Submit"</strong> button
-                    below.
-                  </p>
-                  <p class="h3">
+                    question.</span
+                  ><span>
+                    2. If accurate, click the "Submit" button below.
+                  </span>
+                  <span>
                     3. If inaccurate or not provided, select an accurate topic
                     from the dropdown menu.
-                  </p>
-                  <p class="h3">
-                    4. After selecting the correct topic, click the
-                    <strong>"Submit"</strong> button.
-                  </p>
+                  </span>
+                  <span
+                    >4. After selecting the correct topic, click the "Submit"
+                    button.</span
+                  >
                 </div>
                 <div class="h4 text-dark pb-2">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Topic:</span
-                  ><strong
-                    id="questionTopic"
-                    class="h2 font-weight-bold"
-                  ></strong>
-                </div>
-                <div class="h4 text-dark font-weight-bold mb-3">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Question:</span
-                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                  <span class="text-primary mr-3 font-weight-bold">Topic:</span
+                  ><strong id="questionTopic"></strong>
                 </div>
                 <div class="h4 text-dark font-weight-bold mb-5">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Category:</span
-                  ><span
-                    id="questionCategory"
-                    class="h2 font-weight-bold"
-                    style="text-transform: capitalize"
-                  ></span>
+                  <span class="text-primary mr-3">Question:</span
+                  ><span id="oneQuestion2"></span>
+                  <span id="displayValue"></span>
                 </div>
                 <div class="mb-3">
                   <label
@@ -294,7 +273,7 @@ block content %}
                   <select
                     id="topic"
                     name="topic"
-                    class="form-control h3 border border-dark"
+                    class="form-control h5"
                     required
                   >
                     <option disabled selected value>Select</option>
@@ -554,10 +533,6 @@ block content %}
         questionTopic.textContent = anyQuestion.topic
           ? anyQuestion.topic
           : "No Topic";
-        const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = anyQuestion.category
-          ? anyQuestion.category
-          : "No Category";
         var questionId = anyQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);

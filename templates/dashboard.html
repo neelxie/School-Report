@@ -131,232 +131,45 @@ block content %}
     <div class="app-main__outer">
       <div class="app-main__inner">
         <div class="row">
-          <div class="col-9 col-sm-12">
-            <ul class="nav nav-pills nav-fill">
-              <li class="nav-item">
+          <div
+            class="card mb-3 ml-3 col-11 text-left text-dark mx-2 my-4 p-3 shadow-none border border-primary"
+          >
+            <p class="text-center text-primary display-4">Instructions:</p>
+            <p class="h2 my-4">
+              1. Choose a language in which to conduct the evaluation.
+            </p>
+            <p class="h2 my-4">
+              2.To select the language, please click below.
+            </p>
+            <!-- <p class="h2">
+              3. To conduct the evaluation in either Luganda or English, choose
+              Any.
+            </p> -->
+            <div
+              class=" nav-pills nav-fill organize"
+              style="gap: 5%"
+            >
+              <div class="nav-item">
                 <a
                   class="nav-link active"
-                  style="font-size: 1.5rem"
                   href="{{ url_for('web.expert_dashboard') }}"
-                  >Review Questions</a
+                  >Any Language</a
                 >
-              </li>
-              <li class="nav-item">
+              </div>
+              <div class="nav-item">
                 <a
-                  class="nav-link text-success"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.answer_questions') }}"
-                  >Answer Questions</a
+                  class="nav-link active"
+                  href="{{ url_for('web.luganda_expert') }}"
+                  >Luganda</a
                 >
-              </li>
-              <li class="nav-item">
+              </div>
+              <div class="nav-item">
                 <a
-                  class="nav-link text-success"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.rank_answers') }}"
-                  >Rank Answers</a
+                  class="nav-link active"
+                  href="{{ url_for('web.english_expert') }}"
+                  >English</a
                 >
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 card">
-            <h1 class="text-center fs-4">Question Evaluation</h1>
-            <form id="signUpForm" class="border border-dark">
-              <div class="form-header d-flex mb-4 font-weight-bold h3">
-                <span class="stepIndicator font-weight-bold">Agriculture</span>
-                <span class="stepIndicator font-weight-bold"
-                  >Clarity/Grammar</span
-                >
-                <span class="stepIndicator font-weight-bold">Topic</span>
               </div>
-              <!-- end step indicators -->
-
-              <!-- step one -->
-              <div class="step">
-                <div
-                  class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
-                >
-                  <div class="text-center text-primary h2 font-weight-bold">
-                    Instructions:
-                  </div>
-                  <p class="h3">1. Read the Question.</p>
-                  <p class="h3">
-                    2. If the question is related to agriculture, click
-                    <strong>"Next."</strong>
-                  </p>
-                  <p class="h3">
-                    3. If the question is not related to agriculture, click
-                    <strong>"No."</strong>
-                  </p>
-                </div>
-                <div class="mb-3">
-                  <div class="h4 text-dark font-weight-bold">
-                    <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion" class="h2 font-weight-bold"></span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- step two -->
-              <div class="step">
-                <div
-                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
-                >
-                  <p class="text-center text-primary h2 font-weight-bold">
-                    Instructions:
-                  </p>
-                  <p class="h3">
-                    1. Determine if the question is clear and grammatically
-                    correct.
-                  </p>
-                  <p class="h3">
-                    2. If the question is clear and grammatically correct, click
-                    <strong>"Next."</strong>
-                  </p>
-                  <p class="h3">
-                    3. If the question needs improvement, rewrite it correctly
-                    it to improve clarity and grammar.
-                  </p>
-                  <p class="h3">4. Click <strong>Next.</strong></p>
-                </div>
-                <div class="mb-3">
-                  <div class="h4 text-dark font-weight-bold">
-                    <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion1" class="h2 font-weight-bold"></span>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <input
-                    type="text"
-                    name="rephrased"
-                    id="rephrased"
-                    class="border border-dark h3"
-                    placeholder="Rephrase the question here."
-                  />
-                </div>
-              </div>
-
-              <!-- step three -->
-              <div class="step">
-                <div
-                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
-                >
-                  <p class="text-center text-primary h3 font-weight-bold">
-                    Instructions:
-                  </p>
-                  <p class="h3">
-                    1. Determine if the topic accurately represents the
-                    question.
-                  </p>
-                  <p class="h3">
-                    2. If accurate, click the <strong>"Submit"</strong> button
-                    below.
-                  </p>
-                  <p class="h3">
-                    3. If inaccurate or not provided, select an accurate topic
-                    from the dropdown menu.
-                  </p>
-                  <p class="h3">
-                    4. After selecting the correct topic, click the
-                    <strong>"Submit"</strong> button.
-                  </p>
-                </div>
-                <div class="h4 text-dark pb-2">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Topic:</span
-                  ><strong
-                    id="questionTopic"
-                    class="h2 font-weight-bold"
-                  ></strong>
-                </div>
-                <div class="h4 text-dark font-weight-bold mb-3">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Question:</span
-                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
-                </div>
-                <div class="h4 text-dark font-weight-bold mb-5">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Category:</span
-                  ><span
-                    id="questionCategory"
-                    class="h2 font-weight-bold"
-                    style="text-transform: capitalize"
-                  ></span>
-                </div>
-                <div class="mb-3">
-                  <label
-                    for="dropdown"
-                    class="h4 text-center w-100 font-weight-bold"
-                    >Choose a Topic</label
-                  >
-                  <select
-                    id="topic"
-                    name="topic"
-                    class="form-control h3 border border-dark"
-                    required
-                  >
-                    <option disabled selected value>Select</option>
-                    <option value="Irrigation">Irrigation</option>
-                    <option value="Pest Control">Pest control</option>
-                    <option value="Crop Rotation">Crop rotation</option>
-                    <option value="Fertilizers">Fertilizers</option>
-                    <option value="Livestock">Livestock</option>
-                    <option value="Aquaculture">Aquaculture</option>
-                    <option value="Soil Health">Soil health</option>
-                    <option value="Food Security">Food security</option>
-                    <option value="Cultivation">Cultivation</option>
-                    <option value="Pesticides">Pesticides</option>
-                    <option value="Weeds">Weeds</option>
-                    <option value="Planting">Planting</option>
-                    <option value="Harvesting">Harvesting</option>
-                    <option value="Erosion">Erosion</option>
-                    <option value="Cropping">Cropping</option>
-                    <option value="Seeds">Seeds</option>
-                    <option value="Animals">Animals</option>
-                    <option value="Soil">Soil</option>
-                    <option value="Water">Water</option>
-                    <option value="Tools">Tools</option>
-                    <option value="Tractor">Tractor</option>
-                    <option value="Germination">Germination</option>
-                    <option value="Farming">Farming</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- start previous / next buttons -->
-              <div class="form-footer d-flex">
-                <button
-                  type="button"
-                  id="prevBtn"
-                  onclick="nextPrev(-1)"
-                  class="bg-warning font-weight-bold text-white"
-                >
-                  Previous
-                </button>
-                <button
-                  type="button"
-                  id="nextBtn"
-                  onclick="nextPrev(1)"
-                  class="font-weight-bold"
-                >
-                  Next
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="app-wrapper-footer">
-        <div class="app-footer">
-          <div class="app-footer__inner">
-            <div class="app-footer-left">
-              <ul class="nav">
-                <li class="nav-item">
-                  <a href="https://air.ug" class="nav-link"> air.ug </a>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -554,10 +367,6 @@ block content %}
         questionTopic.textContent = anyQuestion.topic
           ? anyQuestion.topic
           : "No Topic";
-        const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = anyQuestion.category
-          ? anyQuestion.category
-          : "No Category";
         var questionId = anyQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);

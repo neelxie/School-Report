@@ -35,9 +35,9 @@ def index():
                 session["token"] = access_token
                 session["role"] = user.role
                 session["username"] = user.username
-                # return redirect(url_for('web.expert_dashoard'))
+                # return redirect(url_for('web.expert_dashboard'))
                 return render_template(
-                    "expertDash.html",
+                    "dashboard.html",
                     token=access_token,
                     role=user.role,
                     user=user.username,
@@ -86,12 +86,32 @@ def experts():
 
 
 @web_bp.route("/expert_dash")
-def expert_dashoard():
+def expert_dashboard():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
         "expertDash.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/english_expert")
+def english_expert():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "englishExpert.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/luganda_expert")
+def luganda_expert():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "lugandaExpert.html", token=access_token, role=role, user=username
     )
 
 
