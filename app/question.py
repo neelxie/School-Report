@@ -390,15 +390,14 @@ def random_question_for_review():
     english_random_unreviewed_question = (
         Question.query.filter(english_filter, reviewed_filter)
         .order_by(func.random())
-        .first()
+        .one_or_none()
     )
 
     luganda_random_unreviewed_question = (
         Question.query.filter(luganda_filter, reviewed_filter)
         .order_by(func.random())
-        .first()
+        .one_or_none()
     )
-
     random_unreviewed_question = (
         Question.query.filter(reviewed_filter).order_by(func.random()).first()
     )
@@ -409,10 +408,24 @@ def random_question_for_review():
         questions_data.append(
             format_question(english_random_unreviewed_question, "English")
         )
+    else:
+        questions_data.append(
+            {
+                "question_language": "English",
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections"
+            }
+        )
 
-    if luganda_random_unreviewed_question:
+    if luganda_random_unreviewed_question is not None:
         questions_data.append(
             format_question(luganda_random_unreviewed_question, "Luganda")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Luganda",
+                "sentence": "There are no more luganda questions, Please evaluate English questions",
+            }
         )
 
     if random_unreviewed_question:

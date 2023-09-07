@@ -398,40 +398,40 @@ block content %}
     const token = localStorage.getItem("token"); // Get the token from local storage
 
     // Fetch top users data
-    fetch("/api/v1/auth/farmers", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((topUsersData) => {
-        const tableBody = document.querySelector(".farmers tbody");
-        topUsersData.forEach((user, index) => {
-          const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                  <td class="text-center text-muted">${user.user_id}</td>
-                  <td>
-                    <div class="widget-content p-0">
-                      <div class="widget-content-wrapper">
-                        <div class="widget-content-left flex2">
-                          <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                          <div class="widget-subheading opacity-7">${user.username}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-      
-                  <td class="text-center">${user.phone_number}</td>
-                  <td class="text-center">${user.location}</td>
-                  <td class="text-center">${user.gender}</td>
-                  <td class="text-center">
-                    <div class="font-weight-bold" >${user.questions} </div>
-                  </td>`;
+    // fetch("/api/v1/auth/farmers", {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((topUsersData) => {
+    //     const tableBody = document.querySelector(".farmers tbody");
+    //     topUsersData.forEach((user, index) => {
+    //       const tableRow = document.createElement("tr");
+    //       tableRow.innerHTML = `
+    //               <td class="text-center text-muted">${user.user_id}</td>
+    //               <td>
+    //                 <div class="widget-content p-0">
+    //                   <div class="widget-content-wrapper">
+    //                     <div class="widget-content-left flex2">
+    //                       <div class="widget-heading">${user.firstname} ${user.lastname}</div>
+    //                       <div class="widget-subheading opacity-7">${user.username}</div>
+    //                     </div>
+    //                   </div>
+    //                 </div>
+    //               </td>
 
-          tableBody.appendChild(tableRow);
-        });
-      })
-      .catch((error) => console.error("Error fetching top users data:", error));
+    //               <td class="text-center">${user.phone_number}</td>
+    //               <td class="text-center">${user.location}</td>
+    //               <td class="text-center">${user.gender}</td>
+    //               <td class="text-center">
+    //                 <div class="font-weight-bold" >${user.questions} </div>
+    //               </td>`;
+
+    //       tableBody.appendChild(tableRow);
+    //     });
+    //   })
+    //   .catch((error) => console.error("Error fetching top users data:", error));
   });
 </script>
 {% endblock %}

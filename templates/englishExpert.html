@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Experts Dash Page{% endblock %} {%
+{% extends "base.html" %} {% block title %}Experts English Dash{% endblock %} {%
 block content %}
 
 <div
@@ -136,6 +136,7 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link active"
+                  style="font-size: 1.5rem"
                   href="{{ url_for('web.expert_dashboard') }}"
                   >Review Questions</a
                 >
@@ -143,6 +144,7 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link text-success"
+                  style="font-size: 1.5rem"
                   href="{{ url_for('web.answer_questions') }}"
                   >Answer Questions</a
                 >
@@ -150,6 +152,7 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link text-success"
+                  style="font-size: 1.5rem"
                   href="{{ url_for('web.rank_answers') }}"
                   >Rank Answers</a
                 >
@@ -158,17 +161,15 @@ block content %}
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 card">
+          <div class="col-12 card">
             <h1 class="text-center fs-4">Question Evaluation</h1>
-            <form id="signUpForm" class="col-9">
+            <form id="signUpForm" class="border border-dark">
               <div class="form-header d-flex mb-4 font-weight-bold h3">
-                <span class="stepIndicator font-weight-bold h5"
-                  >Agriculture</span
-                >
-                <span class="stepIndicator font-weight-bold h5"
+                <span class="stepIndicator font-weight-bold">Agriculture</span>
+                <span class="stepIndicator font-weight-bold"
                   >Clarity/Grammar</span
                 >
-                <span class="stepIndicator font-weight-bold h5">Topic</span>
+                <span class="stepIndicator font-weight-bold">Topic</span>
               </div>
               <!-- end step indicators -->
 
@@ -177,22 +178,23 @@ block content %}
                 <div
                   class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
                 >
-                  <span class="text-center text-primary h3 font-weight-bold"
-                    >Instructions:</span
-                  >
-                  <span>1. Read the Question.</span
-                  ><span
-                    >2. If the question is related to agriculture, click
-                    "Next."</span
-                  ><span>
+                  <div class="text-center text-primary h2 font-weight-bold">
+                    Instructions:
+                  </div>
+                  <p class="h3">1. Read the Question.</p>
+                  <p class="h3">
+                    2. If the question is related to agriculture, click
+                    <strong>"Next."</strong>
+                  </p>
+                  <p class="h3">
                     3. If the question is not related to agriculture, click
-                    "No."</span
-                  >
+                    <strong>"No."</strong>
+                  </p>
                 </div>
                 <div class="mb-3">
                   <div class="h4 text-dark font-weight-bold">
                     <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion"></span>
+                    ><span id="oneQuestion" class="h2 font-weight-bold"></span>
                   </div>
                 </div>
               </div>
@@ -202,25 +204,27 @@ block content %}
                 <div
                   class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
                 >
-                  <span class="text-center text-primary h3 font-weight-bold"
-                    >Instructions:</span
-                  >
-                  <span>
+                  <p class="text-center text-primary h2 font-weight-bold">
+                    Instructions:
+                  </p>
+                  <p class="h3">
                     1. Determine if the question is clear and grammatically
-                    correct.</span
-                  ><span>
+                    correct.
+                  </p>
+                  <p class="h3">
                     2. If the question is clear and grammatically correct, click
-                    "Next."</span
-                  ><span
-                    >3. If the question needs improvement, rewrite it correctly
+                    <strong>"Next."</strong>
+                  </p>
+                  <p class="h3">
+                    3. If the question needs improvement, rewrite it correctly
                     it to improve clarity and grammar.
-                  </span>
-                  <span>4. Click Next.</span>
+                  </p>
+                  <p class="h3">4. Click <strong>Next.</strong></p>
                 </div>
                 <div class="mb-3">
                   <div class="h4 text-dark font-weight-bold">
                     <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion1"></span>
+                    ><span id="oneQuestion1" class="h2 font-weight-bold"></span>
                   </div>
                 </div>
                 <div class="mb-3">
@@ -228,6 +232,7 @@ block content %}
                     type="text"
                     name="rephrased"
                     id="rephrased"
+                    class="border border-dark h3"
                     placeholder="Rephrase the question here."
                   />
                 </div>
@@ -238,31 +243,47 @@ block content %}
                 <div
                   class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
                 >
-                  <span class="text-center text-primary h3 font-weight-bold"
-                    >Instructions:</span
-                  ><span>
+                  <p class="text-center text-primary h3 font-weight-bold">
+                    Instructions:
+                  </p>
+                  <p class="h3">
                     1. Determine if the topic accurately represents the
-                    question.</span
-                  ><span>
-                    2. If accurate, click the "Submit" button below.
-                  </span>
-                  <span>
+                    question.
+                  </p>
+                  <p class="h3">
+                    2. If accurate, click the <strong>"Submit"</strong> button
+                    below.
+                  </p>
+                  <p class="h3">
                     3. If inaccurate or not provided, select an accurate topic
                     from the dropdown menu.
-                  </span>
-                  <span
-                    >4. After selecting the correct topic, click the "Submit"
-                    button.</span
-                  >
+                  </p>
+                  <p class="h3">
+                    4. After selecting the correct topic, click the
+                    <strong>"Submit"</strong> button.
+                  </p>
                 </div>
                 <div class="h4 text-dark pb-2">
-                  <span class="text-primary mr-3 font-weight-bold">Topic:</span
-                  ><strong id="questionTopic"></strong>
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Topic:</span
+                  ><strong
+                    id="questionTopic"
+                    class="h2 font-weight-bold"
+                  ></strong>
+                </div>
+                <div class="h4 text-dark font-weight-bold mb-3">
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Question:</span
+                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
                 </div>
                 <div class="h4 text-dark font-weight-bold mb-5">
-                  <span class="text-primary mr-3">Question:</span
-                  ><span id="oneQuestion2"></span>
-                  <span id="displayValue"></span>
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Category:</span
+                  ><span
+                    id="questionCategory"
+                    class="h2 font-weight-bold"
+                    style="text-transform: capitalize"
+                  ></span>
                 </div>
                 <div class="mb-3">
                   <label
@@ -273,7 +294,7 @@ block content %}
                   <select
                     id="topic"
                     name="topic"
-                    class="form-control h5"
+                    class="form-control h3 border border-dark"
                     required
                   >
                     <option disabled selected value>Select</option>
@@ -524,16 +545,20 @@ block content %}
           (question) => question.question_language === "Luganda"
         );
         const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = anyQuestion.sentence;
+        oneQuestion.textContent = englishQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = anyQuestion.sentence;
+        oneQuestion1.textContent = englishQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = anyQuestion.sentence;
+        oneQuestion2.textContent = englishQuestion.sentence;
         const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = anyQuestion.topic
-          ? anyQuestion.topic
+        questionTopic.textContent = englishQuestion.topic
+          ? englishQuestion.topic
           : "No Topic";
-        var questionId = anyQuestion.id;
+        const questionCategory = document.getElementById("questionCategory");
+        questionCategory.textContent = englishQuestion.category
+          ? englishQuestion.category
+          : "No Category";
+        var questionId = englishQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
