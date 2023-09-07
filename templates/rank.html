@@ -17,7 +17,7 @@ block content %}
           <div class="widget-content p-0">
             <div class="widget-content-wrapper">
               <div class="widget-content-left ml-3 header-user-info">
-                <div class="widget-heading">
+                <div class="widget-heading" id="user-info">
                   {% if session.username %} {{ session.username }} {% else %}
                   <script>
                     var usernameFromLocalStorage =
@@ -172,18 +172,20 @@ block content %}
     <div class="app-main__outer">
       <div class="app-main__inner">
         <div class="row">
-          <div class="col-md-9">
+          <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
               <li class="nav-item">
                 <a
                   class="nav-link text-success"
-                  href="{{ url_for('web.expert_dashoard') }}"
+                  style="font-size: 1.5rem"
+                  href="{{ url_for('web.expert_dashboard') }}"
                   >Review Questions</a
                 >
               </li>
               <li class="nav-item">
                 <a
                   class="nav-link text-success"
+                  style="font-size: 1.5rem"
                   href="{{ url_for('web.answer_questions') }}"
                   >Answer Questions</a
                 >
@@ -191,6 +193,7 @@ block content %}
               <li class="nav-item">
                 <a
                   class="nav-link active"
+                  style="font-size: 1.5rem"
                   href="{{ url_for('web.rank_answers') }}"
                   >Rank Answers</a
                 >
@@ -199,52 +202,76 @@ block content %}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-12">
             <div class="main-card mb-3 card">
               <div class="justify-content-center">
                 <form id="rank-form" class="py-5 px-5">
                   <fieldset>
-                    <div class="h3 text-success mt-1">
+                    <div
+                      class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
+                    >
+                      <div class="text-center text-primary h2 font-weight-bold">
+                        Instructions:
+                      </div>
+                      <p class="h3">
+                        1. Select the option that most accurately reflects your
+                        level of agreement with the provided answers by rating
+                        them on a scale of 1 to 5:
+                      </p>
+                      <p class="h3 font-weight-bold">1 = Strongly Disagree</p>
+                      <p class="h3 font-weight-bold">2 = Disagree</p>
+                      <p class="h3 font-weight-bold">3 = Neutral</p>
+                      <p class="h3 font-weight-bold">4 = Agree</p>
+                      <p class="h3 font-weight-bold">5 = Strongly Agree</p>
+                      <p class="h3">
+                        2. You can assign the same value to multiple answers.
+                      </p>
+                    </div>
+                    <!-- <div class="h3 text-success mt-1">
                       Please assign a ranking to these answers, with 1
                       indicating the best answer.
-                    </div>
+                    </div> -->
                     <ul class="list-group">
-                      <li class="list-group-item bg-success text-center">
+                      <li class="list-group-item bg-success text-center h2">
                         <strong>What causes Cassava Mosaic?</strong>
                       </li>
                       <li
-                        class="list-group-item d-flex justify-content-around align-items-baseline"
+                        class="list-group-item d-flex justify-content-around align-items-baseline h3"
                       >
                         Black flies cause cassava mosaic
                         <input
                           type="number"
-                          class="rank-input form-control"
+                          class="rank-input form-control border border-dark"
                           style="width: 5rem"
                         />
                       </li>
                       <li
-                        class="list-group-item d-flex justify-content-around align-items-baseline"
+                        class="list-group-item d-flex justify-content-around align-items-baseline h3"
                       >
                         Rotting of cassava roots cause Cassava mosaic
                         <input
                           type="number"
-                          class="rank-input form-control"
+                          class="rank-input form-control border border-dark"
                           style="width: 5rem"
                         />
                       </li>
-                      <li class="list-group-item d-flex justify-content-around">
+                      <li
+                        class="list-group-item d-flex justify-content-around h3"
+                      >
                         Intercropping with legumes causes cassava mosaic
                         <input
                           type="number"
-                          class="rank-input form-control"
+                          class="rank-input form-control border border-dark"
                           style="width: 5rem"
                         />
                       </li>
-                      <li class="list-group-item d-flex justify-content-around">
+                      <li
+                        class="list-group-item d-flex justify-content-around h3"
+                      >
                         Termites and rodents cause cassava mosaic
                         <input
                           type="number"
-                          class="rank-input form-control"
+                          class="rank-input form-control border border-dark"
                           style="width: 5rem"
                         />
                       </li>
@@ -371,40 +398,40 @@ block content %}
     const token = localStorage.getItem("token"); // Get the token from local storage
 
     // Fetch top users data
-    fetch("/api/v1/auth/farmers", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((topUsersData) => {
-        const tableBody = document.querySelector(".farmers tbody");
-        topUsersData.forEach((user, index) => {
-          const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                  <td class="text-center text-muted">${user.user_id}</td>
-                  <td>
-                    <div class="widget-content p-0">
-                      <div class="widget-content-wrapper">
-                        <div class="widget-content-left flex2">
-                          <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                          <div class="widget-subheading opacity-7">${user.username}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-      
-                  <td class="text-center">${user.phone_number}</td>
-                  <td class="text-center">${user.location}</td>
-                  <td class="text-center">${user.gender}</td>
-                  <td class="text-center">
-                    <div class="font-weight-bold" >${user.questions} </div>
-                  </td>`;
+    // fetch("/api/v1/auth/farmers", {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((topUsersData) => {
+    //     const tableBody = document.querySelector(".farmers tbody");
+    //     topUsersData.forEach((user, index) => {
+    //       const tableRow = document.createElement("tr");
+    //       tableRow.innerHTML = `
+    //               <td class="text-center text-muted">${user.user_id}</td>
+    //               <td>
+    //                 <div class="widget-content p-0">
+    //                   <div class="widget-content-wrapper">
+    //                     <div class="widget-content-left flex2">
+    //                       <div class="widget-heading">${user.firstname} ${user.lastname}</div>
+    //                       <div class="widget-subheading opacity-7">${user.username}</div>
+    //                     </div>
+    //                   </div>
+    //                 </div>
+    //               </td>
 
-          tableBody.appendChild(tableRow);
-        });
-      })
-      .catch((error) => console.error("Error fetching top users data:", error));
+    //               <td class="text-center">${user.phone_number}</td>
+    //               <td class="text-center">${user.location}</td>
+    //               <td class="text-center">${user.gender}</td>
+    //               <td class="text-center">
+    //                 <div class="font-weight-bold" >${user.questions} </div>
+    //               </td>`;
+
+    //       tableBody.appendChild(tableRow);
+    //     });
+    //   })
+    //   .catch((error) => console.error("Error fetching top users data:", error));
   });
 </script>
 {% endblock %}

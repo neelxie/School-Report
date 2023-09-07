@@ -19,6 +19,20 @@ from app.helper import admin_required
 questions = Blueprint("questions", __name__, url_prefix="/api/v1/questions")
 
 
+def format_question(question, language):
+    return {
+        "id": question.id,
+        "sentence": question.sentence,
+        "language": question.language,
+        "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        "topics": question.topic,
+        "category": question.category,
+        "animal_crop": question.animal_crop,
+        "location": question.location,
+        "question_language": language,
+    }
+
+
 @questions.route("/", methods=["POST", "GET"])
 @jwt_required()
 def handle_questions():
@@ -299,11 +313,19 @@ def list_questions():
         Question.query.filter(Question.created_at >= one_week_ago).count() or 1
     )
 
-    #     # # Calculate average questions per user
+    #  Calculate average questions per user
     total_users = User.query.count()
     average_questions_per_user = total_questions / (total_users or 1)
 
-    #     # Prepare the response data
+    plant_question_count = Question.query.filter(
+        func.lower(Question.category) == "plant"
+    ).count()
+
+    animal_question_count = Question.query.filter(
+        func.lower(Question.category) == "animal"
+    ).count()
+
+    # Prepare the response data
     response_data = {
         "total_questions": total_questions,
         "questions_per_language": [
@@ -312,6 +334,8 @@ def list_questions():
         "average_daily_questions": round(average_daily_questions, 2),
         "average_weekly_questions": round(average_weekly_questions, 2),
         "average_questions_per_user": round(average_questions_per_user, 2),
+        "plant_category": plant_question_count,
+        "animal_category": animal_question_count,
         "questions": [
             {
                 "id": question.id,
@@ -359,24 +383,58 @@ def random_question_and_add_answer():
 @questions.route("/random_question_review", methods=["GET"])
 @jwt_required()
 def random_question_for_review():
-    random_unreviewed_question = (
-        Question.query.filter_by(reviewed=False).order_by(func.random()).first()
+    english_filter = func.lower(Question.language) == "english"
+    luganda_filter = func.lower(Question.language) == "luganda"
+    reviewed_filter = Question.reviewed == False
+
+    english_random_unreviewed_question = (
+        Question.query.filter(english_filter, reviewed_filter)
+        .order_by(func.random())
+        .one_or_none()
     )
 
+    luganda_random_unreviewed_question = (
+        Question.query.filter(luganda_filter, reviewed_filter)
+        .order_by(func.random())
+        .one_or_none()
+    )
+    random_unreviewed_question = (
+        Question.query.filter(reviewed_filter).order_by(func.random()).first()
+    )
+
+    questions_data = []
+
+    if english_random_unreviewed_question:
+        questions_data.append(
+            format_question(english_random_unreviewed_question, "English")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "English",
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections"
+            }
+        )
+
+    if luganda_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(luganda_random_unreviewed_question, "Luganda")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Luganda",
+                "sentence": "There are no more luganda questions, Please evaluate English questions",
+            }
+        )
+
     if random_unreviewed_question:
-        question_data = {
-            "id": random_unreviewed_question.id,
-            "sentence": random_unreviewed_question.sentence,
-            "language": random_unreviewed_question.language,
-            "created_at": random_unreviewed_question.created_at.strftime(
-                "%Y-%m-%d %H:%M:%S"
-            ),
-            "topics": random_unreviewed_question.topic,
-            "category": random_unreviewed_question.category,
-            "animal_crop": random_unreviewed_question.animal_crop,
-            "location": random_unreviewed_question.location,
-        }
-        return jsonify(question_data), HTTP_200_OK
+        questions_data.append(
+            format_question(random_unreviewed_question, "Any Language")
+        )
+
+    if questions_data:
+        return jsonify(questions_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
@@ -573,10 +631,11 @@ def get_english_questions():
     else:
         return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
 
+
+# DO NOT USE
 @questions.route("/add_question_location", methods=["PUT"])
 @jwt_required()
 def update_question_locations():
-    
     try:
         users = User.query.filter(func.lower(User.role) == "farmer").all()
 
@@ -590,8 +649,11 @@ def update_question_locations():
 
         db.session.commit()
 
-        return jsonify({'message': 'Question locations updated successfully'}), HTTP_200_OK
+        return (
+            jsonify({"message": "Question locations updated successfully"}),
+            HTTP_200_OK,
+        )
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'An error occurred while updating question locations'})
+        return jsonify({"error": "An error occurred while updating question locations"})

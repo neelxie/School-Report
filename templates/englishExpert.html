@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Experts Review Question Page{% endblock %} {%
+{% extends "base.html" %} {% block title %}Experts English Dash{% endblock %} {%
 block content %}
 
 <div
@@ -545,20 +545,20 @@ block content %}
           (question) => question.question_language === "Luganda"
         );
         const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = anyQuestion.sentence;
+        oneQuestion.textContent = englishQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = anyQuestion.sentence;
+        oneQuestion1.textContent = englishQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = anyQuestion.sentence;
+        oneQuestion2.textContent = englishQuestion.sentence;
         const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = anyQuestion.topic
-          ? anyQuestion.topic
+        questionTopic.textContent = englishQuestion.topic
+          ? englishQuestion.topic
           : "No Topic";
         const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = anyQuestion.category
-          ? anyQuestion.category
+        questionCategory.textContent = englishQuestion.category
+          ? englishQuestion.category
           : "No Category";
-        var questionId = anyQuestion.id;
+        var questionId = englishQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
