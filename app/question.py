@@ -10,6 +10,7 @@ from app.status import (
 )
 from flask import Blueprint, request
 from flask.json import jsonify
+import pandas as pd
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.models import Question, db, User, Answer
 import datetime
@@ -318,7 +319,7 @@ def list_questions():
     average_questions_per_user = total_questions / (total_users or 1)
 
     plant_question_count = Question.query.filter(
-        func.lower(Question.category) == "plant"
+        func.lower(Question.category) == "crop"
     ).count()
 
     animal_question_count = Question.query.filter(
@@ -412,7 +413,7 @@ def random_question_for_review():
         questions_data.append(
             {
                 "question_language": "English",
-                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections"
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections",
             }
         )
 
@@ -657,3 +658,66 @@ def update_question_locations():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "An error occurred while updating question locations"})
+
+
+@questions.route("/dataset_upload/", methods=["POST"])
+@jwt_required()
+def upload_excel_file():
+    if request.method == "POST":
+        file_excel = request.files.get("file")
+
+        if file_excel and file_excel.filename.endswith(".xlsx"):
+            try:
+                # Read the Excel file using pandas
+                df = pd.read_excel(file_excel)
+
+                current_user = get_jwt_identity()
+                dup_count = 0
+                duplicates = []
+
+                for _, row in df.iterrows():
+                    sentence = row.get("sentence")
+                    language = row.get("language")
+                    topic = row.get("topics", None)
+                    category = row.get("category", None)
+                    animal_crop = row.get("crop_animal", None)
+                    location = row.get("location", None)
+
+                    if Question.query.filter_by(sentence=sentence).first():
+                        dup_count += 1
+                        duplicates.append({"sentence": sentence})
+                    else:
+                        question = Question(
+                            sentence=sentence,
+                            language=language,
+                            user_id=current_user,
+                            topic=topic,
+                            category=category,
+                            animal_crop=animal_crop,
+                            location=location,
+                        )
+                        db.session.add(question)
+
+                db.session.commit()
+
+                num_questions = Question.query.filter_by(user_id=current_user).count()
+
+                return (
+                    jsonify(
+                        {
+                            "num_questions": num_questions,
+                            "duplicate_questions": dup_count,
+                            "duplicates": duplicates,
+                        }
+                    ),
+                    HTTP_200_OK,
+                )
+            except Exception as e:
+                return jsonify({"message": str(e)}), HTTP_400_BAD_REQUEST
+        else:
+            return (
+                jsonify(
+                    {"message": "Invalid file format. Please upload a .xlsx file."}
+                ),
+                HTTP_400_BAD_REQUEST,
+            )
