@@ -145,3 +145,11 @@ def english():
     role = session.get("role")
     username = session.get("username")
     return render_template("english.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/upload_dataset")
+def upload_dataset():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("dataset.html", token=access_token, role=role, user=username)
