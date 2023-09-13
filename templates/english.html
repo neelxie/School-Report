@@ -226,6 +226,7 @@ content %}
                       <th class="text-center">Category</th>
                       <th class="text-center">Sub Category</th>
                       <th class="text-center">Language</th>
+                      <th class="text-center">Date</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -283,7 +284,7 @@ content %}
         topUsersData.forEach((question, index) => {
           const tableRow = document.createElement("tr");
           tableRow.innerHTML = `
-          <td class="text-center text-muted">${question.id}</td>
+          <td class="text-center text-muted">${question.username}</td>
           <td>
             <div class="widget-content p-0">
               <div class="widget-content-wrapper">
@@ -299,7 +300,8 @@ content %}
           <td class="text-center">${question.animal_crop}</td>
           <td class="text-center">
             <div class="font-weight-bold" >${question.language} </div>
-          </td>`;
+          </td>
+          <td class="text-center">${question.date}</td>`;
 
           tableBody.appendChild(tableRow);
         });
