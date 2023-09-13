@@ -224,8 +224,9 @@ content %}
                       <th>Question</th>
                       <th class="text-center">Location</th>
                       <th class="text-center">Topic</th>
+                      <th class="text-center">Category</th>
+                      <th class="text-center">Sub Category</th>
                       <th class="text-center">Language</th>
-                      <th class="text-center">Date</th>
                     </tr>
                   </thead>
                   <tbody></tbody>
@@ -295,10 +296,11 @@ content %}
           </td>
           <td class="text-center">${question.location}</td>
           <td class="text-center">${question.topics}</td>
+          <td class="text-center">${question.category}</td>
+          <td class="text-center">${question.animal_crop}</td>
           <td class="text-center">
             <div class="font-weight-bold" >${question.language} </div>
-          </td>
-          <td class="text-center">${question.created_at}</td>`;
+          </td>`;
 
           tableBody.appendChild(tableRow);
         });
