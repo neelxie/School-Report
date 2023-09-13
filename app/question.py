@@ -245,6 +245,10 @@ def get_questions():
     returned_data = []
 
     for question in questions:
+        user = User.query.get(question.user_id)  # Get the user who asked the question
+        if user:
+            user_name = f"{user.firstname} {user.lastname}"
+
         returned_data.append(
             {
                 "id": question.id,
@@ -255,6 +259,7 @@ def get_questions():
                 "category": question.category,
                 "animal_crop": question.animal_crop,
                 "location": question.location,
+                "user_name": user_name,
             }
         )
 
