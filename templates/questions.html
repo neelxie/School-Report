@@ -306,6 +306,12 @@ content %}
     })
       .then((response) => response.json())
       .then((questionsData) => {
+        questionsData.forEach((question) => {
+          question.created_at = new Date(question.created_at);
+        });
+
+        questionsData.sort((a, b) => b.created_at - a.created_at);
+
         const tableBody = document.querySelector(".questions tbody");
         questionsData.forEach((question, index) => {
           const tableRow = document.createElement("tr");

@@ -280,6 +280,11 @@ content %}
     })
       .then((response) => response.json())
       .then((topUsersData) => {
+        topUsersData.forEach((question) => {
+          question.created_at = new Date(question.created_at);
+        });
+
+        topUsersData.sort((a, b) => b.created_at - a.created_at);
         const tableBody = document.querySelector(".english tbody");
         topUsersData.forEach((question, index) => {
           const tableRow = document.createElement("tr");
