@@ -520,7 +520,7 @@ block content %}
     // Fetch top users data
     fetch("/api/v1/questions/random_question_review", {
       headers: {
-        Authorization: `Bearer ${mytoken}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
@@ -563,13 +563,13 @@ block content %}
           });
         }
       })
-      .catch((error) => console.error("Error fetching question:"));
+      .catch((error) => console.error(error));
 
     function updateQuestion(questionId) {
       const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${mytoken}`,
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => response.json())

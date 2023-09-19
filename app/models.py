@@ -65,6 +65,10 @@ class Answer(db.Model):
     source = db.Column(db.String(100), nullable=False)
     rank = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.now())
+    fluency = db.Column(db.Integer, nullable=True, default=0)
+    relevance = db.Column(db.Integer, nullable=True, default=0)
+    coherence = db.Column(db.Integer, nullable=True, default=0)
+
 
     def __repr__(self) -> str:
         return f"Answer>>> {self.answer_text}"
