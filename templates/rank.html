@@ -18,13 +18,7 @@ block content %}
             <div class="widget-content-wrapper">
               <div class="widget-content-left ml-3 header-user-info">
                 <div class="widget-heading" id="user-info">
-                  {% if session.username %} {{ session.username }} {% else %}
-                  <script>
-                    var usernameFromLocalStorage =
-                      localStorage.getItem("username");
-                    document.write(usernameFromLocalStorage);
-                  </script>
-                  {% endif %}
+          
                 </div>
                 <div class="widget-subheading">
                   {% if session.role %} {{ session.role }} {% else %}
@@ -213,72 +207,158 @@ block content %}
                       <div class="text-center text-primary h2 font-weight-bold">
                         Instructions:
                       </div>
-                      <p class="h3">
-                        1. Select the option that most accurately reflects your
+                      <p class="h2 font-weight-bold">Answers will be ranked according to the following criteria:</p>
+                      <p class="h4"><u><strong>Coherence</strong> - means the quality of being logical and consistent in terms of a answer.</u>
+                          <p class="h4">A coherent answer should follow the topic, context, and structure of the input text or query. A coherent answer should also avoid repetition, contradiction, or irrelevant information.</p>
+                      </p>
+                      <p class="h4"><u><strong>Fluency</strong> - means the ability to use a language smoothly, accurately, and effortlessly in terms of an answer.</u>
+                        <p class="h4">A fluent answer should follow the grammatical, syntactic, and lexical rules of the language, and avoid errors, pauses, or repetitions that may hinder the communication. A fluent answer should also convey the intended meaning and tone of the question.</p>
+                      </p>
+                      <p class="h4"><u><strong>Relevance</strong> - means the quality of being closely connected or appropriate in terms of an answer.</u>
+                        <p class="h4">A relevant answer should match the question in terms of meaning, intention, and style. 
+                          A relevant answer should also satisfy the information need or goal of the farmer.
+                        </p>
+                      </p>
+                      <p class="h3 text-primary font-weight-bold">
+                        Select the option that most accurately reflects your
                         level of agreement with the provided answers by rating
                         them on a scale of 1 to 5:
                       </p>
-                      <p class="h3 font-weight-bold">1 = Strongly Disagree</p>
-                      <p class="h3 font-weight-bold">2 = Disagree</p>
-                      <p class="h3 font-weight-bold">3 = Neutral</p>
-                      <p class="h3 font-weight-bold">4 = Agree</p>
-                      <p class="h3 font-weight-bold">5 = Strongly Agree</p>
+                      <p class="h3">1 = Poor</p>
+                      <p class="h3">2 = Fair</p>
+                      <p class="h3">3 = Good</p>
+                      <p class="h3">4 = Very Good</p>
+                      <p class="h3">5 = Excellent</p>
                       <p class="h3">
-                        2. You can assign the same value to multiple answers.
+                        Note: You can assign the same value to multiple answers.
                       </p>
                     </div>
-                    <!-- <div class="h3 text-success mt-1">
-                      Please assign a ranking to these answers, with 1
-                      indicating the best answer.
-                    </div> -->
-                    <ul class="list-group">
-                      <li class="list-group-item bg-success text-center h2">
-                        <strong>What causes Cassava Mosaic?</strong>
-                      </li>
-                      <li
-                        class="list-group-item d-flex justify-content-around align-items-baseline h3"
-                      >
-                        Black flies cause cassava mosaic
-                        <input
-                          type="number"
-                          class="rank-input form-control border border-dark"
-                          style="width: 5rem"
-                        />
-                      </li>
-                      <li
-                        class="list-group-item d-flex justify-content-around align-items-baseline h3"
-                      >
-                        Rotting of cassava roots cause Cassava mosaic
-                        <input
-                          type="number"
-                          class="rank-input form-control border border-dark"
-                          style="width: 5rem"
-                        />
-                      </li>
-                      <li
-                        class="list-group-item d-flex justify-content-around h3"
-                      >
-                        Intercropping with legumes causes cassava mosaic
-                        <input
-                          type="number"
-                          class="rank-input form-control border border-dark"
-                          style="width: 5rem"
-                        />
-                      </li>
-                      <li
-                        class="list-group-item d-flex justify-content-around h3"
-                      >
-                        Termites and rodents cause cassava mosaic
-                        <input
-                          type="number"
-                          class="rank-input form-control border border-dark"
-                          style="width: 5rem"
-                        />
-                      </li>
-                    </ul>
-                    <!-- <button name="next" class="btn btn-primary mt-3">
+                    <div class="list-group-item bg-success text-center h2">
+                      <strong id="oneQuestion"></strong>
+                    </div>
+                    <div class="text-center h3">
+                      Category:&nbsp;<strong id="questionCategory" class="text-capitalize"></strong>
+                    </div>
+                    <table class="table">
+                      <thead>
+                        <tr class="h4">
+                          <th class="">
+                            Answer
+                          </th>
+                          <th class="text-center" >
+                            Coherence
+                          </th>
+                          <th class="text-center" >
+                            Fluency
+                          </th>
+                          <th class="text-center">
+                            Relevance
+                          </th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="h3">Black flies cause cassava mosaic</td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="h3">Rotting of cassava roots causes Cassava mosaic</td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="h3">Intercropping with legumes causes cassava mosaic</td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="h3">Termites and rodents cause cassava mosaic</td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                          <td class="text-center">
+                            <input
+                              type="number"
+                              class="rank-input form-control border border-dark mx-auto"
+                              style="width: 5rem"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    
+                    
+                    <button name="next" class="btn btn-primary mt-3">
                       Submit
-                    </button> -->
+                    </button>
                   </fieldset>
                 </form>
               </div>
@@ -302,82 +382,6 @@ block content %}
     </div>
   </div>
 </div>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var current_fs, next_fs, previous_fs; // fieldsets
-    var opacity;
-
-    var nextButtons = document.querySelectorAll(".next");
-    var previousButtons = document.querySelectorAll(".previous");
-    var progressBarItems = document.querySelectorAll("#progressbar li");
-    var radioButtons = document.querySelectorAll(".radio-group .radio");
-    var submitButton = document.querySelector(".submit");
-
-    nextButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        current_fs = this.parentElement;
-        next_fs = this.parentElement.nextElementSibling;
-
-        progressBarItems[
-          Array.from(document.querySelectorAll("fieldset")).indexOf(next_fs)
-        ].classList.add("active");
-
-        next_fs.style.display = "block";
-        current_fs.style.opacity = 0;
-
-        var animationInterval = setInterval(function () {
-          opacity = parseFloat(current_fs.style.opacity);
-          if (opacity <= 0) {
-            clearInterval(animationInterval);
-            current_fs.style.display = "none";
-            next_fs.style.opacity = 1;
-          } else {
-            current_fs.style.opacity = (opacity - 0.05).toString();
-          }
-        }, 10);
-      });
-    });
-
-    previousButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        current_fs = this.parentElement;
-        previous_fs = this.parentElement.previousElementSibling;
-
-        progressBarItems[
-          Array.from(document.querySelectorAll("fieldset")).indexOf(current_fs)
-        ].classList.remove("active");
-
-        previous_fs.style.display = "block";
-        current_fs.style.opacity = 0;
-
-        var animationInterval = setInterval(function () {
-          opacity = parseFloat(current_fs.style.opacity);
-          if (opacity <= 0) {
-            clearInterval(animationInterval);
-            current_fs.style.display = "none";
-            previous_fs.style.opacity = 1;
-          } else {
-            current_fs.style.opacity = (opacity - 0.05).toString();
-          }
-        }, 10);
-      });
-    });
-
-    radioButtons.forEach(function (radio) {
-      radio.addEventListener("click", function () {
-        var radioGroup = this.parentElement;
-        radioGroup.querySelectorAll(".radio").forEach(function (radioItem) {
-          radioItem.classList.remove("selected");
-        });
-        this.classList.add("selected");
-      });
-    });
-
-    submitButton.addEventListener("click", function () {
-      return false;
-    });
-  });
-</script>
 
 <script>
   function logout() {
@@ -388,50 +392,87 @@ block content %}
     window.location.href = "/"; // Redirect to the index page
   }
 
-  // Attach the logout function to the logout button/link
-  const logoutButton = document.getElementById("logoutButton");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", logout);
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token"); // Get the token from local storage
+    const userElement = document.getElementById("user-info");
+    var currentTab = 0;
 
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      userElement.textContent = storedUser;
+    } else {
+      userElement.textContent = Expert;
+    }
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", logout);
+    }
+    const token = localStorage.getItem("token");
+
+    function showFormWithQuestionId(questionId) {
+      // Display the form and set the question ID as a data attribute
+      var form = document.getElementById("rank-form");
+      form.style.display = "block";
+      form.setAttribute("data-question-id", questionId);
+    }
+  
     // Fetch top users data
-    // fetch("/api/v1/auth/farmers", {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((topUsersData) => {
-    //     const tableBody = document.querySelector(".farmers tbody");
-    //     topUsersData.forEach((user, index) => {
-    //       const tableRow = document.createElement("tr");
-    //       tableRow.innerHTML = `
-    //               <td class="text-center text-muted">${user.user_id}</td>
-    //               <td>
-    //                 <div class="widget-content p-0">
-    //                   <div class="widget-content-wrapper">
-    //                     <div class="widget-content-left flex2">
-    //                       <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-    //                       <div class="widget-subheading opacity-7">${user.username}</div>
-    //                     </div>
-    //                   </div>
-    //                 </div>
-    //               </td>
+    fetch("/api/v1/questions/random_question_review", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((randomQuestion) => {
+        const reviewQuesion = randomQuestion.find(
+          (question) => question.question_language === "Any Language"
+        );
+        let oneQuestion = document.getElementById("oneQuestion");
+        oneQuestion.textContent = reviewQuesion.sentence;
+        // let questionTopic = document.getElementById("questionTopic");
+        // questionTopic.textContent = reviewQuesion.topic
+        //   ? reviewQuesion.topic
+        //   : "No Topic";
+        console.log(reviewQuesion.category)
+        let questionCategory = document.getElementById("questionCategory");
+        questionCategory.textContent = reviewQuesion.category
+          ? reviewQuesion.category
+          : "No Category";
+        var questionId = reviewQuesion.id;
+        console.log(reviewQuesion)
+        // console.log(questionId);
+        showFormWithQuestionId(questionId);
+        // const incorrectQuestion = document.getElementById("prevBtn");
+        // if (incorrectQuestion) {
+        //   incorrectQuestion.addEventListener("click", async function (event) {
+        //     event.preventDefault();
+        //     let questionId1 = parseInt(questionId);
+        //     // console.log(questionId1);
+        //     if (prevBtn.innerHTML === "No") {
+        //       await updateQuestion(questionId1);
+        //     }
+        //   });
+        // }
+      })
+      .catch((error) => console.error("Error fetching question:"));
 
-    //               <td class="text-center">${user.phone_number}</td>
-    //               <td class="text-center">${user.location}</td>
-    //               <td class="text-center">${user.gender}</td>
-    //               <td class="text-center">
-    //                 <div class="font-weight-bold" >${user.questions} </div>
-    //               </td>`;
-
-    //       tableBody.appendChild(tableRow);
-    //     });
+    // function updateQuestion(questionId) {
+    //   const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
+    //     method: "PUT",
+    //     headers: {
+    //       Authorization: `Bearer ${mytoken}`,
+    //     },
     //   })
-    //   .catch((error) => console.error("Error fetching top users data:", error));
+    //     .then((response) => response.json())
+    //     .then((responseData) => {
+    //       if (response) {
+    //         window.location.reload();
+    //       } else {
+    //         console.error("Error updating question:");
+    //       }
+    //     })
+    //     .catch((error) => console.error("Error parsing response:", error));
+    // }
   });
 </script>
 {% endblock %}

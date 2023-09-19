@@ -396,13 +396,13 @@ def random_question_for_review():
     english_random_unreviewed_question = (
         Question.query.filter(english_filter, reviewed_filter)
         .order_by(func.random())
-        .one_or_none()
+        .first()
     )
 
     luganda_random_unreviewed_question = (
         Question.query.filter(luganda_filter, reviewed_filter)
         .order_by(func.random())
-        .one_or_none()
+        .first()
     )
     random_unreviewed_question = (
         Question.query.filter(reviewed_filter).order_by(func.random()).first()
