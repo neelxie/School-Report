@@ -306,8 +306,6 @@ def list_questions():
         .group_by(Question.language)
         .all()
     )
-
-    #     # # Calculate average daily questions
     # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
     average_daily_questions = total_questions / (
         Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1
@@ -726,3 +724,119 @@ def upload_excel_file():
                 ),
                 HTTP_400_BAD_REQUEST,
             )
+        
+@questions.route('/get_answers/<int:question_id>', methods=['GET'])
+@jwt_required()
+def get_answers(question_id):
+    # Retrieve all answers for the specified question_id
+    answers = Answer.query.filter_by(question_id=question_id).all()
+
+    if not answers:
+        return jsonify({'message': 'No answers found for the specified question.'}), 404
+
+    # Create a list to store the answers as dictionaries
+    answer_list = []
+
+    for answer in answers:
+        answer_data = {
+            'id': answer.id,
+            'answer_text': answer.answer_text,
+            'source': answer.source,
+            'relevance': answer.relevance,
+            'coherence': answer.coherence,
+            'fluency': answer.fluency,
+            'rank': answer.rank,
+            'created_at': answer.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        answer_list.append(answer_data)
+
+    return jsonify({'answers': answer_list}), 200
+
+
+@questions.route('/answered_question_ranking', methods=['GET'])
+@jwt_required()
+def answered_question_ranking():
+    # Query for a random question that has associated answers
+    random_question = (
+        Question.query.join(Answer, Question.id == Answer.question_id)
+        .filter(Question.reviewed == True, Question.correct == True)
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_question:
+        question_data = {
+            "id": random_question.id,
+            "sentence": random_question.rephrased if random_question.rephrased else random_question.sentence,
+            "language": random_question.language,
+            "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topic": random_question.topic,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
+        }
+
+        # Retrieve all answers associated with the selected question
+        answers = Answer.query.filter_by(question_id=random_question.id).all()
+
+        # Create a list to store answer data for each associated answer
+        answer_list = []
+        for answer in answers:
+            answer_data = {
+                "id": answer.id,
+                "answer_text": answer.answer_text,
+                "source": answer.source,
+                "relevance": answer.relevance,
+                "coherence": answer.coherence,
+                "fluency": answer.fluency,
+                "rank": answer.rank,
+                "created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            answer_list.append(answer_data)
+
+        return jsonify({"question": question_data, "answers": answer_list}), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available with answers."}), HTTP_404_NOT_FOUND
+
+@questions.route('/rank_answers', methods=['POST'])
+@jwt_required()
+def rank_answers():
+    data = request.get_json()
+
+    # Get the question_id for which answers are being ranked
+    question_id = data.get('question_id')
+
+    # Get the array of answers from the request
+    answers = data.get('answers')
+
+    if not answers:
+        return jsonify({'error': 'No answers provided in the request.'}), 400
+
+    # Loop through each answer and update its rank and input fields
+    for answer_data in answers:
+        answer_id = answer_data.get('answer_id')
+        relevance = answer_data.get('relevance')
+        coherence = answer_data.get('coherence')
+        fluency = answer_data.get('fluency')
+
+        # Check if all input fields are present
+        if relevance is None or coherence is None or fluency is None:
+            return jsonify({'error': 'All input fields (relevance, coherence, fluency) are required for each answer.'}), 400
+
+        # Retrieve the existing answer by answer_id and question_id
+        existing_answer = Answer.query.filter_by(id=answer_id, question_id=question_id).first()
+
+        if existing_answer:
+            # Calculate the answer rank by summing the input fields
+            answer_rank = relevance + coherence + fluency
+
+            # Update the existing answer with the new rank and input field values
+            existing_answer.rank = answer_rank
+            existing_answer.relevance = relevance
+            existing_answer.coherence = coherence
+            existing_answer.fluency = fluency
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({'message': 'Answers ranked and updated successfully.'}), 200

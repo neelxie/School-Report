@@ -146,6 +146,13 @@ def english():
     username = session.get("username")
     return render_template("english.html", token=access_token, role=role, user=username)
 
+@web_bp.route("/runyankole")
+def runyankole():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("runyankole.html", token=access_token, role=role, user=username)
+
 
 @web_bp.route("/upload_dataset")
 def upload_dataset():
