@@ -224,11 +224,11 @@ block content %}
                         level of agreement with the provided answers by rating
                         them on a scale of 1 to 5:
                       </p>
-                      <p class="h3">1 = Poor</p>
-                      <p class="h3">2 = Fair</p>
-                      <p class="h3">3 = Good</p>
-                      <p class="h3">4 = Very Good</p>
-                      <p class="h3">5 = Excellent</p>
+                      <p class="h4">1 = Poor</p>
+                      <p class="h4">2 = Fair</p>
+                      <p class="h4">3 = Good</p>
+                      <p class="h4">4 = Very Good</p>
+                      <p class="h4">5 = Excellent</p>
                       <p class="h3">
                         Note: You can assign the same value to multiple answers.
                       </p>
@@ -236,129 +236,37 @@ block content %}
                     <div class="list-group-item bg-success text-center h2">
                       <strong id="oneQuestion"></strong>
                     </div>
-                    <div class="text-center h3">
-                      Category:&nbsp;<strong id="questionCategory" class="text-capitalize"></strong>
+                    <div class=" h3">
+                      Topic:&nbsp;<strong id="questionTopic" class="text-capitalize text-primary"></strong>
                     </div>
                     <table class="table">
                       <thead>
                         <tr class="h4">
                           <th class="">
-                            Answer
+                            <u>Answers</u>
+                          </th>
+                          <th class="text-center" >
+                            Relevance
                           </th>
                           <th class="text-center" >
                             Coherence
                           </th>
-                          <th class="text-center" >
+                          <th class="text-center">
                             Fluency
                           </th>
-                          <th class="text-center">
-                            Relevance
-                          </th>
                       </thead>
-                      <tbody>
-                        <tr>
-                          <td class="h3">Black flies cause cassava mosaic</td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="h3">Rotting of cassava roots causes Cassava mosaic</td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="h3">Intercropping with legumes causes cassava mosaic</td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="h3">Termites and rodents cause cassava mosaic</td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                          <td class="text-center">
-                            <input
-                              type="number"
-                              class="rank-input form-control border border-dark mx-auto"
-                              style="width: 5rem"
-                            />
-                          </td>
-                        </tr>
+                      <tbody id="answerTableBody">
                       </tbody>
                     </table>
                     
-                    
-                    <button name="next" class="btn btn-primary mt-3">
-                      Submit
-                    </button>
+                    <div class="d-flex justify-content-between">
+                      <button style="font-size: 1.5rem" name="next" class="btn btn-warning my-3" onclick="reloadPage()">
+                        Skip
+                      </button>
+                      <button style="font-size: 1.5rem" name="next" class="btn btn-primary my-3" type="submit" id="submitButton">
+                        Submit
+                      </button>
+                    </div>
                   </fieldset>
                 </form>
               </div>
@@ -384,6 +292,9 @@ block content %}
 </div>
 
 <script>
+  function reload() {
+    window.location.reload();
+  }
   function logout() {
     // Clear the user token from localStorage
     localStorage.clear();
@@ -391,6 +302,7 @@ block content %}
     // Redirect to the index.html page
     window.location.href = "/"; // Redirect to the index page
   }
+  let qnAnswers = [];
 
   document.addEventListener("DOMContentLoaded", function () {
     const userElement = document.getElementById("user-info");
@@ -417,30 +329,65 @@ block content %}
     }
   
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/answered_question_ranking", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        const reviewQuesion = randomQuestion.find(
-          (question) => question.question_language === "Any Language"
-        );
+        const {question, answers} = randomQuestion
+        qnAnswers = answers
         let oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = reviewQuesion.sentence;
-        // let questionTopic = document.getElementById("questionTopic");
-        // questionTopic.textContent = reviewQuesion.topic
-        //   ? reviewQuesion.topic
-        //   : "No Topic";
-        console.log(reviewQuesion.category)
-        let questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = reviewQuesion.category
-          ? reviewQuesion.category
-          : "No Category";
-        var questionId = reviewQuesion.id;
-        console.log(reviewQuesion)
-        // console.log(questionId);
+        oneQuestion.textContent = question.sentence;
+  
+        let questionTopic = document.getElementById("questionTopic");
+        questionTopic.textContent = question.topic
+          ? question.topic
+          : "No Topic";
+        // console.log(question.category)
+        const tableBody = document.getElementById('answerTableBody');
+        answers.forEach((answer, index) => {
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+              <td class="h3">${answer.answer_text}</td>
+              <td class="text-center">
+                  <input
+                      type="text"
+                      class="rank-input form-control border border-dark mx-auto answer-rank"
+                      style="width: 5rem"
+                      maxlength="1"
+                      onkeypress="return /^[1-5]$/i.test(event.key)"
+                  />
+              </td>
+              <td class="text-center">
+                  <input
+                      type="text"
+                      class="rank-input form-control border border-dark mx-auto answer-rank"
+                      style="width: 5rem"
+                      maxlength="1"
+                      onkeypress="return /^[1-5]$/i.test(event.key)"
+                  />
+              </td>
+              <td class="text-center">
+                  <input
+                      type="text"
+                      class="rank-input form-control border border-dark mx-auto answer-rank"
+                      style="width: 5rem"
+                      maxlength="1"
+                      onkeypress="return /^[1-5]$/i.test(event.key)"
+                  />
+              </td>
+          `;
+          tableBody.appendChild(newRow);
+        })
+        // let questionCategory = document.getElementById("questionCategory");
+        // questionCategory.textContent = question.category
+        //   ? question.category
+        //   : "No Category";
+        var questionId = question.id;
+        console.log(question)
+        console.log(questionId);
         showFormWithQuestionId(questionId);
         // const incorrectQuestion = document.getElementById("prevBtn");
         // if (incorrectQuestion) {
@@ -449,14 +396,14 @@ block content %}
         //     let questionId1 = parseInt(questionId);
         //     // console.log(questionId1);
         //     if (prevBtn.innerHTML === "No") {
-        //       await updateQuestion(questionId1);
+        //       await updateAnswers(questionId1);
         //     }
         //   });
         // }
       })
       .catch((error) => console.error("Error fetching question:"));
 
-    // function updateQuestion(questionId) {
+    // function updateAnswers(questionId) {
     //   const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
     //     method: "PUT",
     //     headers: {
@@ -473,6 +420,84 @@ block content %}
     //     })
     //     .catch((error) => console.error("Error parsing response:", error));
     // }
+    function sendRankingsToAPI() {
+      var questionIdButton = this.getAttribute("data-question-id");
+      let questionId = parseInt(questionIdButton);
+      console.log(questionId)
+      // const token = "YOUR_ACCESS_TOKEN"; // Replace with your access token
+      
+      // Collect ranking details from input fields
+      const answerElements = document.querySelectorAll('.answer-rank');
+      const rankings = [];
+
+      console.log(answerElements)
+      let currentAnswer = {};
+      answerElements.forEach((element, index) => {
+        // Check if the current input field belongs to a new answer
+        if (index % 3 === 0) {
+            if (currentAnswer.hasOwnProperty('answerText')) {
+                rankings.push(currentAnswer);
+            }
+            currentAnswer = {
+                answer_id : qnAnswers[rankings.length].id,
+                answerText: qnAnswers[rankings.length].answer_text,
+                relevance: null,
+                coherence: null,
+                fluency: null
+            };
+        }
+
+        // Determine which field (relevance, coherence, fluency) this input belongs to
+        if (index % 3 === 0) {
+            currentAnswer.relevance = parseInt(element.value);
+        } else if (index % 3 === 1) {
+            currentAnswer.coherence = parseInt(element.value);
+        } else if (index % 3 === 2) {
+            currentAnswer.fluency = parseInt(element.value);
+        }
+
+        // If this is the last input field, push the answer to rankings
+        if (index === answerElements.length - 1) {
+            rankings.push(currentAnswer);
+        }
+      });
+      console.log(rankings)
+
+      // Prepare the data to send to the API
+      const data = {
+          questionId,
+          rankings
+      };
+
+      console.log(data)
+
+        // Send the data to the API using a POST request
+        // fetch("/api/v1/questions/answered_question_ranking", {
+        //     method: 'POST',
+        //     headers: {
+        //         'Authorization': `Bearer ${token}`,
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(data)
+        // })
+        // .then(response => response.json())
+        // .then(responseData => {
+        //     console.log('Response from API:', responseData);
+        //     // Handle the API response as needed
+        // })
+        // .catch(error => {
+        //     console.error('Error sending data to the API:', error);
+        // });
+    }
+
+    // Attach a click event listener to the "Submit Rankings" button
+    const submitButton = document.getElementById('submitButton');
+    submitButton.addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Call the sendRankingsToAPI function to send the rankings to the API
+      sendRankingsToAPI();
+  });//
   });
 </script>
 {% endblock %}

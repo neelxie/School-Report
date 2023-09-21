@@ -49,6 +49,8 @@ class Question(db.Model):
     location = db.Column(db.String(80), nullable=True)
     reviewed = db.Column(db.Boolean, default=False)
     correct = db.Column(db.Boolean, default=False)
+    finished = db.Column(db.Boolean, default=False)
+    cleaned = db.Column(db.Boolean, default=False)
     answers = db.relationship("Answer", backref="question")
 
     def __repr__(self) -> str:
