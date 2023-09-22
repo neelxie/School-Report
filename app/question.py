@@ -845,7 +845,6 @@ def upload_json_answers():
         duplicates = []
 
         for obj in json_data:
-            print(obj)
             sentence = obj.get("questions")
             language = obj.get("language")
             topic = obj.get("topics")

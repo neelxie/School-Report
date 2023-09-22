@@ -218,25 +218,26 @@ content %}
         <div class="row">
           <div class="col mb-3">
             <div class="card shadow-lg">
-              <div class="card-header bg-malibu-beach">Upload a CSV Dataset</div>
+              <div class="card-header bg-malibu-beach">Upload a JSON Dataset</div>
               <div class="card-body">
                 <form id="csvForm" method="POST">
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
-                        <label for="file" class="form-label">Select an CSV File (.csv)</label>
+                        <label for="file" class="form-label">Select an JSON File (.json)</label>
                         <input
                           type="file"
                           name="file"
-                          accept=".csv"
+                          id="fileInput"
+                          accept=".json"
                           class="form-control"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <button type="submit" class="btn btn-success">
-                    Add CSV Data set
+                  <button type="button" class="btn btn-success" onclick="uploadFile()">
+                    Add JSON Data set
                   </button>
                 </form>
                 {% if error_message %}
@@ -268,56 +269,61 @@ content %}
   </div>
 </div>
 <script>
+  const token = localStorage.getItem("token");
+  async function uploadFile() {
+    try {
+        // ... previous code ...
+        const response = await fetch("/api/v1/questions/upload_json_answers", {
+            method: "POST",
+            body: formData,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        const data = await response.json();
+        alert("This is done")
+        document.getElementById("message").innerText = data.message;
+    } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("message").innerText = "An error occurred while uploading the file.";
+    }
+  }
+  function uploadFile() {
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        document.getElementById("message").innerText = "Please select a file.";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/api/v1/questions/upload_json_answers", {
+        method: "POST",
+        body: formData,
+        headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+          document.getElementById("message").innerText = data.message;
+      })
+      .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("message").innerText = "An error occurred while uploading the file.";
+      });
+  }
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
     if (user) {
       document.getElementById("user-info").textContent = user;
     }
-    const form = document.getElementById("apiForm");
-    const errorMessage = document.getElementById("errorMessage");
-
-    apiForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const firstname = document.getElementById("firstname").value;
-      const lastname = document.getElementById("lastname").value;
-      const gender = document.getElementById("gender").value;
-      const phone = document.getElementById("phone").value;
-      const organisation = document.getElementById("organisation").value;
-      const email = document.getElementById("email").value;
-      const itemBody = {
-        phone_number: phone,
-        lastname: lastname,
-        firstname: firstname,
-        organisation: organisation,
-        gender: gender,
-        email: email,
-      };
-
-      const response = await fetch("/api/v1/auth/register_expert", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(itemBody),
-      });
-
-      try {
-        const responseData = await response.json();
-        if (response.ok) {
-          window.location.reload();
-          window.location.href = window.location.href;
-        } else {
-          errorMessage.textContent = responseData.error;
-        }
-      } catch (error) {
-        console.error("Error parsing response:");
-      } finally {
-        window.location.reload();
-      }
-    });
+    
   });
 </script>
 
