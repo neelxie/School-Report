@@ -35,13 +35,13 @@ def index():
                 session["token"] = access_token
                 session["role"] = user.role
                 session["username"] = user.username
-                # return redirect(url_for('web.expert_dashboard'))
-                return render_template(
-                    "dashboard.html",
-                    token=access_token,
-                    role=user.role,
-                    user=user.username,
-                )
+                return redirect(url_for('web.dash'))
+                # return render_template(
+                #     "dashboard.html",
+                #     token=access_token,
+                #     role=user.role,
+                #     user=user.username,
+                # )
             else:
                 pass
         if not user:
@@ -57,6 +57,13 @@ def admin():
     role = session.get("role")
     username = session.get("username")
     return render_template("admin.html", token=access_token, role=role, user=username)
+
+@web_bp.route("/dash")
+def dash():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("dashboard.html", token=access_token, role=role, user=username)
 
 
 @web_bp.route("/farmers")
@@ -95,25 +102,33 @@ def expert_dashboard():
     )
 
 
-@web_bp.route("/english_expert")
-def english_expert():
+@web_bp.route("/english_review")
+def english_review():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "englishExpert.html", token=access_token, role=role, user=username
+        "englishReview.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/luganda_expert")
-def luganda_expert():
+@web_bp.route("/luganda_review")
+def luganda_review():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "lugandaExpert.html", token=access_token, role=role, user=username
+        "lugandaReview.html", token=access_token, role=role, user=username
     )
 
+@web_bp.route("/runyankole_review")
+def runyankole_review():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "runyankoleReview.html", token=access_token, role=role, user=username
+    )
 
 @web_bp.route("/answer")
 def answer_questions():
