@@ -1,5 +1,4 @@
 import json
-import re
 
 from app.status import (
     HTTP_200_OK,
@@ -18,17 +17,7 @@ import datetime
 from sqlalchemy import func
 from app.helper import admin_required
 
-import csv
-
 questions = Blueprint("questions", __name__, url_prefix="/api/v1/questions")
-
-english_filter = func.lower(Question.language) == "english"
-luganda_filter = func.lower(Question.language) == "luganda"
-runyankole_filter = func.lower(Question.language) == "runyankole"
-unreviewed_filter = Question.reviewed == False
-reviewed_filter = Question.reviewed == True
-correct_filter = Question.correct == True
-cleaned_filter = Question.cleaned == True
 
 
 def format_question(question, language):
@@ -317,6 +306,8 @@ def list_questions():
         .group_by(Question.language)
         .all()
     )
+
+    #     # # Calculate average daily questions
     # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
     average_daily_questions = total_questions / (
         Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1
@@ -372,64 +363,25 @@ def list_questions():
 @questions.route("/random_question", methods=["GET"])
 @jwt_required()
 def random_question_and_add_answer():
-    # random question that is unanswered by an expert for answering
     user_id = get_jwt_identity()
-    english_random_reviewed_correct_question = (
-        Question.query.filter(
-            (reviewed_filter) & (correct_filter),
-            ~Question.answers.any(Answer.source == "expert"),
-            english_filter
-        )
-        .order_by(db.func.random())
-        .first()
-    )
-
-    luganda_random_reviewed_correct_question = (
-        Question.query.filter(
-            (reviewed_filter) & (correct_filter),
-            ~Question.answers.any(Answer.source == "expert"),
-            luganda_filter
-        )
-        .order_by(db.func.random())
-        .first()
-    )
-
-    runyankole_random_reviewed_correct_question = (
-        Question.query.filter(
-            (reviewed_filter) & (correct_filter),
-            ~Question.answers.any(Answer.source == "expert"),
-            runyankole_filter
-        )
-        .order_by(db.func.random())
-        .first()
-    )
-
     random_question = (
-        Question.query.filter(
-            (reviewed_filter) & (correct_filter), ~Question.answers.any(Answer.source == "expert"))
+        Question.query.filter(~Question.answers.any(Answer.source == "expert"))
         .order_by(db.func.random())
         .first()
     )
 
-    questions_data = []
-
-    def add_question_data(question, language):
-        if question:
-            questions_data.append(format_question(question, language))
-        else:
-            questions_data.append({
-                "question_language": language,
-                "sentence": f"There are no more {language} questions, Please evaluate English questions",
-            })
-
-    add_question_data(english_random_reviewed_correct_question, "English")
-    add_question_data(luganda_random_reviewed_correct_question, "Luganda")
-    add_question_data(runyankole_random_reviewed_correct_question, "Runyankole")
-    add_question_data(random_question, "Any Language")
-
-
-    if questions_data:
-        return jsonify(questions_data), HTTP_200_OK
+    if random_question:
+        question_data = {
+            "id": random_question.id,
+            "sentence": random_question.sentence,
+            "language": random_question.language,
+            "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topics": random_question.topic,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
+        }
+        return jsonify(question_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
@@ -437,46 +389,110 @@ def random_question_and_add_answer():
 @questions.route("/random_question_review", methods=["GET"])
 @jwt_required()
 def random_question_for_review():
-    #unreviewed question for review
+    english_filter = func.lower(Question.language) == "english"
+    luganda_filter = func.lower(Question.language) == "luganda"
+    runyankole_filter = func.lower(Question.language) == "runyankole"
+    unreviewed_filter = Question.reviewed == False
+    cleaned_filter = Question.cleaned == True
+
     english_random_unreviewed_question = (
-        Question.query.filter(english_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(english_filter, unreviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(luganda_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(luganda_filter, unreviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
+
     runyankole_random_unreviewed_question = (
-        Question.query.filter(runyankole_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(runyankole_filter, unreviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
+
     random_unreviewed_question = (
-        Question.query.filter(reviewed_filter, cleaned_filter).order_by(func.random()).first()
+        Question.query.filter(unreviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
     )
 
     questions_data = []
 
-    def add_question_data(question, language):
-        if question:
-            questions_data.append(format_question(question, language))
-        else:
-            questions_data.append({
-                "question_language": language,
-                "sentence": f"There are no more {language} questions, Please evaluate English questions",
-            })
+    if english_random_unreviewed_question:
+        questions_data.append(
+            format_question(english_random_unreviewed_question, "English")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "English",
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections",
+            }
+        )
 
-    add_question_data(english_random_unreviewed_question, "English")
-    add_question_data(luganda_random_unreviewed_question, "Luganda")
-    add_question_data(runyankole_random_unreviewed_question, "Runyankole")
-    questions_data.append(random_unreviewed_question)
+    if luganda_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(luganda_random_unreviewed_question, "Luganda")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Luganda",
+                "sentence": "There are no more luganda questions, Please evaluate English questions",
+            }
+        )
 
+    if runyankole_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(runyankole_random_unreviewed_question, "Runyankole")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Runyakole",
+                "sentence": "There are no more Runyankole questions, Please evaluate English questions",
+            }
+        )
+
+    if random_unreviewed_question:
+        questions_data.append(
+            format_question(random_unreviewed_question, "Any Language")
+        )
 
     if questions_data:
         return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+
+@questions.route("/random_question_answer", methods=["GET"])
+@jwt_required()
+def random_question_for_answer():
+    random_unreviewed_question = (
+        Question.query.filter_by(reviewed=True, correct=True)
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_unreviewed_question:
+        question_data = {
+            "id": random_unreviewed_question.id,
+            "sentence": random_unreviewed_question.rephrased
+            if random_unreviewed_question.rephrased
+            else random_unreviewed_question.sentence,
+            "language": random_unreviewed_question.language,
+            "created_at": random_unreviewed_question.created_at.strftime(
+                "%Y-%m-%d %H:%M:%S"
+            ),
+            "topic": random_unreviewed_question.topic,
+            "category": random_unreviewed_question.category,
+            "animal_crop": random_unreviewed_question.animal_crop,
+            "location": random_unreviewed_question.location,
+        }
+        return jsonify(question_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
@@ -502,6 +518,7 @@ def add_answer(question_id):
         )
 
         db.session.add(new_answer)
+        question.answered = True
         db.session.commit()
 
         return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
@@ -559,6 +576,36 @@ def question_review(question_id):
         return jsonify({"message": "Question attributes updated"})
     else:
         return jsonify({"message": "Question not found"})
+
+
+@questions.route("/random_unanswered_question", methods=["GET"])
+@jwt_required()
+def get_random_unanswered_question(user_id):
+    user_id = get_jwt_identity()
+
+    # Get a random unanswered question for the user
+    random_question = (
+        Question.query.outerjoin(
+            Answer, (Answer.question_id == Question.id) & (Answer.user_id == user_id)
+        )
+        .filter(Answer.id == None)
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_question:
+        question_data = {
+            "id": random_question.id,
+            "sentence": random_question.sentence,
+            "language": random_question.language,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
+            # answer part
+        }
+        return jsonify(question_data), 200
+    else:
+        return jsonify({"message": "No unanswered questions available"}), 404
 
 
 @questions.route("/luganda", methods=["GET"])
@@ -644,7 +691,7 @@ def update_question_locations():
 
 @questions.route("/dataset_upload/", methods=["POST"])
 @jwt_required()
-def dataset_upload():
+def upload_excel_file():
     if request.method == "POST":
         file_excel = request.files.get("file")
 
@@ -677,7 +724,6 @@ def dataset_upload():
                             category=category,
                             animal_crop=animal_crop,
                             location=location,
-                            cleaned=True
                         )
                         db.session.add(question)
 
@@ -704,71 +750,52 @@ def dataset_upload():
                 ),
                 HTTP_400_BAD_REQUEST,
             )
-        
-@questions.route('/get_answers/<int:question_id>', methods=['GET'])
-@jwt_required()
-def get_answers(question_id):
-    # Retrieve all answers for the specified question_id
-    answers = Answer.query.filter_by(question_id=question_id).all()
-
-    if not answers:
-        return jsonify({'message': 'No answers found for the specified question.'}), 404
-
-    # Create a list to store the answers as dictionaries
-    answer_list = []
-
-    for answer in answers:
-        answer_data = {
-            'id': answer.id,
-            'answer_text': answer.answer_text,
-            'source': answer.source,
-            'relevance': answer.relevance,
-            'coherence': answer.coherence,
-            'fluency': answer.fluency,
-            'rank': answer.rank,
-            'created_at': answer.created_at.strftime('%Y-%m-%d %H:%M:%S')
-        }
-        answer_list.append(answer_data)
-
-    return jsonify({'answers': answer_list}), 200
 
 
-@questions.route('/answered_question_ranking', methods=['GET'])
+@questions.route("/answered_question_ranking", methods=["GET"])
 @jwt_required()
 def answered_question_ranking():
-    languages = ["English", "Luganda", "Runyankole"]
+    user_id = get_jwt_identity()
+    cleaned_filter = Question.cleaned == True
+    answered_filter = Question.answered == True
+    unFinished_filter = Question.finished == False
+    question_and_answer_data = []
 
-    # Initialize a dictionary to store questions for each language
-    questions_data = {}
+    languages = ["english", "luganda", "runyankole"]
 
     for language in languages:
-        # Create a language filter condition
-        language_filter = func.lower(Question.language) == language.lower()
+        language_filter = func.lower(Question.language) == language
 
-        # Query for finished questions in the specified language
-        random_finished_question = (
-            Question.query
-            .join(Answer, Question.id == Answer.question_id)
-            .filter(Question.finished == True, language_filter)
+        random_unreviewed_question = (
+            Question.query.filter(
+                language_filter,
+                answered_filter,
+                cleaned_filter,
+                unFinished_filter,
+                (~Question.answers.any(Answer.user_id == user_id)),
+            )
             .order_by(func.random())
             .first()
         )
 
-        if random_finished_question:
+        if random_unreviewed_question:
             question_data = {
-                "id": random_finished_question.id,
-                "sentence": random_finished_question.rephrased or random_finished_question.sentence,
-                "language": random_finished_question.language,
-                "created_at": random_finished_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                "topic": random_finished_question.topic,
-                "category": random_finished_question.category,
-                "animal_crop": random_finished_question.animal_crop,
-                "location": random_finished_question.location,
+                "id": random_unreviewed_question.id,
+                "sentence": random_unreviewed_question.rephrased
+                or random_unreviewed_question.sentence,
+                "language": random_unreviewed_question.language,
+                "created_at": random_unreviewed_question.created_at.strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+                "topic": random_unreviewed_question.topic,
+                "category": random_unreviewed_question.category,
+                "animal_crop": random_unreviewed_question.animal_crop,
+                "location": random_unreviewed_question.location,
             }
 
-            # Use SQLAlchemy's relationship to fetch associated answers
+            # Create a list to store answer data for each associated answer
             answer_list = []
-            for answer in random_finished_question.answers:
+            for answer in random_unreviewed_question.answers:
                 answer_data = {
                     "id": answer.id,
                     "answer_text": answer.answer_text,
@@ -781,111 +808,95 @@ def answered_question_ranking():
                 }
                 answer_list.append(answer_data)
 
-            # Store the question data for this language
-            questions_data[language] = {"question": question_data, "answers": answer_list}
+            question_and_answer_data.append(
+                {"question": question_data, "answers": answer_list}
+            )
 
-    if questions_data:
-        return jsonify(questions_data), HTTP_200_OK
+    # Include the random_question without language filter
+    random_question_data = None
+    random_question = (
+        Question.query.filter(cleaned_filter, answered_filter, unFinished_filter, (~Question.answers.any(Answer.user_id == user_id)))
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_question:
+        random_question_data = {
+            "id": random_question.id,
+            "sentence": random_question.rephrased or random_question.sentence,
+            "language": random_question.language,
+            "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topic": random_question.topic,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
+        }
+
+        # Create a list to store answer data for each associated answer
+        answer_list = []
+        for answer in random_question.answers:
+            answer_data = {
+                "id": answer.id,
+                "answer_text": answer.answer_text,
+                "source": answer.source,
+                "relevance": answer.relevance,
+                "coherence": answer.coherence,
+                "fluency": answer.fluency,
+                "rank": answer.rank,
+                "created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            answer_list.append(answer_data)
+
+        random_question_data["answers"] = answer_list
+
+    if question_and_answer_data or random_question_data:
+        result_object = {
+            "question_and_answer_data": question_and_answer_data,
+            "random_question_data": random_question_data,
+        }
+        return jsonify(result_object), HTTP_200_OK
     else:
-        return jsonify({"message": "No questions available with answers."}), HTTP_404_NOT_FOUND
+        return (
+            jsonify({"message": "No questions available with answers."}),
+            HTTP_404_NOT_FOUND,
+        )
 
 
-@questions.route('/rank_answers', methods=['POST'])
+@questions.route("/store_answer_ranks", methods=["POST"])
 @jwt_required()
-def rank_answers():
-    data = request.get_json()
+def store_answer_ranks():
+    data = request.json
+    question_id = data.get("questionId")
+    rankings = data.get("rankings")
 
-    # Get the question_id for which answers are being ranked
-    question_id = data.get('question_id')
+    if question_id is None or rankings is None:
+        return jsonify({"message": "Invalid data format"}), HTTP_400_BAD_REQUEST
 
-    # Get the array of answers from the request
-    answers = data.get('answers')
+    try:
+        for ranking in rankings:
+            answer_id = ranking.get("answer_id")
+            relevance = ranking.get("relevance")
+            coherence = ranking.get("coherence")
+            fluency = ranking.get("fluency")
 
-    if not answers:
-        return jsonify({'error': 'No answers provided in the request.'}), 400
-
-    # Loop through each answer and update its rank and input fields
-    for answer_data in answers:
-        answer_id = answer_data.get('answer_id')
-        relevance = answer_data.get('relevance')
-        coherence = answer_data.get('coherence')
-        fluency = answer_data.get('fluency')
-
-        # Check if all input fields are present
-        if relevance is None or coherence is None or fluency is None:
-            return jsonify({'error': 'All input fields (relevance, coherence, fluency) are required for each answer.'}), 400
-
-        # Retrieve the existing answer by answer_id and question_id
-        existing_answer = Answer.query.filter_by(id=answer_id, question_id=question_id).first()
-
-        if existing_answer:
-            # Calculate the answer rank by summing the input fields
+            # Calculate the answer rank as the summation of relevance, coherence, and fluency
             answer_rank = relevance + coherence + fluency
 
-            # Update the existing answer with the new rank and input field values
-            existing_answer.rank = answer_rank
-            existing_answer.relevance = relevance
-            existing_answer.coherence = coherence
-            existing_answer.fluency = fluency
+            answer = Answer.query.get(answer_id)
+            if answer:
+                answer.relevance = relevance
+                answer.coherence = coherence
+                answer.fluency = fluency
+                answer.rank = answer_rank
 
-    # Commit the changes to the database
-    db.session.commit()
+        # Update the question field to "finished"
+        question = Question.query.get(question_id)
+        if question:
+            question.finished = True
 
-    return jsonify({'message': 'Answers ranked and updated successfully.'}), 200
+        db.session.commit()
+        return jsonify({"message": "Answer ranks stored successfully"}), HTTP_200_OK
 
-@questions.route("/upload_json_answers/", methods=["POST"])
-@jwt_required()
-def upload_json_answers():
-    if request.method == "POST":
-        file_json = request.files.get("file")
-        json_data = json.load(file_json)
-
-        current_user_id = get_jwt_identity()
-        dup_count = 0
-        duplicates = []
-
-        for obj in json_data:
-            sentence = obj.get("questions")
-            language = obj.get("language")
-            topic = obj.get("topics")
-            category = obj.get("category")
-            animal_crop = obj.get("animal_crop")
-            location = obj.get("location")
-
-            # Check if the question already exists
-            if Question.query.filter_by(sentence=sentence).first():
-                dup_count += 1
-                duplicates.append({"sentence": sentence})
-            else:
-                question = Question(
-                    sentence=sentence,
-                    language=language,
-                    user_id=current_user_id,
-                    topic=topic,
-                    category=category,
-                    animal_crop=animal_crop,
-                    location=location,
-                    cleaned=True
-                )
-                db.session.add(question)
-                db.session.commit()
-                question_id = question.id
-
-                response_categories = ["bing response", "bard response", "llama -2 response", "chatgpt 3.5 response", "chatgpt 4 response"]
-                for category in response_categories:
-                    response_value = obj.get(category)
-                    if response_value is not None:
-                        response = Answer(
-                            question_id=question_id,
-                            answer_text=response_value,
-                            source=category,
-                            user_id=current_user_id, 
-                        )
-                        db.session.add(response)
-                        db.session.commit()
-
-        response_data = {
-            "duplicates_count": dup_count,
-            "duplicates": duplicates
-        }
-        return jsonify(response_data), HTTP_200_OK
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST

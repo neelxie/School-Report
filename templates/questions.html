@@ -26,21 +26,10 @@ content %}
             <div class="widget-content-wrapper">
               <div class="widget-content-left ml-3 header-user-info">
                 <div class="widget-heading" id="user-info">
-                  {% if session.username %} {{ session.username }} {% else %}
-                  <script>
-                    var usernameFromLocalStorage =
-                      localStorage.getItem("username");
-                    document.write(usernameFromLocalStorage);
-                  </script>
-                  {% endif %}
+                  
                 </div>
                 <div class="widget-subheading">
-                  {% if session.role %} {{ session.role }} {% else %}
-                  <script>
-                    var roleFromLocalStorage = localStorage.getItem("role");
-                    document.write(roleFromLocalStorage);
-                  </script>
-                  {% endif %}
+                  Admin
                 </div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
@@ -281,6 +270,21 @@ content %}
 <script></script>
 
 <script>
+  const token = "{{ token }}";
+  const user = "{{ user }}";
+  const role = "{{ role }}";
+
+  const userElement = document.getElementById("user-info");
+  var currentTab = 0;
+
+  // Retrieve data from local storage
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
+    userElement.textContent = storedUser;
+  } else {
+    userElement.textContent = Admin;
+  }
   function logout() {
     // Clear the user token from localStorage
     localStorage.clear();
