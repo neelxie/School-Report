@@ -987,3 +987,64 @@ def store_answer_ranks():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
+
+
+@questions.route("/upload_json_answers/", methods=["POST"])
+@jwt_required()
+def upload_json_answers():
+    if request.method == "POST":
+        file_json = request.files.get("file")
+        json_data = json.load(file_json)
+
+        current_user_id = get_jwt_identity()
+        dup_count = 0
+        duplicates = []
+
+        for obj in json_data:
+            sentence = obj.get("Prompts")
+            language = obj.get("Language")
+            topic = obj.get("Topic")
+            category = obj.get("Category")
+            animal_crop = obj.get("animal_crop")
+            location = obj.get("Location")
+
+            # Check if the question already exists
+            if Question.query.filter_by(sentence=sentence).first():
+                dup_count += 1
+                duplicates.append({"sentence": sentence})
+            else:
+                question = Question(
+                    sentence=sentence,
+                    language=language,
+                    user_id=current_user_id,
+                    topic=topic,
+                    category=category,
+                    animal_crop=animal_crop,
+                    location=location,
+                    cleaned=True,
+                )
+                db.session.add(question)
+                db.session.commit()
+                question_id = question.id
+
+                response_categories = [
+                    "Bing response",
+                    "Bard Response",
+                    "Llama -2 Response",
+                    "GPT 3.5 response",
+                    # "chatgpt 4 response",
+                ]
+                for category in response_categories:
+                    response_value = obj.get(category)
+                    if response_value is not None:
+                        response = Answer(
+                            question_id=question_id,
+                            answer_text=response_value,
+                            source=category,
+                            user_id=current_user_id,
+                        )
+                        db.session.add(response)
+                        db.session.commit()
+
+        response_data = {"duplicates_count": dup_count, "duplicates": duplicates}
+        return jsonify(response_data), HTTP_200_OK

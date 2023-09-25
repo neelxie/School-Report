@@ -183,13 +183,17 @@ content %}
         <div class="row">
           <div class="col mb-3">
             <div class="card shadow-lg">
-              <div class="card-header bg-malibu-beach">Upload an Excel Dataset</div>
+              <div class="card-header bg-malibu-beach">
+                Upload an Excel Dataset
+              </div>
               <div class="card-body">
                 <form id="excelForm" method="POST">
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
-                        <label for="formFile" class="form-label">Select an Excel File (.xlsx)</label>
+                        <label for="formFile" class="form-label"
+                          >Select an Excel File (.xlsx)</label
+                        >
                         <input
                           type="file"
                           name="file"
@@ -218,13 +222,17 @@ content %}
         <div class="row">
           <div class="col mb-3">
             <div class="card shadow-lg">
-              <div class="card-header bg-malibu-beach">Upload a JSON Dataset</div>
+              <div class="card-header bg-malibu-beach">
+                Upload a JSON Dataset
+              </div>
               <div class="card-body">
                 <form id="csvForm" method="POST">
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
-                        <label for="file" class="form-label">Select an JSON File (.json)</label>
+                        <label for="file" class="form-label"
+                          >Select an JSON File (.json)</label
+                        >
                         <input
                           type="file"
                           name="file"
@@ -236,7 +244,11 @@ content %}
                     </div>
                   </div>
 
-                  <button type="button" class="btn btn-success" onclick="uploadFile()">
+                  <button
+                    type="button"
+                    class="btn btn-success"
+                    onclick="uploadFile()"
+                  >
                     Add JSON Data set
                   </button>
                 </form>
@@ -271,50 +283,32 @@ content %}
 <script>
   const token = localStorage.getItem("token");
   async function uploadFile() {
-    try {
-        // ... previous code ...
-        const response = await fetch("/api/v1/questions/upload_json_answers", {
-            method: "POST",
-            body: formData,
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        const data = await response.json();
-        alert("This is done")
-        document.getElementById("message").innerText = data.message;
-    } catch (error) {
-        console.error("Error:", error);
-        document.getElementById("message").innerText = "An error occurred while uploading the file.";
-    }
-  }
-  function uploadFile() {
     const fileInput = document.getElementById("fileInput");
     const file = fileInput.files[0];
 
     if (!file) {
-        document.getElementById("message").innerText = "Please select a file.";
-        return;
+      document.getElementById("message").innerText = "Please select a file.";
+      return;
     }
 
     const formData = new FormData();
     formData.append("file", file);
 
     fetch("/api/v1/questions/upload_json_answers", {
-        method: "POST",
-        body: formData,
-        headers: {
+      method: "POST",
+      body: formData,
+      headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(response => response.json())
-      .then(data => {
-          document.getElementById("message").innerText = data.message;
+      .then((response) => response.json())
+      .then((data) => {
+        document.getElementById("message").innerText = data.message;
       })
-      .catch(error => {
-          console.error("Error:", error);
-          document.getElementById("message").innerText = "An error occurred while uploading the file.";
+      .catch((error) => {
+        console.error("Error:", error);
+        document.getElementById("message").innerText =
+          "An error occurred while uploading the file.";
       });
   }
   document.addEventListener("DOMContentLoaded", function () {
@@ -323,7 +317,6 @@ content %}
     if (user) {
       document.getElementById("user-info").textContent = user;
     }
-    
   });
 </script>
 
