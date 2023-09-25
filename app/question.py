@@ -1660,30 +1660,6 @@ def upload_json_answers():
         
         if existing_question:
             question_id = existing_question.id
-
-            response_categories = [
-                "bing response",
-                "bardrResponse",
-                "llama -2 response",
-                "chatgpt 3.5 response",
-                # "chatgpt 4 response",
-            ]
-            
-            # Iterate through response categories
-            for category in response_categories:
-                response_value = obj.get(category)
-                
-                if response_value is not None:
-                    response = Answer(
-                        question_id=question_id,
-                        answer_text=response_value,
-                        source=category,
-                        user_id=current_user_id,
-                    )
-                    
-                    db.session.add(response)
-                    db.session.commit()
-                    
             # Add a new answer for the "new category"
             new_response_value = obj.get(new_category)
             
