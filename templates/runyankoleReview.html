@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Experts Runyankole Dash{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Experts Runyankole Review Question
+Page{% endblock %} {% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -157,7 +157,7 @@
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.expert_dashboard') }}"
+                  href="{{ url_for('web.runyankole_review') }}"
                   >Review Questions</a
                 >
               </li>
@@ -165,7 +165,7 @@
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.answer_questions') }}"
+                  href="{{ url_for('web.runyankole_answer') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -173,7 +173,7 @@
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.rank_answers') }}"
+                  href="{{ url_for('web.runyankole_rank') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -290,13 +290,7 @@
                     id="questionTopic"
                     class="h2 font-weight-bold"
                   ></strong>
-                </div>
-                <div class="h4 text-dark font-weight-bold mb-3">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Question:</span
-                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
-                </div>
-                <div class="h4 text-dark font-weight-bold mb-5">
+                  &nbsp;
                   <span class="text-primary mr-3 h2 font-weight-bold"
                     >Category:</span
                   ><span
@@ -305,43 +299,249 @@
                     style="text-transform: capitalize"
                   ></span>
                 </div>
-                <div class="mb-3">
-                  <label
-                    for="dropdown"
-                    class="h4 text-center w-100 font-weight-bold"
-                    >Choose a Topic</label
-                  >
-                  <select
-                    id="topic"
-                    name="topic"
-                    class="form-control h3 border border-dark"
-                    required
-                  >
-                    <option disabled selected value>Select</option>
-                    <option value="Irrigation">Irrigation</option>
-                    <option value="Pest Control">Pest control</option>
-                    <option value="Crop Rotation">Crop rotation</option>
-                    <option value="Fertilizers">Fertilizers</option>
-                    <option value="Livestock">Livestock</option>
-                    <option value="Aquaculture">Aquaculture</option>
-                    <option value="Soil Health">Soil health</option>
-                    <option value="Food Security">Food security</option>
-                    <option value="Cultivation">Cultivation</option>
-                    <option value="Pesticides">Pesticides</option>
-                    <option value="Weeds">Weeds</option>
-                    <option value="Planting">Planting</option>
-                    <option value="Harvesting">Harvesting</option>
-                    <option value="Erosion">Erosion</option>
-                    <option value="Cropping">Cropping</option>
-                    <option value="Seeds">Seeds</option>
-                    <option value="Animals">Animals</option>
-                    <option value="Soil">Soil</option>
-                    <option value="Water">Water</option>
-                    <option value="Tools">Tools</option>
-                    <option value="Tractor">Tractor</option>
-                    <option value="Germination">Germination</option>
-                    <option value="Farming">Farming</option>
-                  </select>
+                <div class="h4 text-dark font-weight-bold mb-3">
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Question:</span
+                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                </div>
+                <div id="selectedTopics">
+                  <h3>Selected Topics:</h3>
+                  <ul id="selectedTopicsList"></ul>
+                </div>
+
+                <div class="h4 text-dark font-weight-bold mb-5"></div>
+                <div class="mb-3" id="topicForm">
+                  <div class="h4">
+                    <label>
+                      <input
+                        type="radio"
+                        name="topicType"
+                        value="Plant"
+                        checked
+                      />
+                      Plant
+                    </label>
+
+                    <label>
+                      <input
+                        type="radio"
+                        name="topicType"
+                        value="Animal"
+                        class="text-primary"
+                      />
+                      Animal
+                    </label>
+                  </div>
+                  <div id="plantTopics" style="display: block">
+                    <h3 class="text-primary">Plant Topics:</h3>
+                    <div class="h5 font-weight-bold">
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Planting and Sowing"
+                        />
+                        Planting and Sowing
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Fertilization"
+                        />
+                        Fertilization
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Soil Health and Properties"
+                        />
+                        Soil Health and Properties
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Harvesting and Post-Harvest Handling"
+                        />
+                        Harvesting and Post-Harvest Handling
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Farm Management"
+                        />
+                        Farm Management
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Weed Management"
+                        />
+                        Weed Management
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Irrigation and Water Management"
+                        />
+                        Irrigation and Water Management
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Pest and Disease Management"
+                        />
+                        Pest and Disease Management
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Weather and Climate"
+                        />
+                        Weather and Climate
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Crop Markets, Products, and Prices"
+                        />
+                        Crop Markets, Products, and Prices
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Crop Selection and Rotation"
+                        />
+                        Crop Selection and Rotation
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Farming Tools and Technologies"
+                        />
+                        Farming Tools and Technologies
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Food Security"
+                        />
+                        Food Security
+                      </label>
+                      <label>
+                        <input type="checkbox" name="topics" value="Others" />
+                        Others
+                      </label>
+                    </div>
+                  </div>
+                  <div id="animalTopics" style="display: none">
+                    <h3 class="text-primary">Animal Topics:</h3>
+                    <div class="h5 font-weight-bold">
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Health and Veterinary Care"
+                        />
+                        Animal Health and Veterinary Care
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Husbandry"
+                        />
+                        Animal Husbandry
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal/Livestock Selection"
+                        />
+                        Animal/Livestock Selection
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Production"
+                        />
+                        Animal Production
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Marketing"
+                        />
+                        Animal Marketing
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Diseases, Management, and Prevention"
+                        />
+                        Animal Diseases, Management, and Prevention
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Breeding and Reproduction"
+                        />
+                        Animal Breeding and Reproduction
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Housing and Shelter"
+                        />
+                        Animal Housing and Shelter
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Feeds and Nutrition"
+                        />
+                        Animal Feeds and Nutrition
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Animal Pasture and Grazing Management"
+                        />
+                        Animal Pasture and Grazing Management
+                      </label>
+                      <label>
+                        <input
+                          type="checkbox"
+                          name="topics"
+                          value="Aquaculture"
+                        />
+                        Aquaculture
+                      </label>
+                      <label>
+                        <input type="checkbox" name="topics" value="Others" />
+                        Others
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -388,8 +588,6 @@
   const token = "{{ token }}";
   const user = "{{ user }}";
   const role = "{{ role }}";
-
-  // Check if the token is not empty and store it in local storage
 
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
@@ -474,32 +672,58 @@
     // questio.textContent = ''
   });
 
+  function toggleTopics() {
+    const topicType = document.querySelector(
+      'input[name="topicType"]:checked'
+    ).value;
+    const plantTopics = document.getElementById("plantTopics");
+    const animalTopics = document.getElementById("animalTopics");
+
+    if (topicType === "Plant") {
+      plantTopics.style.display = "block";
+      animalTopics.style.display = "none";
+    } else {
+      plantTopics.style.display = "none";
+      animalTopics.style.display = "block";
+    }
+  }
+
+  const topicTypeRadios = document.querySelectorAll('input[name="topicType"]');
+  topicTypeRadios.forEach((radio) => {
+    radio.addEventListener("change", toggleTopics);
+  });
+
   async function submitForm() {
     event.preventDefault();
+
     var form = document.getElementById("signUpForm");
     var formData = new FormData(form);
 
     let questionId2 = parseInt(form.getAttribute("data-question-id"));
     const rephrased = document.getElementById("rephrased");
-    const topic = document.getElementById("topic").value;
     const displayValue = document.getElementById("displayValue");
-    // rephrased.addEventListener("input", function () {
-    //   // Update the display element with the input value
-    //   displayValue.textContent = rephrased.value;
-    //   console.log(displayValue);
-    // });
+
+    const formx = document.getElementById("topicForm");
+    const selectedTopicsList = document.getElementById("selectedTopicsList");
+    const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
+
+    let my_topics = [];
+    let selectedTopicsString = "";
+    checkboxes.forEach((checkbox) => {
+      console.log(checkbox.value);
+      selectedTopicsString += checkbox.value + ",";
+    });
     let itemBody = {};
 
-    if (rephrased !== "" && topic !== "") {
-      itemBody = { rephrased: rephrased, topic: topic };
+    if (rephrased !== "" && selectedTopicsString !== "") {
+      itemBody = { rephrased: rephrased, topic: selectedTopicsString };
     } else if (rephrased !== "") {
       itemBody = { rephrased: rephrased };
-    } else if (topic !== "") {
-      itemBody = { topic: topic };
+    } else if (selectedTopicsString !== "") {
+      itemBody = { topic: selectedTopicsString };
     } else {
       itemBody = {};
     }
-
     try {
       const response = await fetch(
         `/api/v1/questions/question_review/${questionId2}`,
@@ -541,7 +765,7 @@
     // Fetch top users data
     fetch("/api/v1/questions/random_question_review", {
       headers: {
-        Authorization: `Bearer ${mytoken}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
@@ -549,27 +773,25 @@
         const anyQuestion = randomQuestion.find(
           (question) => question.question_language === "Any Language"
         );
-        const englishQuestion = randomQuestion.find(
-          (question) => question.question_language === "English"
+        const runyankoleQuestion = randomQuestion.find(
+          (question) => question.question_language === "Runyankole"
         );
-        const lugandaQuestion = randomQuestion.find(
-          (question) => question.question_language === "Luganda"
-        );
+        
         const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = lugandaQuestion.sentence;
+        oneQuestion.textContent = runyankoleQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = lugandaQuestion.sentence;
+        oneQuestion1.textContent = runyankoleQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = lugandaQuestion.sentence;
+        oneQuestion2.textContent = runyankoleQuestion.sentence;
         const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = lugandaQuestion.topic
-          ? lugandaQuestion.topic
+        questionTopic.textContent = runyankoleQuestion.topics
+          ? runyankoleQuestion.topics
           : "No Topic";
         const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = lugandaQuestion.category
-          ? lugandaQuestion.category
+        questionCategory.textContent = runyankoleQuestion.category
+          ? runyankoleQuestion.category
           : "No Category";
-        var questionId = lugandaQuestion.id;
+        var questionId = runyankoleQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
@@ -584,13 +806,13 @@
           });
         }
       })
-      .catch((error) => console.error("Error fetching question:"));
+      .catch((error) => console.error(error));
 
     function updateQuestion(questionId) {
       const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${mytoken}`,
+          Authorization: `Bearer ${token}`,
         },
       })
         .then((response) => response.json())
