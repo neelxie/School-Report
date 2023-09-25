@@ -993,8 +993,9 @@ def store_answer_ranks():
 @jwt_required()
 def upload_json_answers():
     if request.method == "POST":
-        file_json = request.files.get("file")
-        json_data = json.load(file_json)
+        beforeData = request.get_json()
+        json_data = beforeData["file"]
+        
 
         current_user_id = get_jwt_identity()
         dup_count = 0
