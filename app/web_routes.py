@@ -145,6 +145,51 @@ def rank_answers():
     username = session.get("username")
     return render_template("rank.html", token=access_token, role=role, user=username)
 
+@web_bp.route("/english_answer")
+def english_answer():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("englishAnswer.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/english_rank")
+def english_rank():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("englishRank.html", token=access_token, role=role, user=username)
+
+@web_bp.route("/luganda_answer")
+def luganda_answer():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("lugandaAnswer.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/luganda_rank")
+def luganda_rank():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("lugandaRank.html", token=access_token, role=role, user=username)
+
+@web_bp.route("/runyankole_answer")
+def runyankole_answer():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("runyankoleAnswer.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/runyankole_rank")
+def runyankole_rank():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("runyankoleRank.html", token=access_token, role=role, user=username)
+
 
 @web_bp.route("/luganda")
 def luganda():

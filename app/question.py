@@ -471,30 +471,112 @@ def random_question_for_review():
 @questions.route("/random_question_answer", methods=["GET"])
 @jwt_required()
 def random_question_for_answer():
-    random_unreviewed_question = (
-        Question.query.filter_by(reviewed=True, correct=True)
+    english_filter = func.lower(Question.language) == "english"
+    luganda_filter = func.lower(Question.language) == "luganda"
+    runyankole_filter = func.lower(Question.language) == "runyankole"
+    reviewed_filter = Question.reviewed == True
+    cleaned_filter = Question.cleaned == True
+
+    english_random_unreviewed_question = (
+        Question.query.filter(english_filter, reviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
+    luganda_random_unreviewed_question = (
+        Question.query.filter(luganda_filter, reviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    runyankole_random_unreviewed_question = (
+        Question.query.filter(runyankole_filter, reviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    random_unreviewed_question = (
+        Question.query.filter(reviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    questions_data = []
+
+    if english_random_unreviewed_question:
+        questions_data.append(
+            format_question(english_random_unreviewed_question, "English")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "English",
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections",
+            }
+        )
+
+    if luganda_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(luganda_random_unreviewed_question, "Luganda")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Luganda",
+                "sentence": "There are no more luganda questions, Please evaluate English questions",
+            }
+        )
+
+    if runyankole_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(runyankole_random_unreviewed_question, "Runyankole")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Runyakole",
+                "sentence": "There are no more Runyankole questions, Please evaluate English questions",
+            }
+        )
+
     if random_unreviewed_question:
-        question_data = {
-            "id": random_unreviewed_question.id,
-            "sentence": random_unreviewed_question.rephrased
-            if random_unreviewed_question.rephrased
-            else random_unreviewed_question.sentence,
-            "language": random_unreviewed_question.language,
-            "created_at": random_unreviewed_question.created_at.strftime(
-                "%Y-%m-%d %H:%M:%S"
-            ),
-            "topic": random_unreviewed_question.topic,
-            "category": random_unreviewed_question.category,
-            "animal_crop": random_unreviewed_question.animal_crop,
-            "location": random_unreviewed_question.location,
-        }
-        return jsonify(question_data), HTTP_200_OK
+        questions_data.append(
+            format_question(random_unreviewed_question, "Any Language")
+        )
+
+    if questions_data:
+        return jsonify(questions_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+
+# @questions.route("/", methods=["GET"])
+# @jwt_required()
+# def random_question_for_answer():
+#     random_unreviewed_question = (
+#         Question.query.filter_by(reviewed=True, correct=True)
+#         .order_by(func.random())
+#         .first()
+#     )
+
+#     if random_unreviewed_question:
+#         question_data = {
+#             "id": random_unreviewed_question.id,
+#             "sentence": random_unreviewed_question.rephrased
+#             if random_unreviewed_question.rephrased
+#             else random_unreviewed_question.sentence,
+#             "language": random_unreviewed_question.language,
+#             "created_at": random_unreviewed_question.created_at.strftime(
+#                 "%Y-%m-%d %H:%M:%S"
+#             ),
+#             "topic": random_unreviewed_question.topic,
+#             "category": random_unreviewed_question.category,
+#             "animal_crop": random_unreviewed_question.animal_crop,
+#             "location": random_unreviewed_question.location,
+#         }
+#         return jsonify(question_data), HTTP_200_OK
+#     else:
+#         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
 
 @questions.post("/add_answer/<int:question_id>")
@@ -815,7 +897,12 @@ def answered_question_ranking():
     # Include the random_question without language filter
     random_question_data = None
     random_question = (
-        Question.query.filter(cleaned_filter, answered_filter, unFinished_filter, (~Question.answers.any(Answer.user_id == user_id)))
+        Question.query.filter(
+            cleaned_filter,
+            answered_filter,
+            unFinished_filter,
+            (~Question.answers.any(Answer.user_id == user_id)),
+        )
         .order_by(func.random())
         .first()
     )

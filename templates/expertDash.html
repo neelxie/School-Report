@@ -131,25 +131,25 @@ endblock %} {% block content %}
     <div class="app-main__outer">
       <div class="app-main__inner">
         <a
-            type="button"
-            class="btn btn-warning mb-3"
-            href="{{ url_for('web.dash') }}"
+          type="button"
+          class="btn btn-warning mb-3"
+          href="{{ url_for('web.dash') }}"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-arrow-bar-left"
+            viewBox="0 0 16 16"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-bar-left"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-              ></path>
-            </svg>
-            Back to Dashboard
-          </a>
+            <path
+              fill-rule="evenodd"
+              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+            ></path>
+          </svg>
+          Back to Dashboard
+        </a>
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
@@ -308,10 +308,10 @@ endblock %} {% block content %}
                   <h3>Selected Topics:</h3>
                   <ul id="selectedTopicsList"></ul>
                 </div>
-          
+
                 <div class="h4 text-dark font-weight-bold mb-5"></div>
-                <div class="mb-3">
-                  <div id="topicForm">
+                <div class="mb-3" id="topicForm">
+                  <div class="h4">
                     <label>
                       <input
                         type="radio"
@@ -323,13 +323,18 @@ endblock %} {% block content %}
                     </label>
 
                     <label>
-                      <input type="radio" name="topicType" value="Animal" />
+                      <input
+                        type="radio"
+                        name="topicType"
+                        value="Animal"
+                        class="text-primary"
+                      />
                       Animal
                     </label>
                   </div>
                   <div id="plantTopics" style="display: block">
-                    <h3>Plant Topics:</h3>
-                    <div>
+                    <h3 class="text-primary">Plant Topics:</h3>
+                    <div class="h5 font-weight-bold">
                       <label>
                         <input
                           type="checkbox"
@@ -435,18 +440,14 @@ endblock %} {% block content %}
                         Food Security
                       </label>
                       <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Others"
-                        />
+                        <input type="checkbox" name="topics" value="Others" />
                         Others
                       </label>
                     </div>
                   </div>
                   <div id="animalTopics" style="display: none">
-                    <h3>Animal Topics:</h3>
-                    <div>
+                    <h3 class="text-primary">Animal Topics:</h3>
+                    <div class="h5 font-weight-bold">
                       <label>
                         <input
                           type="checkbox"
@@ -536,11 +537,7 @@ endblock %} {% block content %}
                         Aquaculture
                       </label>
                       <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Others"
-                        />
+                        <input type="checkbox" name="topics" value="Others" />
                         Others
                       </label>
                     </div>
@@ -674,97 +671,87 @@ endblock %} {% block content %}
     displayValue.textContent = rephrased.value;
     // questio.textContent = ''
   });
-  
+
+  function toggleTopics() {
+    const topicType = document.querySelector(
+      'input[name="topicType"]:checked'
+    ).value;
+    const plantTopics = document.getElementById("plantTopics");
+    const animalTopics = document.getElementById("animalTopics");
+
+    if (topicType === "Plant") {
+      plantTopics.style.display = "block";
+      animalTopics.style.display = "none";
+    } else {
+      plantTopics.style.display = "none";
+      animalTopics.style.display = "block";
+    }
+  }
+
+  const topicTypeRadios = document.querySelectorAll('input[name="topicType"]');
+  topicTypeRadios.forEach((radio) => {
+    radio.addEventListener("change", toggleTopics);
+  });
+
+  async function submitForm() {
+    event.preventDefault();
+
+    var form = document.getElementById("signUpForm");
+    var formData = new FormData(form);
+
+    let questionId2 = parseInt(form.getAttribute("data-question-id"));
+    const rephrased = document.getElementById("rephrased");
+    const displayValue = document.getElementById("displayValue");
+
+    const formx = document.getElementById("topicForm");
+    const selectedTopicsList = document.getElementById("selectedTopicsList");
+    const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
+
+    let my_topics = [];
+    let selectedTopicsString = "";
+    checkboxes.forEach((checkbox) => {
+      console.log(checkbox.value);
+      selectedTopicsString += checkbox.value + ",";
+    });
+    let itemBody = {};
+
+    if (rephrased !== "" && selectedTopicsString !== "") {
+      itemBody = { rephrased: rephrased, topic: selectedTopicsString };
+    } else if (rephrased !== "") {
+      itemBody = { rephrased: rephrased };
+    } else if (selectedTopicsString !== "") {
+      itemBody = { topic: selectedTopicsString };
+    } else {
+      itemBody = {};
+    }
+    try {
+      const response = await fetch(
+        `/api/v1/questions/question_review/${questionId2}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${mytoken}`,
+          },
+          body: JSON.stringify(itemBody),
+        }
+      );
+
+      const responseData = await response.json();
+      if (response) {
+        window.location.reload();
+        // window.location.href = window.location.href;
+      } else {
+        errorMessage.textContent = responseData.error;
+      }
+    } catch (error) {
+      console.error("Error parsing response:", error);
+    }
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     // Get the token from local storage
     const token = localStorage.getItem("token");
-
-    function toggleTopics() {
-      const topicType = document.querySelector(
-        'input[name="topicType"]:checked'
-      ).value;
-      const plantTopics = document.getElementById("plantTopics");
-      const animalTopics = document.getElementById("animalTopics");
-
-      if (topicType === "Plant") {
-        plantTopics.style.display = "block";
-        animalTopics.style.display = "none";
-      } else {
-        plantTopics.style.display = "none";
-        animalTopics.style.display = "block";
-      }
-    }
-
-    const topicTypeRadios = document.querySelectorAll('input[name="topicType"]');
-    topicTypeRadios.forEach((radio) => {
-      radio.addEventListener("change", toggleTopics);
-    });
-
-    async function submitForm() {
-      event.preventDefault();
-
-      const formx = document.getElementById("topicForm");
-      const selectedTopicsList = document.getElementById("selectedTopicsList");
-      const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
-      
-      let my_topics = []
-      let selectedTopicsString = "Selected Topics:\n";
-      checkboxes.forEach(checkbox => {
-        console.log(checkbox.value)
-        selectedTopicsString += checkbox.value + "\n";
-      });
-      console.log(selectedTopicsString)
-      alert(selectedTopicsString);
-
-      var form = document.getElementById("signUpForm");
-      var formData = new FormData(form);
-
-      let questionId2 = parseInt(form.getAttribute("data-question-id"));
-      const rephrased = document.getElementById("rephrased");
-      // const topic = document.getElementById("topic").value;
-      const displayValue = document.getElementById("displayValue");
-      // rephrased.addEventListener("input", function () {
-      //   // Update the display element with the input value
-      //   displayValue.textContent = rephrased.value;
-      //   console.log(displayValue);
-      // });
-      let itemBody = {};
-
-      if (rephrased !== "" && topic !== "") {
-        itemBody = { rephrased: rephrased, topic: topic };
-      } else if (rephrased !== "") {
-        itemBody = { rephrased: rephrased };
-      } else if (topic !== "") {
-        itemBody = { topic: topic };
-      } else {
-        itemBody = {};
-      }
-
-      // try {
-      //   const response = await fetch(
-      //     `/api/v1/questions/question_review/${questionId2}`,
-      //     {
-      //       method: "PUT",
-      //       headers: {
-      //         "content-type": "application/json",
-      //         Authorization: `Bearer ${mytoken}`,
-      //       },
-      //       body: JSON.stringify(itemBody),
-      //     }
-      //   );
-
-      //   const responseData = await response.json();
-      //   if (response) {
-      //     window.location.reload();
-      //     // window.location.href = window.location.href;
-      //   } else {
-      //     errorMessage.textContent = responseData.error;
-      //   }
-      // } catch (error) {
-      //   console.error("Error parsing response:", error);
-      // }
-    }
 
     function showFormWithQuestionId(questionId) {
       // Display the form and set the question ID as a data attribute
