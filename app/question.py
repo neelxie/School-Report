@@ -1658,7 +1658,7 @@ def upload_json_answers():
         location = obj.get("location")
 
         # Check if the question already exists
-        if Question.query.filter_by(sentence=sentence).first():
+        if Question.query.filter_by(sentence=sentence, cleaned=True).first():
             dup_count += 1
             duplicates.append({"sentence": sentence})
         else:
