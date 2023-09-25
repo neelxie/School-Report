@@ -291,25 +291,41 @@ content %}
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const fileReader =  new FileReader();
 
-    fetch("/api/v1/questions/upload_json_answers", {
-      method: "POST",
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        document.getElementById("message").innerText = data.message;
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        document.getElementById("message").innerText =
-          "An error occurred while uploading the file.";
-      });
+    fileReader.onload = function (event) {
+      const fileContent = event.target.result;
+
+      try {
+        const jsonData = JSON.parse(fileContent);
+
+        const requestBody = {
+          file: jsonData,
+        };
+
+        fetch("/api/v1/questions/upload_json_answers", {
+          method: "POST",
+          body: JSON.stringify(requestBody),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("message").innerText = data.message;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            document.getElementById("message").innerText =
+              "An error occurred while uploading the file.";
+          });
+      }  catch (error) {
+        document.getElementById("message").innerText = "Invalid JSON format in the selected file.";
+      }
+    };
+
+    fileReader.readAsText(file)
   }
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
