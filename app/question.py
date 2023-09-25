@@ -989,7 +989,7 @@ def store_answer_ranks():
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
 
 
-@questions.route("/upload_json_answers/", methods=["POST"])
+@questions.route("/upload_json_answers/", methods=["GET"])
 @jwt_required()
 def upload_json_answers():
     if request.method == "POST":
