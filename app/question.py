@@ -922,6 +922,7 @@ def answered_question_ranking():
 @questions.route("/store_answer_ranks", methods=["POST"])
 @jwt_required()
 def store_answer_ranks():
+    user_id = get_jwt_identity()
     data = request.json
     question_id = data.get("questionId")
     rankings = data.get("rankings")
@@ -946,10 +947,10 @@ def store_answer_ranks():
                 answer.fluency = fluency
                 answer.rank = answer_rank
 
-        # Update the question field to "finished"
         question = Question.query.get(question_id)
         if question:
             question.finished = True
+            question.ranked_by = user_id
 
         db.session.commit()
         return jsonify({"message": "Answer ranks stored successfully"}), HTTP_200_OK
@@ -958,6 +959,45 @@ def store_answer_ranks():
         db.session.rollback()
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
 
+
+@questions.route('/expert-stats', methods=['GET'])
+@jwt_required()
+def question_stats():
+    total_cleaned = Question.query.filter_by(cleaned=True).count()
+    cleaned_and_reviewed = Question.query.filter_by(cleaned=True, reviewed=True).count()
+    cleaned_reviewed_and_answered = Question.query.filter_by(cleaned=True, answered=True).count()
+    all_fields_true = Question.query.filter_by(cleaned=True, finished=True).count()
+    experts = User.query.filter_by(role='expert').all()
+
+    expert_data = []
+    for expert in experts:
+        # Count the number of reviewed questions for this expert
+        reviewed_questions_count = Question.query.filter_by(reviewer_id=expert.id).count()
+
+        # Get all answers provided by this expert
+        answers = Answer.query.filter_by(user_id=expert.id).count()
+
+        ranked_answers = Question.query.filter_by(ranked_by=expert.id).count()
+
+        expert_info = {
+            'id': expert.id,
+            'lastname': expert.lastname,
+            'firstname': expert.firstname,
+            'phone_number':expert.phone_number,
+            'reviewed_questions_count': reviewed_questions_count,
+            'answers_count': answers,
+            'ranked_answers': ranked_answers
+        }
+
+        expert_data.append(expert_info)
+
+    return jsonify({
+        'total_cleaned': total_cleaned,
+        'cleaned_and_reviewed': cleaned_and_reviewed,
+        'cleaned_reviewed_and_answered': cleaned_reviewed_and_answered,
+        'all_fields_true': all_fields_true,
+        'experts':expert_data
+    })
 
 @questions.route("/upload_json_answers/", methods=["POST"])
 @jwt_required()
