@@ -52,6 +52,9 @@ class Question(db.Model):
     finished = db.Column(db.Boolean, default=False)
     answered = db.Column(db.Boolean, default=False)
     cleaned = db.Column(db.Boolean, default=False)
+    ranked_by = db.Column(
+        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
+    )
     answers = db.relationship("Answer", backref="question")
 
     def __repr__(self) -> str:
