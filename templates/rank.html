@@ -409,6 +409,9 @@ block content %}
                       onkeypress="return /^[1-5]$/i.test(event.key)"
                   />
               </td>
+              <td class="text-center">
+                <button class="btn btn-danger flag-button" data-answer-id="${answer.id}">Flag</button>
+              </td>
           `;
           tableBody.appendChild(newRow);
         })

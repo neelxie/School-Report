@@ -237,7 +237,7 @@ def get_question(id):
 @jwt_required()
 @questions.get("/all")
 def get_questions():
-    questions = Question.query.filter(Question.cleaned != True).all()
+    questions = Question.query.filter(Question.cleaned == None).all()
 
     if not questions:
         return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
@@ -303,30 +303,30 @@ def list_questions():
     total_questions = len(all_questions)
     questions_per_language = (
         db.session.query(Question.language, func.count(Question.id))
-        .filter(Question.cleaned != True)
+        .filter(Question.cleaned == None)
         .group_by(Question.language)
         .all()
     )
 
     # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
     average_daily_questions = total_questions / (
-        Question.query.filter(Question.cleaned != True, Question.created_at >= datetime.date.today()).count() or 1
+        Question.query.filter(Question.cleaned == None, Question.created_at >= datetime.date.today()).count() or 1
     )
 
     one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
     average_weekly_questions = total_questions / (
-        Question.query.filter(Question.cleaned != True, Question.created_at >= one_week_ago).count() or 1
+        Question.query.filter(Question.cleaned == None, Question.created_at >= one_week_ago).count() or 1
     )
 
     #  Calculate average questions per user
     total_users = User.query.count()
     average_questions_per_user = total_questions / (total_users or 1)
 
-    plant_question_count = Question.query.filter(Question.cleaned != True,
+    plant_question_count = Question.query.filter(Question.cleaned == None,
         func.lower(Question.category) == "crop"
     ).count()
 
-    animal_question_count = Question.query.filter(Question.cleaned != True,
+    animal_question_count = Question.query.filter(Question.cleaned == None,
         func.lower(Question.category) == "animal"
     ).count()
 
@@ -663,7 +663,7 @@ def get_random_unanswered_question(user_id):
 @questions.route("/luganda", methods=["GET"])
 @jwt_required()
 def get_luganda_questions():
-    luganda_questions = Question.query.filter(Question.cleaned != True,
+    luganda_questions = Question.query.filter(Question.cleaned == None,
         func.lower(Question.language) == "luganda"
     ).all()
 
@@ -690,7 +690,7 @@ def get_luganda_questions():
 @questions.route("/english", methods=["GET"])
 @jwt_required()
 def get_english_questions():
-    english_questions = Question.query.filter(Question.cleaned != True,
+    english_questions = Question.query.filter(Question.cleaned == None,
         func.lower(Question.language) == "english"
     ).all()
 

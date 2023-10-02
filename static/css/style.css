@@ -34,6 +34,13 @@ body {
   overflow: hidden;
 }
 
+.hait{
+  min-height: 60vh;
+}
+
+.customPadding{
+  padding-top: 6rem!important;
+}
 .fullscreen-bg img {
   position: absolute;
   top: 0;
