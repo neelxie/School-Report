@@ -52,10 +52,25 @@ class Question(db.Model):
     finished = db.Column(db.Boolean, default=False)
     answered = db.Column(db.Boolean, default=False)
     cleaned = db.Column(db.Boolean, default=False)
+    answer_expert_one = db.Column(
+        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
+    )
+    answer_expert_two = db.Column(
+        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
+    )
+    answer_count = db.Column(db.Integer, default=0)
+    ranking_count = db.Column(db.Integer, default=0)
     ranked_by = db.Column(
         db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
     )
+    rank_expert_one = db.Column(
+        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
+    )
+    rank_expert_two = db.Column(
+        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
+    )
     answers = db.relationship("Answer", backref="question")
+    
 
     def __repr__(self) -> str:
         return "Question>>> {self.sentence}"
@@ -74,7 +89,7 @@ class Answer(db.Model):
     fluency = db.Column(db.Integer, nullable=True, default=0)
     relevance = db.Column(db.Integer, nullable=True, default=0)
     coherence = db.Column(db.Integer, nullable=True, default=0)
-
+    offensive = db.Column(db.Boolean, default=False)
 
     def __repr__(self) -> str:
         return f"Answer>>> {self.answer_text}"

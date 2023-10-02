@@ -35,7 +35,7 @@ def index():
                 session["token"] = access_token
                 session["role"] = user.role
                 session["username"] = user.username
-                return redirect(url_for('web.dash'))
+                return redirect(url_for('web.choose'))
                 # return render_template(
                 #     "dashboard.html",
                 #     token=access_token,
@@ -58,8 +58,29 @@ def admin():
     username = session.get("username")
     return render_template("admin.html", token=access_token, role=role, user=username)
 
+@web_bp.route("/choose")
+def choose():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("choose.html", token=access_token, role=role, user=username)
+
 @web_bp.route("/dash")
 def dash():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("dashboard.html", token=access_token, role=role, user=username)
+
+@web_bp.route("/crop_expert")
+def crop_expert():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("dashboard.html", token=access_token, role=role, user=username)
+
+@web_bp.route("/animal_expert")
+def animal_expert():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
