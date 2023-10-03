@@ -35,7 +35,7 @@ def index():
                 session["token"] = access_token
                 session["role"] = user.role
                 session["username"] = user.username
-                return redirect(url_for('web.choose'))
+                return redirect(url_for("web.choose"))
                 # return render_template(
                 #     "dashboard.html",
                 #     token=access_token,
@@ -58,6 +58,7 @@ def admin():
     username = session.get("username")
     return render_template("admin.html", token=access_token, role=role, user=username)
 
+
 @web_bp.route("/choose")
 def choose():
     access_token = session.get("token")
@@ -65,26 +66,49 @@ def choose():
     username = session.get("username")
     return render_template("choose.html", token=access_token, role=role, user=username)
 
+
 @web_bp.route("/dash")
 def dash():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("dashboard.html", token=access_token, role=role, user=username)
+    return render_template(
+        "dashboard.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/crop_expert")
 def crop_expert():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("dashboard.html", token=access_token, role=role, user=username)
+    return render_template(
+        "crop_expert.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/animal_expert")
 def animal_expert():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("dashboard.html", token=access_token, role=role, user=username)
+    return render_template(
+        "animal_expert.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/answer_page.html")
+def answer_page():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+
+    return render_template(
+        "answer_page.html",
+        token=access_token,
+        role=role,
+        user=username,
+    )
 
 
 @web_bp.route("/farmers")
@@ -142,6 +166,7 @@ def luganda_review():
         "lugandaReview.html", token=access_token, role=role, user=username
     )
 
+
 @web_bp.route("/runyankole_review")
 def runyankole_review():
     access_token = session.get("token")
@@ -150,6 +175,7 @@ def runyankole_review():
     return render_template(
         "runyankoleReview.html", token=access_token, role=role, user=username
     )
+
 
 @web_bp.route("/answer")
 def answer_questions():
@@ -166,12 +192,15 @@ def rank_answers():
     username = session.get("username")
     return render_template("rank.html", token=access_token, role=role, user=username)
 
+
 @web_bp.route("/english_answer")
 def english_answer():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("englishAnswer.html", token=access_token, role=role, user=username)
+    return render_template(
+        "englishAnswer.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/english_rank")
@@ -179,14 +208,19 @@ def english_rank():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("englishRank.html", token=access_token, role=role, user=username)
+    return render_template(
+        "englishRank.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/luganda_answer")
 def luganda_answer():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("lugandaAnswer.html", token=access_token, role=role, user=username)
+    return render_template(
+        "lugandaAnswer.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/luganda_rank")
@@ -194,14 +228,19 @@ def luganda_rank():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("lugandaRank.html", token=access_token, role=role, user=username)
+    return render_template(
+        "lugandaRank.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/runyankole_answer")
 def runyankole_answer():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("runyankoleAnswer.html", token=access_token, role=role, user=username)
+    return render_template(
+        "runyankoleAnswer.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/runyankole_rank")
@@ -209,7 +248,9 @@ def runyankole_rank():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("runyankoleRank.html", token=access_token, role=role, user=username)
+    return render_template(
+        "runyankoleRank.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/luganda")
@@ -227,12 +268,15 @@ def english():
     username = session.get("username")
     return render_template("english.html", token=access_token, role=role, user=username)
 
+
 @web_bp.route("/runyankole")
 def runyankole():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("runyankole.html", token=access_token, role=role, user=username)
+    return render_template(
+        "runyankole.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/upload_dataset")

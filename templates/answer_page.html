@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Answer Questions Page{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Experts Animal Dash Page{% endblock
+%} {% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -69,33 +69,7 @@
                   </div>
                 </div>
               </li>
-              <li class="list-group-item">
-                <div class="widget-content p-0">
-                  <div class="widget-content-wrapper">
-                    <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-sidebar"
-                      >
-                        <div class="switch-animate switch-on">
-                          <input
-                            type="checkbox"
-                            checked
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="widget-content-left">
-                      <div class="widget-heading">Fixed Sidebar</div>
-                      <div class="widget-subheading">
-                        Makes the sidebar left fixed, always visible!
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
+
               <li class="list-group-item">
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
@@ -153,13 +127,13 @@
       </div>
     </div>
   </div>
-  <div class="app-main">
+  <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner">
         <a
           type="button"
           class="btn btn-warning mb-3"
-          href="{{ url_for('web.dash') }}"
+          href="{{ url_for('web.choose') }}"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -177,39 +151,9 @@
           Back to Dashboard
         </a>
         <div class="row">
-          <div class="col-9 col-sm-12">
-            <ul class="nav nav-pills nav-fill justify-content-around">
-              <li class="nav-item">
-                <a
-                  class="nav-link text-success"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.expert_dashboard') }}"
-                  >Review Questions</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.answer_questions') }}"
-                  >Answer Questions</a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link text-success"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.rank_answers') }}"
-                  >Rank Answers</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
           <div class="col-12">
             <div class="main-card mb-3 card pt-3 pb-5">
-              <div class="card col-11 mx-auto my-3">
+              <div class="card col-11 mx-auto my-3 border border-success">
                 <form id="answerForm">
                   <div
                     class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-1 my-4 border"
@@ -219,46 +163,54 @@
                     </p>
 
                     <p class="h3">
-                      Provide an answer to this question in the input field
-                      below, or you can choose to skip this question.
+                      To edit your answer, please enter it in the input field
+                      provided below.
                     </p>
                   </div>
                   <table>
                     <tbody>
                       <tr>
-                        <th class="text-primary pr-3 h3">Language:</th>
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Language:
+                        </th>
                         <td
                           id="questionLanguage"
                           class="font-weight-bold h2"
                         ></td>
                       </tr>
                       <tr>
-                        <th class="text-primary pr-3 h3">Topic:</th>
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Topic:
+                        </th>
                         <td id="questionTopic" class="font-weight-bold h2"></td>
                       </tr>
                       <tr class="border">
-                        <th class="text-primary pr-3 h3">Question:</th>
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Question:
+                        </th>
                         <td id="oneQuestion" class="font-weight-bold h2"></td>
+                      </tr>
+                      <tr class="border">
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Answer:
+                        </th>
+                        <td id="answer" class="font-weight-bold h2"></td>
                       </tr>
                     </tbody>
                   </table>
+                  <label style="font-size: 1.3rem" class="font-weight-bold mt-3"
+                    >Edit or type in new answer</label
+                  >
                   <input
                     type="text"
-                    name="answer"
-                    id="answer"
-                    placeholder="Add answer"
+                    name="newAnswer"
+                    id="newAnswer"
+                    placeholder="Edit answer"
                     style="font-size: 1.3rem"
-                    class="form-control my-3 border border-dark h3"
+                    class="form-control my-1 border border-dark h3"
                   />
                   <div class="d-flex justify-content-between">
-                    <button
-                      style="font-size: 1.5rem"
-                      name="next"
-                      class="btn btn-warning my-3"
-                      onclick="reloadPage()"
-                    >
-                      Skip
-                    </button>
+                    &nbsp;
                     <button
                       style="font-size: 1.5rem"
                       name="next"
@@ -274,19 +226,6 @@
           </div>
         </div>
       </div>
-      <div class="app-wrapper-footer">
-        <div class="app-footer">
-          <div class="app-footer__inner">
-            <div class="app-footer-left">
-              <ul class="nav">
-                <li class="nav-item">
-                  <a href="https://air.ug" class="nav-link"> air.ug </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -294,6 +233,17 @@
   const token = "{{ token }}";
   const user = "{{ user }}";
   const role = "{{ role }}";
+
+  // Check if the token is not empty and store it in local storage
+  if (token) {
+    localStorage.setItem("token", token);
+  }
+  if (user) {
+    localStorage.setItem("user", user);
+  }
+  if (role) {
+    localStorage.setItem("role", role);
+  }
 
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
@@ -323,44 +273,41 @@
   if (logoutButton) {
     logoutButton.addEventListener("click", logout);
   }
-
+</script>
+<script>
   function showFormWithQuestionId(questionId) {
     // Display the form and set the question ID as a data attribute
     var form = document.getElementById("answerForm");
     form.style.display = "block";
     form.setAttribute("data-question-id", questionId);
   }
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the token from local storage
+    const token = localStorage.getItem("token");
+    const urlParams = new URLSearchParams(window.location.search);
+    const answerId = urlParams.get("answer_id");
 
-  document
-    .addEventListener("DOMContentLoaded", function () {
-      const token = localStorage.getItem("token"); // Get the token from local storage
-
-      // Fetch top users data
-      fetch("/api/v1/questions/random_question_answer", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((randomQuestion) => {
-          const anyQuestion = randomQuestion.find(
-            (question) => question.question_language === "Any Language"
-          );
-          const oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = anyQuestion.sentence
-            ? anyQuestion.sentence
-            : "--No Questions.--";
-          const questionLanguage = document.getElementById("questionLanguage");
-          questionLanguage.textContent = anyQuestion.language;
-          const questionTopic = document.getElementById("questionTopic");
-          questionTopic.textContent = anyQuestion.topics
-            ? anyQuestion.topics
-            : "No Topic";
-          var questionId = anyQuestion.id;
-          showFormWithQuestionId(questionId);
-        });
+    fetch(`/api/v1/questions/answers/${answerId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch((error) => console.error("Error fetching question:"));
+      .then((response) => response.json())
+      .then((data) => {
+        const oneQuestion = document.getElementById("oneQuestion");
+        oneQuestion.textContent = data.question_text;
+        const questionLanguage = document.getElementById("questionLanguage");
+        questionLanguage.textContent = data.language;
+        const questionTopic = document.getElementById("questionTopic");
+        questionTopic.textContent = data.topic;
+        const answer = document.getElementById("answer");
+        answer.textContent = data.answer_text;
+        var questionId = data.answer_id;
+        showFormWithQuestionId(questionId);
+        const answerDetails = document.getElementById("answer-details");
+      })
+      .catch((error) => console.error("Error fetching answer data: ", error));
+  });
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -372,15 +319,15 @@
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
-      let answer = document.getElementById("answer").value;
+      let answer = document.getElementById("newAnswer").value;
       const itemBody = {
-        answer: answer,
+        answer_text: answer,
       };
       console.log(answer);
       const response = await fetch(
-        `/api/v1/questions/add_answer/${questionId}`,
+        `/api/v1/questions/update_answer_text/${questionId}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "content-type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -388,21 +335,21 @@
           body: JSON.stringify(itemBody),
         }
       );
+      console.log(itemBody)
+      console.log(questionId)
 
       try {
         const responseData = await response.json();
         if (response.ok) {
-          window.location.reload();
-          window.location.href = window.location.href;
+          window.location.href = "/choose";
         } else {
           errorMessage.textContent = responseData.error;
         }
       } catch (error) {
         console.error("Error parsing response:");
-      } finally {
-        window.location.reload();
       }
     });
   });
 </script>
+
 {% endblock %}

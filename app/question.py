@@ -310,23 +310,23 @@ def list_questions():
 
     # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
     average_daily_questions = total_questions / (
-        Question.query.filter(Question.cleaned == None, Question.created_at >= datetime.date.today()).count() or 1
+        Question.query.filter(Question.cleaned == None, Question.cleaned == False, Question.created_at >= datetime.date.today()).count() or 1
     )
 
     one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
     average_weekly_questions = total_questions / (
-        Question.query.filter(Question.cleaned == None, Question.created_at >= one_week_ago).count() or 1
+        Question.query.filter(Question.cleaned == None, Question.cleaned == False, Question.created_at >= one_week_ago).count() or 1
     )
 
     #  Calculate average questions per user
     total_users = User.query.count()
     average_questions_per_user = total_questions / (total_users or 1)
 
-    plant_question_count = Question.query.filter(Question.cleaned == None,
+    plant_question_count = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
         func.lower(Question.category) == "crop"
     ).count()
 
-    animal_question_count = Question.query.filter(Question.cleaned == None,
+    animal_question_count = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
         func.lower(Question.category) == "animal"
     ).count()
 
@@ -663,7 +663,7 @@ def get_random_unanswered_question(user_id):
 @questions.route("/luganda", methods=["GET"])
 @jwt_required()
 def get_luganda_questions():
-    luganda_questions = Question.query.filter(Question.cleaned == None,
+    luganda_questions = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
         func.lower(Question.language) == "luganda"
     ).all()
 
@@ -690,7 +690,7 @@ def get_luganda_questions():
 @questions.route("/english", methods=["GET"])
 @jwt_required()
 def get_english_questions():
-    english_questions = Question.query.filter(Question.cleaned == None,
+    english_questions = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
         func.lower(Question.language) == "english"
     ).all()
 
@@ -998,6 +998,72 @@ def question_stats():
         'all_fields_true': all_fields_true,
         'experts':expert_data
     })
+
+@questions.route('/user_answers', methods=['GET'])
+@jwt_required()
+def get_user_answers():
+    user_id = get_jwt_identity()
+
+    user_answers = Answer.query.filter_by(user_id=user_id).all()
+    answers_data = []
+
+    for answer in user_answers:
+        answers_data.append({
+            'id': answer.id,
+            'answer_text': answer.answer_text,
+            'created_at': answer.created_at,
+            'question_id': answer.question_id,
+        })
+
+    return jsonify(answers_data)
+
+@questions.route('/answers/<int:answer_id>', methods=['GET'])
+@jwt_required()
+def get_answer(answer_id):
+    user_id = get_jwt_identity()
+
+    answer = Answer.query.get(answer_id)
+    if not answer:
+        return jsonify({'error': 'Answer not found'}), HTTP_404_NOT_FOUND
+    
+    if answer.user_id != user_id:
+        return jsonify({'error': 'Unauthorized access to answer details'}), 403
+
+    question = Question.query.get(answer.question_id)
+    if not question:
+        return jsonify({'error': 'Question not found'}), HTTP_404_NOT_FOUND
+    
+    response_data = {
+        'answer_id': answer.id,
+        'answer_text': answer.answer_text,
+        'question_id': question.id,
+        'question_text': question.rephrased or question.sentence,
+        'language': question.language,
+        'animal_crop': question.animal_crop,
+        'category': question.category,
+        'topic': question.topic
+    }
+
+    return jsonify(response_data), HTTP_200_OK
+
+@questions.route('/update_answer_text/<int:answer_id>', methods=['PUT'])
+@jwt_required()
+def update_answer_text(answer_id):
+
+    answer = Answer.query.get(answer_id)
+    if not answer:
+        return jsonify({"message": "Answer not found"}), HTTP_404_NOT_FOUND
+    new_answer_text = request.json.get("answer_text")
+
+    if not new_answer_text:
+        return jsonify({"message": "New answer_text not provided"}), HTTP_404_NOT_FOUND
+
+    answer.answer_text = new_answer_text
+    db.session.commit()
+
+    return jsonify({"message": "Answer text updated successfully"}), HTTP_200_OK
+    
+
 
 @questions.route("/upload_json_answers/", methods=["POST"])
 @jwt_required()
