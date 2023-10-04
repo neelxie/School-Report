@@ -1,0 +1,564 @@
+{% extends "base.html" %} {% block title %}Experts Dash Page{% endblock %} {%
+  block content %}
+  
+  <div
+    class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
+  >
+    <div class="app-header header-shadow">
+      <div class="app-header__logo">
+        <div class="" id=""></div>
+        <div class="header__pane ml-auto"></div>
+      </div>
+      <div class="app-header__mobile-menu"></div>
+      <div class="app-header__menu"></div>
+      <div class="app-header__content">
+        <div class="app-header-right">
+          <div class="header-btn-lg pr-0">
+            <div class="widget-content p-0">
+              <div class="widget-content-wrapper">
+                <div class="widget-content-left ml-3 header-user-info">
+                  <div class="widget-heading" id="user-info">
+            
+                  </div>
+                  <div class="widget-subheading">
+                    Expert
+                  </div>
+                </div>
+                <div class="widget-content-right header-user-info ml-3">
+                  <button
+                    type="button"
+                    class="btn-shadow p-1 btn btn-primary btn-sm"
+                    id="logoutButton"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui-theme-settings">
+      <div class="theme-settings__inner">
+        <div class="scrollbar-container">
+          <div class="theme-settings__options-wrapper">
+            <h3 class="themeoptions-heading">Layout Options</h3>
+            <div class="p-3">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                      <div class="widget-content-left mr-3">
+                        <div
+                          class="switch has-switch switch-container-class"
+                          data-class="fixed-header"
+                        >
+                          <div class="switch-animate switch-on">
+                            <input
+                              type="checkbox"
+                              checked
+                              data-toggle="toggle"
+                              data-onstyle="success"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-content-left">
+                        <div class="widget-heading">Fixed Header</div>
+                        <div class="widget-subheading">
+                          Makes the header top fixed, always visible!
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                      <div class="widget-content-left mr-3">
+                        <div
+                          class="switch has-switch switch-container-class"
+                          data-class="fixed-sidebar"
+                        >
+                          <div class="switch-animate switch-on">
+                            <input
+                              type="checkbox"
+                              checked
+                              data-toggle="toggle"
+                              data-onstyle="success"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-content-left">
+                        <div class="widget-heading">Fixed Sidebar</div>
+                        <div class="widget-subheading">
+                          Makes the sidebar left fixed, always visible!
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item">
+                  <div class="widget-content p-0">
+                    <div class="widget-content-wrapper">
+                      <div class="widget-content-left mr-3">
+                        <div
+                          class="switch has-switch switch-container-class"
+                          data-class="fixed-footer"
+                        >
+                          <div class="switch-animate switch-off">
+                            <input
+                              type="checkbox"
+                              data-toggle="toggle"
+                              data-onstyle="success"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="widget-content-left">
+                        <div class="widget-heading">Fixed Footer</div>
+                        <div class="widget-subheading">
+                          Makes the app footer bottom fixed, always visible!
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="p-3">
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <h5 class="pb-2">Page Section Tabs</h5>
+                  <div class="theme-settings-swatches">
+                    <div role="group" class="mt-2 btn-group">
+                      <button
+                        type="button"
+                        class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                        data-class="body-tabs-line"
+                      >
+                        Line
+                      </button>
+                      <button
+                        type="button"
+                        class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
+                        data-class="body-tabs-shadow"
+                      >
+                        Shadow
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="app-main">
+      <div class="app-main__outer">
+        <div class="app-main__inner">
+          <a
+              type="button"
+              class="btn btn-warning mb-3"
+              href="{{ url_for('web.dash') }}"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-arrow-bar-left"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+                ></path>
+              </svg>
+              Back to Dashboard
+            </a>
+          <div class="row">
+            <div class="col-9 col-sm-12">
+              <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                  <a
+                    class="nav-link text-success"
+                    style="font-size: 1.5rem"
+                    href="{{ url_for('web.expert_dashboard_animal') }}"
+                    >Review Questions</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link text-success"
+                    style="font-size: 1.5rem"
+                    href="{{ url_for('web.answer_questions_animal') }}"
+                    >Answer Questions</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link active"
+                    style="font-size: 1.5rem"
+                    href="{{ url_for('web.rank_answers_animal') }}"
+                    >Rank Answers</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="main-card mb-3 card">
+                <div class="justify-content-center">
+                  <form id="rankForm" class="py-5 px-5">
+                    <fieldset>
+                      <div
+                        class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
+                      >
+                        <div class="text-center text-primary h2 font-weight-bold">
+                          Instructions:
+                        </div>
+                        <p class="h2 font-weight-bold">Answers will be ranked according to the following criteria:</p>
+                        <p class="h4"><u><strong>Coherence</strong> - means the quality of being logical and consistent in terms of a answer.</u>
+                            <p class="h4">A coherent answer should follow the topic, context, and structure of the input text or query. A coherent answer should also avoid repetition, contradiction, or irrelevant information.</p>
+                        </p>
+                        <p class="h4"><u><strong>Fluency</strong> - means the ability to use a language smoothly, accurately, and effortlessly in terms of an answer.</u>
+                          <p class="h4">A fluent answer should follow the grammatical, syntactic, and lexical rules of the language, and avoid errors, pauses, or repetitions that may hinder the communication. A fluent answer should also convey the intended meaning and tone of the question.</p>
+                        </p>
+                        <p class="h4"><u><strong>Relevance</strong> - means the quality of being closely connected or appropriate in terms of an answer.</u>
+                          <p class="h4">A relevant answer should match the question in terms of meaning, intention, and style. 
+                            A relevant answer should also satisfy the information need or goal of the farmer.
+                          </p>
+                        </p>
+                        <p class="h3 text-primary font-weight-bold">
+                          Select the option that most accurately reflects your
+                          level of agreement with the provided answers by rating
+                          them on a scale of 1 to 5:
+                        </p>
+                        <p class="h4">1 = Strongly disagree</p>
+                        <p class="h4">2 = Disagree</p>
+                        <p class="h4">3 = Neither agree nor disagree</p>
+                        <p class="h4">4 = Agree</p>
+                        <p class="h4">5 = Strongly agree</p>
+                        <p class="h3">
+                          Note: You can assign the same value to multiple answers.
+                        </p>
+                      </div>
+                      <div class="list-group-item bg-success text-center h2">
+                        <strong id="oneQuestion"></strong>
+                      </div>
+                      <div class=" h3">
+                        Topic:&nbsp;<strong id="questionTopic" class="text-capitalize text-primary"></strong>
+                      </div>
+                      <table class="table">
+                        <thead>
+                          <tr class="h4">
+                            <th class="">
+                              <u>Answers</u>
+                            </th>
+                            <th class="text-center" >
+                              Relevance
+                            </th>
+                            <th class="text-center" >
+                              Coherence
+                            </th>
+                            <th class="text-center">
+                              Fluency
+                            </th>
+                        </thead>
+                        <tbody id="answerTableBody">
+                        </tbody>
+                      </table>
+                      
+                      <div class="d-flex justify-content-between">
+                        <button style="font-size: 1.5rem" class="btn btn-warning my-3" onclick="reloadPage()">
+                          Skip
+                        </button>
+                        <button style="font-size: 1.5rem" class="btn btn-primary my-3" type="submit">
+                          Submit
+                        </button>
+                      </div>
+                    </fieldset>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-wrapper-footer">
+          <div class="app-footer">
+            <div class="app-footer__inner">
+              <div class="app-footer-left">
+                <ul class="nav">
+                  <li class="nav-item">
+                    <a href="https://air.ug" class="nav-link"> air.ug </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const token = "{{ token }}";
+    const user = "{{ user }}";
+    const role = "{{ role }}";
+  
+    const userElement = document.getElementById("user-info");
+    var currentTab = 0;
+  
+    // Retrieve data from local storage
+    const storedUser = localStorage.getItem("user");
+  
+    if (storedUser) {
+      userElement.textContent = storedUser;
+    } else {
+      userElement.textContent = Expert;
+    }
+    function logout() {
+      // Clear the user token from localStorage
+      localStorage.clear();
+  
+      // Redirect to the index.html page
+      window.location.href = "/"; // Redirect to the index page
+    }
+    function reload() {
+      window.location.reload();
+    }
+    function logout() {
+      // Clear the user token from localStorage
+      localStorage.clear();
+  
+      // Redirect to the index.html page
+      window.location.href = "/"; // Redirect to the index page
+    }
+    let qnAnswers = [];
+  
+    document.addEventListener("DOMContentLoaded", function () {
+      const token = localStorage.getItem("token");
+      
+      const logoutButton = document.getElementById("logoutButton");
+      if (logoutButton) {
+        logoutButton.addEventListener("click", logout);
+      }
+  
+      function showFormWithQuestionId(questionId) {
+        // Display the form and set the question ID as a data attribute
+        var form = document.getElementById("rankForm");
+        form.style.display = "block";
+        form.setAttribute("data-question-id", questionId);
+      }
+    
+      // Fetch top users data
+      fetch("/api/v1/questions/answered_question_ranking_animal", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((randomQuestion) => {
+          const englishQuestionAndAnswerData = randomQuestion.question_and_answer_data.filter(item => {
+            return item.question.language.toLowerCase() === 'english';
+          });
+          let randomQuestionData = randomQuestion.random_question_data;
+          const { answers} = randomQuestionData
+          qnAnswers = answers
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = randomQuestionData.sentence;
+    
+          let questionTopic = document.getElementById("questionTopic");
+          questionTopic.textContent = randomQuestionData.topic
+            ? randomQuestionData.topic
+            : "No Topic";
+          const tableBody = document.getElementById('answerTableBody');
+          answers.forEach((answer, index) => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="h3">${answer.answer_text}</td>
+                <td class="text-center rankIncrease" id="rankIncrease">
+                    <div  class="minus">-</div>
+                    <input type="text" class="form-control text-center my-2" value=1>
+                    <div>+</div>
+                </td>
+                <td class="text-center rankIncrease" id="rankIncrease">
+                    <div  class="minus">-</div>
+                    <input type="text" class="form-control text-center my-2" value=1>
+                    <div>+</div>
+                </td>
+                <td class="text-center rankIncrease" id="rankIncrease">
+                    <div  class="minus">-</div>
+                    <input type="text" class="form-control text-center my-2" value=1>
+                    <div>+</div>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-warning" onclick="toggleButtonText()" id="toggleButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag" viewBox="0 0 16 16">
+                      <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21.294 21.294 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21.317 21.317 0 0 0 14 7.655V1.222z"></path>
+                    </svg>
+                    Flag
+                  </button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+            // const rankIncreaseCells = newRow.querySelectorAll('.rankIncrease');
+            // rankIncreaseCells.forEach((cell) => {
+            //     const minusDiv = cell.querySelector('.minus');
+            //     const plusDiv = cell.querySelector('.plus');
+            //     const inputField = cell.querySelector('input');
+
+            //     minusDiv.addEventListener('click', () => {
+            //         const currentValue = parseInt(inputField.value, 5);
+            //         if (!isNaN(currentValue) && currentValue > 1) {
+            //             inputField.value = currentValue - 1;
+            //         }
+            //     });
+
+            //     plusDiv.addEventListener('click', () => {
+            //         const currentValue = parseInt(inputField.value, 5);
+            //         if (!isNaN(currentValue)) {
+            //             inputField.value = currentValue + 1;
+            //         }
+            //     });
+            // });
+          });
+          var questionId = randomQuestionData.id;
+          showFormWithQuestionId(questionId);
+        })
+        .catch((error) => console.error("Error fetching question:"));
+    });
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("rankForm");
+      const errorMessage = document.getElementById("errorMessage");
+      const token = localStorage.getItem("token");
+  
+      rankForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        var questionIdButton = this.getAttribute("data-question-id");
+        let questionId = parseInt(questionIdButton);
+        
+        const answerElements = document.querySelectorAll('.answer-rank');
+        const rankings = [];
+        let currentAnswer = {};
+        answerElements.forEach((element, index) => {
+          if (index % 3 === 0) {
+            if (currentAnswer.hasOwnProperty('answerText')) {
+              rankings.push(currentAnswer);
+            }
+            currentAnswer = {
+              answer_id : qnAnswers[rankings.length].id,
+              answerText: qnAnswers[rankings.length].answer_text,
+              relevance: null,
+              coherence: null,
+              fluency: null
+            };
+          }
+  
+          // Determine which field (relevance, coherence, fluency) this input belongs to
+          if (index % 3 === 0) {
+            currentAnswer.relevance = parseInt(element.value);
+          } else if (index % 3 === 1) {
+            currentAnswer.coherence = parseInt(element.value);
+          } else if (index % 3 === 2) {
+            currentAnswer.fluency = parseInt(element.value);
+          }
+  
+          // If this is the last input field, push the answer to rankings
+          if (index === answerElements.length - 1) {
+            rankings.push(currentAnswer);
+          }
+        });
+  
+        // Prepare the data to send to the API
+        const data = {
+          questionId, 
+          rankings
+        };
+  
+        const response = await fetch(
+          `/api/v1/questions/store_answer_ranks`,
+          {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+          }
+        );
+  
+        try {
+          const responseData = await response.json();
+          if (response.ok) {
+            window.location.reload();
+            window.location.href = window.location.href;
+          } else {
+            errorMessage.textContent = responseData.error;
+          }
+        } catch (error) {
+          console.error("Error parsing response:");
+        } finally {
+          window.location.reload();
+        }
+      });
+      
+    });
+  </script>
+  <script>
+    function toggleButtonText() {
+        // Get the button element
+        var button = document.getElementById("toggleButton");
+
+        button.classList.toggle("bg-warning");
+        button.classList.toggle("bg-danger");
+
+        // Toggle the button text
+        if (button.innerText === "Flag") {
+            button.innerText = "Offensive!";
+        } else {
+            button.innerText = "Flag";
+        }
+
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      tableBody.addEventListener('click', function (event) {
+      // Check if the clicked element is a "minus" or "plus" div
+      if (event.target.id === 'minus' || event.target.id === 'plus') {
+        // Find the parent row of the clicked element
+        const row = event.target.closest('tr');
+
+        if (row) {
+          // Find the input field within the row
+          const inputField = row.querySelector('.form-control.text-center.my-2');
+
+          if (inputField) {
+            // Get the current value of the input field
+            let value = parseInt(inputField.value) || 0;
+
+            // Check if the clicked element is "minus" or "plus" and adjust the value accordingly
+            if (event.target.id === 'minus') {
+              value = Math.max(1, value - 1); // Decrease the value, but not below 1
+            } else if (event.target.id === 'plus') {
+              value = Math.min(5, value + 1); // Increase the value, but not above 5
+            }
+
+            // Update the input field with the new value
+            inputField.value = value;
+          }
+        }
+      }
+    });
+    })
+  </script>
+  {% endblock %}
+  

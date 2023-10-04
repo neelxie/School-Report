@@ -14,7 +14,7 @@ import pandas as pd
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.models import Question, db, User, Answer
 import datetime
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from app.helper import admin_required
 
 questions = Blueprint("questions", __name__, url_prefix="/api/v1/questions")
@@ -237,7 +237,9 @@ def get_question(id):
 @jwt_required()
 @questions.get("/all")
 def get_questions():
-    questions = Question.query.filter(Question.cleaned == None).all()
+    questions = Question.query.filter(
+        or_(Question.cleaned == None, Question.cleaned == False)
+    ).all()
 
     if not questions:
         return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
@@ -303,31 +305,41 @@ def list_questions():
     total_questions = len(all_questions)
     questions_per_language = (
         db.session.query(Question.language, func.count(Question.id))
-        .filter(Question.cleaned == None)
+        .filter(or_(Question.cleaned == None, Question.cleaned == False))
         .group_by(Question.language)
         .all()
     )
 
     # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
     average_daily_questions = total_questions / (
-        Question.query.filter(Question.cleaned == None, Question.cleaned == False, Question.created_at >= datetime.date.today()).count() or 1
+        Question.query.filter(
+            or_(Question.cleaned == None, Question.cleaned == False),
+            Question.created_at >= datetime.date.today(),
+        ).count()
+        or 1
     )
 
     one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
     average_weekly_questions = total_questions / (
-        Question.query.filter(Question.cleaned == None, Question.cleaned == False, Question.created_at >= one_week_ago).count() or 1
+        Question.query.filter(
+            or_(Question.cleaned == None, Question.cleaned == False),
+            Question.created_at >= one_week_ago,
+        ).count()
+        or 1
     )
 
     #  Calculate average questions per user
     total_users = User.query.count()
     average_questions_per_user = total_questions / (total_users or 1)
 
-    plant_question_count = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
-        func.lower(Question.category) == "crop"
+    plant_question_count = Question.query.filter(
+        or_(Question.cleaned == None, Question.cleaned == False),
+        func.lower(Question.category) == "crop",
     ).count()
 
-    animal_question_count = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
-        func.lower(Question.category) == "animal"
+    animal_question_count = Question.query.filter(
+        or_(Question.cleaned == None, Question.cleaned == False),
+        func.lower(Question.category) == "animal",
     ).count()
 
     # Prepare the response data
@@ -663,8 +675,9 @@ def get_random_unanswered_question(user_id):
 @questions.route("/luganda", methods=["GET"])
 @jwt_required()
 def get_luganda_questions():
-    luganda_questions = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
-        func.lower(Question.language) == "luganda"
+    luganda_questions = Question.query.filter(
+        or_(Question.cleaned == None, Question.cleaned == False),
+        func.lower(Question.language) == "luganda",
     ).all()
 
     if luganda_questions:
@@ -690,8 +703,9 @@ def get_luganda_questions():
 @questions.route("/english", methods=["GET"])
 @jwt_required()
 def get_english_questions():
-    english_questions = Question.query.filter(Question.cleaned == None, Question.cleaned == False,
-        func.lower(Question.language) == "english"
+    english_questions = Question.query.filter(
+        or_(Question.cleaned == None, Question.cleaned == False),
+        func.lower(Question.language) == "english",
     ).all()
 
     if english_questions:
@@ -804,9 +818,9 @@ def upload_excel_file():
             )
 
 
-@questions.route("/answered_question_ranking", methods=["GET"])
+@questions.route("/answered_question_ranking_animal", methods=["GET"])
 @jwt_required()
-def answered_question_ranking():
+def answered_question_ranking_animal():
     user_id = get_jwt_identity()
     cleaned_filter = Question.cleaned == True
     answered_filter = Question.answered == True
@@ -824,6 +838,7 @@ def answered_question_ranking():
                 answered_filter,
                 cleaned_filter,
                 unFinished_filter,
+                (func.lower(Question.category) == "animal"),
                 (~Question.answers.any(Answer.user_id == user_id)),
             )
             .order_by(func.random())
@@ -871,6 +886,124 @@ def answered_question_ranking():
             cleaned_filter,
             answered_filter,
             unFinished_filter,
+            (func.lower(Question.category) == "animal"),
+            (~Question.answers.any(Answer.user_id == user_id)),
+        )
+        .order_by(func.random())
+        .first()
+    )
+
+    if random_question:
+        random_question_data = {
+            "id": random_question.id,
+            "sentence": random_question.rephrased or random_question.sentence,
+            "language": random_question.language,
+            "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topic": random_question.topic,
+            "category": random_question.category,
+            "animal_crop": random_question.animal_crop,
+            "location": random_question.location,
+        }
+
+        # Create a list to store answer data for each associated answer
+        answer_list = []
+        for answer in random_question.answers:
+            answer_data = {
+                "id": answer.id,
+                "answer_text": answer.answer_text,
+                "source": answer.source,
+                "relevance": answer.relevance,
+                "coherence": answer.coherence,
+                "fluency": answer.fluency,
+                "rank": answer.rank,
+                "created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            answer_list.append(answer_data)
+
+        random_question_data["answers"] = answer_list
+
+    if question_and_answer_data or random_question_data:
+        result_object = {
+            "question_and_answer_data": question_and_answer_data,
+            "random_question_data": random_question_data,
+        }
+        return jsonify(result_object), HTTP_200_OK
+    else:
+        return (
+            jsonify({"message": "No questions available with answers."}),
+            HTTP_404_NOT_FOUND,
+        )
+
+
+@questions.route("/answered_question_ranking_crop", methods=["GET"])
+@jwt_required()
+def answered_question_ranking_crop():
+    user_id = get_jwt_identity()
+    cleaned_filter = Question.cleaned == True
+    answered_filter = Question.answered == True
+    unFinished_filter = Question.finished == False
+    question_and_answer_data = []
+
+    languages = ["english", "luganda", "runyankole"]
+
+    for language in languages:
+        language_filter = func.lower(Question.language) == language
+
+        random_unreviewed_question = (
+            Question.query.filter(
+                language_filter,
+                answered_filter,
+                cleaned_filter,
+                unFinished_filter,
+                (func.lower(Question.category) == "crop"),
+                (~Question.answers.any(Answer.user_id == user_id)),
+            )
+            .order_by(func.random())
+            .first()
+        )
+
+        if random_unreviewed_question:
+            question_data = {
+                "id": random_unreviewed_question.id,
+                "sentence": random_unreviewed_question.rephrased
+                or random_unreviewed_question.sentence,
+                "language": random_unreviewed_question.language,
+                "created_at": random_unreviewed_question.created_at.strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+                "topic": random_unreviewed_question.topic,
+                "category": random_unreviewed_question.category,
+                "animal_crop": random_unreviewed_question.animal_crop,
+                "location": random_unreviewed_question.location,
+            }
+
+            # Create a list to store answer data for each associated answer
+            answer_list = []
+            for answer in random_unreviewed_question.answers:
+                answer_data = {
+                    "id": answer.id,
+                    "answer_text": answer.answer_text,
+                    "source": answer.source,
+                    "relevance": answer.relevance,
+                    "coherence": answer.coherence,
+                    "fluency": answer.fluency,
+                    "rank": answer.rank,
+                    "created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                }
+                answer_list.append(answer_data)
+
+            question_and_answer_data.append(
+                {"question": question_data, "answers": answer_list}
+            )
+
+    # Include the random_question without language filter
+    random_question_data = None
+    random_question = (
+        Question.query.filter(
+            cleaned_filter,
+            answered_filter,
+            unFinished_filter,
+            (func.lower(Question.category) == "crop"),
             (~Question.answers.any(Answer.user_id == user_id)),
         )
         .order_by(func.random())
@@ -960,19 +1093,23 @@ def store_answer_ranks():
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
 
 
-@questions.route('/expert-stats', methods=['GET'])
+@questions.route("/expert-stats", methods=["GET"])
 @jwt_required()
 def question_stats():
     total_cleaned = Question.query.filter_by(cleaned=True).count()
     cleaned_and_reviewed = Question.query.filter_by(cleaned=True, reviewed=True).count()
-    cleaned_reviewed_and_answered = Question.query.filter_by(cleaned=True, answered=True).count()
+    cleaned_reviewed_and_answered = Question.query.filter_by(
+        cleaned=True, answered=True
+    ).count()
     all_fields_true = Question.query.filter_by(cleaned=True, finished=True).count()
-    experts = User.query.filter_by(role='expert').all()
+    experts = User.query.filter_by(role="expert").all()
 
     expert_data = []
     for expert in experts:
         # Count the number of reviewed questions for this expert
-        reviewed_questions_count = Question.query.filter_by(reviewer_id=expert.id).count()
+        reviewed_questions_count = Question.query.filter_by(
+            reviewer_id=expert.id
+        ).count()
 
         # Get all answers provided by this expert
         answers = Answer.query.filter_by(user_id=expert.id).count()
@@ -980,26 +1117,29 @@ def question_stats():
         ranked_answers = Question.query.filter_by(ranked_by=expert.id).count()
 
         expert_info = {
-            'id': expert.id,
-            'lastname': expert.lastname,
-            'firstname': expert.firstname,
-            'phone_number':expert.phone_number,
-            'reviewed_questions_count': reviewed_questions_count,
-            'answers_count': answers,
-            'ranked_answers': ranked_answers
+            "id": expert.id,
+            "lastname": expert.lastname,
+            "firstname": expert.firstname,
+            "phone_number": expert.phone_number,
+            "reviewed_questions_count": reviewed_questions_count,
+            "answers_count": answers,
+            "ranked_answers": ranked_answers,
         }
 
         expert_data.append(expert_info)
 
-    return jsonify({
-        'total_cleaned': total_cleaned,
-        'cleaned_and_reviewed': cleaned_and_reviewed,
-        'cleaned_reviewed_and_answered': cleaned_reviewed_and_answered,
-        'all_fields_true': all_fields_true,
-        'experts':expert_data
-    })
+    return jsonify(
+        {
+            "total_cleaned": total_cleaned,
+            "cleaned_and_reviewed": cleaned_and_reviewed,
+            "cleaned_reviewed_and_answered": cleaned_reviewed_and_answered,
+            "all_fields_true": all_fields_true,
+            "experts": expert_data,
+        }
+    )
 
-@questions.route('/user_answers', methods=['GET'])
+
+@questions.route("/user_answers", methods=["GET"])
 @jwt_required()
 def get_user_answers():
     user_id = get_jwt_identity()
@@ -1008,48 +1148,51 @@ def get_user_answers():
     answers_data = []
 
     for answer in user_answers:
-        answers_data.append({
-            'id': answer.id,
-            'answer_text': answer.answer_text,
-            'created_at': answer.created_at,
-            'question_id': answer.question_id,
-        })
+        answers_data.append(
+            {
+                "id": answer.id,
+                "answer_text": answer.answer_text,
+                "created_at": answer.created_at,
+                "question_id": answer.question_id,
+            }
+        )
 
     return jsonify(answers_data)
 
-@questions.route('/answers/<int:answer_id>', methods=['GET'])
+
+@questions.route("/answers/<int:answer_id>", methods=["GET"])
 @jwt_required()
 def get_answer(answer_id):
     user_id = get_jwt_identity()
 
     answer = Answer.query.get(answer_id)
     if not answer:
-        return jsonify({'error': 'Answer not found'}), HTTP_404_NOT_FOUND
-    
+        return jsonify({"error": "Answer not found"}), HTTP_404_NOT_FOUND
+
     if answer.user_id != user_id:
-        return jsonify({'error': 'Unauthorized access to answer details'}), 403
+        return jsonify({"error": "Unauthorized access to answer details"}), 403
 
     question = Question.query.get(answer.question_id)
     if not question:
-        return jsonify({'error': 'Question not found'}), HTTP_404_NOT_FOUND
-    
+        return jsonify({"error": "Question not found"}), HTTP_404_NOT_FOUND
+
     response_data = {
-        'answer_id': answer.id,
-        'answer_text': answer.answer_text,
-        'question_id': question.id,
-        'question_text': question.rephrased or question.sentence,
-        'language': question.language,
-        'animal_crop': question.animal_crop,
-        'category': question.category,
-        'topic': question.topic
+        "answer_id": answer.id,
+        "answer_text": answer.answer_text,
+        "question_id": question.id,
+        "question_text": question.rephrased or question.sentence,
+        "language": question.language,
+        "animal_crop": question.animal_crop,
+        "category": question.category,
+        "topic": question.topic,
     }
 
     return jsonify(response_data), HTTP_200_OK
 
-@questions.route('/update_answer_text/<int:answer_id>', methods=['PUT'])
+
+@questions.route("/update_answer_text/<int:answer_id>", methods=["PUT"])
 @jwt_required()
 def update_answer_text(answer_id):
-
     answer = Answer.query.get(answer_id)
     if not answer:
         return jsonify({"message": "Answer not found"}), HTTP_404_NOT_FOUND
@@ -1062,15 +1205,12 @@ def update_answer_text(answer_id):
     db.session.commit()
 
     return jsonify({"message": "Answer text updated successfully"}), HTTP_200_OK
-    
 
 
 @questions.route("/upload_json_answers/", methods=["POST"])
 @jwt_required()
 def upload_json_answers():
-    json_data = [
-        {}
-    ]
+    json_data = [{}]
 
     current_user_id = get_jwt_identity()
     dup_count = 0
@@ -1081,15 +1221,17 @@ def upload_json_answers():
     # Iterate through each object in json_data
     for obj in json_data:
         sentence = obj.get("questions")
-        
+
         # Check if the question already exists and is cleaned
-        existing_question = Question.query.filter_by(sentence=sentence, cleaned=True).first()
-        
+        existing_question = Question.query.filter_by(
+            sentence=sentence, cleaned=True
+        ).first()
+
         if existing_question:
             question_id = existing_question.id
             # Add a new answer for the "new category"
             new_response_value = obj.get(new_category)
-            
+
             if new_response_value is not None:
                 new_response = Answer(
                     question_id=question_id,
@@ -1097,14 +1239,13 @@ def upload_json_answers():
                     source=new_category,
                     user_id=current_user_id,
                 )
-                
+
                 db.session.add(new_response)
                 db.session.commit()
 
     # Calculate duplicates and return the response_data
     response_data = {"duplicates_count": "done", "duplicates": "yes"}
     return jsonify(response_data), HTTP_200_OK
-
 
     # for obj in json_data:
     #     sentence = obj.get("Prompts")

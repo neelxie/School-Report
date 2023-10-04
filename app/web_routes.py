@@ -137,119 +137,233 @@ def experts():
     return render_template("experts.html", token=access_token, role=role, user=username)
 
 
-@web_bp.route("/expert_dash")
-def expert_dashboard():
+@web_bp.route("/expert_dash_crop")
+def expert_dashboard_crop():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "expertDash.html", token=access_token, role=role, user=username
+        "expertDashCrop.html", token=access_token, role=role, user=username
+    )
+
+@web_bp.route("/expert_dash_animal")
+def expert_dashboard_animal():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "expertDashAnimal.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/english_review")
-def english_review():
+@web_bp.route("/english_review_animal")
+def english_review_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "englishReview.html", token=access_token, role=role, user=username
+        "englishReviewAnimal.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/luganda_review")
-def luganda_review():
+@web_bp.route("/luganda_review_animal")
+def luganda_review_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "lugandaReview.html", token=access_token, role=role, user=username
+        "lugandaReviewAnimal.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/runyankole_review")
-def runyankole_review():
+@web_bp.route("/runyankole_review_animal")
+def runyankole_review_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "runyankoleReview.html", token=access_token, role=role, user=username
+        "runyankoleReviewAnimal.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/answer")
-def answer_questions():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("answer.html", token=access_token, role=role, user=username)
-
-
-@web_bp.route("/rank")
-def rank_answers():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("rank.html", token=access_token, role=role, user=username)
-
-
-@web_bp.route("/english_answer")
-def english_answer():
+@web_bp.route("/english_review_crop")
+def english_review_crop():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "englishAnswer.html", token=access_token, role=role, user=username
+        "englishReviewCrop.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/english_rank")
-def english_rank():
+@web_bp.route("/luganda_review_crop")
+def luganda_review_crop():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "englishRank.html", token=access_token, role=role, user=username
+        "lugandaReviewCrop.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/luganda_answer")
-def luganda_answer():
+@web_bp.route("/runyankole_review_crop")
+def runyankole_review_crop():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "lugandaAnswer.html", token=access_token, role=role, user=username
+        "runyankoleReviewCrop.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/luganda_rank")
-def luganda_rank():
+@web_bp.route("/answer_animal")
+def answer_questions_animal():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("answerAnimal.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/answer_crop")
+def answer_questions_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("answerCrop.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/rank_animal")
+def rank_answers_animal():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("rankAnimal.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/english_answer_animal")
+def english_answer_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "lugandaRank.html", token=access_token, role=role, user=username
+        "englishAnswerAnimal.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/runyankole_answer")
-def runyankole_answer():
+@web_bp.route("/english_rank_animal")
+def english_rank_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "runyankoleAnswer.html", token=access_token, role=role, user=username
+        "englishRankAnimal.html", token=access_token, role=role, user=username
     )
 
 
-@web_bp.route("/runyankole_rank")
-def runyankole_rank():
+@web_bp.route("/luganda_answer_animal")
+def luganda_answer_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
     return render_template(
-        "runyankoleRank.html", token=access_token, role=role, user=username
+        "lugandaAnswerAnimal.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/luganda_rank_animal")
+def luganda_rank_animal():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "lugandaRankAnimal.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/runyankole_answer_animal")
+def runyankole_answer_animal():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "runyankoleAnswerAnimal.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/runyankole_rank_animal")
+def runyankole_rank_animal():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "runyankoleRankAnimal.html", token=access_token, role=role, user=username
+    )
+
+@web_bp.route("/rank_crop")
+def rank_answers_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template("rankCrop.html", token=access_token, role=role, user=username)
+
+
+@web_bp.route("/english_answer_crop")
+def english_answer_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "englishAnswerCrop.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/english_rank_crop")
+def english_rank_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "englishRankCrop.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/luganda_answer_crop")
+def luganda_answer_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "lugandaAnswerCrop.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/luganda_rank_crop")
+def luganda_rank_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "lugandaRankCrop.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/runyankole_answer_crop")
+def runyankole_answer_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "runyankoleAnswerCrop.html", token=access_token, role=role, user=username
+    )
+
+
+@web_bp.route("/runyankole_rank_crop")
+def runyankole_rank_crop():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "runyankoleRankCrop.html", token=access_token, role=role, user=username
     )
 
 
