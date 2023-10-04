@@ -357,7 +357,7 @@
       }
     
       // Fetch top users data
-      fetch("/api/v1/questions/answered_question_ranking_animal", {
+      fetch("/api/v1/questions/answered_question_ranking_crop", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -384,21 +384,21 @@
                 <td class="h3">${answer.answer_text}</td>
                 <td class="text-center rankIncrease" id="rankIncrease">
                     <div  class="minus">-</div>
-                    <input type="text" class="form-control text-center my-2" value=1>
-                    <div>+</div>
+                    <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                    <div class="plus">+</div>
                 </td>
                 <td class="text-center rankIncrease" id="rankIncrease">
                     <div  class="minus">-</div>
-                    <input type="text" class="form-control text-center my-2" value=1>
-                    <div>+</div>
+                    <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                    <div class="plus">+</div>
                 </td>
                 <td class="text-center rankIncrease" id="rankIncrease">
                     <div  class="minus">-</div>
-                    <input type="text" class="form-control text-center my-2" value=1>
-                    <div>+</div>
+                    <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                    <div class="plus">+</div>
                 </td>
                 <td class="text-center">
-                  <button type="button" class="btn btn-warning" onclick="toggleButtonText()" id="toggleButton">
+                  <button type="button" class="btn btn-success fitting" onclick="toggleButtonText()" id="toggleButton">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag" viewBox="0 0 16 16">
                       <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21.294 21.294 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21.317 21.317 0 0 0 14 7.655V1.222z"></path>
                     </svg>
@@ -407,26 +407,33 @@
                 </td>
             `;
             tableBody.appendChild(newRow);
-            // const rankIncreaseCells = newRow.querySelectorAll('.rankIncrease');
-            // rankIncreaseCells.forEach((cell) => {
-            //     const minusDiv = cell.querySelector('.minus');
-            //     const plusDiv = cell.querySelector('.plus');
-            //     const inputField = cell.querySelector('input');
+            let rankIncreaseCells = newRow.querySelectorAll('.rankIncrease');
+            rankIncreaseCells.forEach((cell) => {
+                const minusDiv = cell.querySelector('.minus');
+                const plusDiv = cell.querySelector('.plus');
+                const inputField = cell.querySelector('input');
 
-            //     minusDiv.addEventListener('click', () => {
-            //         const currentValue = parseInt(inputField.value, 5);
-            //         if (!isNaN(currentValue) && currentValue > 1) {
-            //             inputField.value = currentValue - 1;
-            //         }
-            //     });
+                minusDiv.addEventListener('click', () => {
+                  let currentValue = parseInt(inputField.value, 10);
+                  if (isNaN(currentValue)) {
+                      currentValue = 1;
+                  } else if (currentValue > 1) {
+                      currentValue--;
+                  }
+                  inputField.value = currentValue;
 
-            //     plusDiv.addEventListener('click', () => {
-            //         const currentValue = parseInt(inputField.value, 5);
-            //         if (!isNaN(currentValue)) {
-            //             inputField.value = currentValue + 1;
-            //         }
-            //     });
-            // });
+                });
+
+                plusDiv.addEventListener('click', () => {
+                  let currentValue = parseInt(inputField.value, 10);
+                  if (isNaN(currentValue)) {
+                      currentValue = 1;
+                  } else if (currentValue < 5) {
+                      currentValue++;
+                  }
+                  inputField.value = currentValue;
+                });
+            });
           });
           var questionId = randomQuestionData.id;
           showFormWithQuestionId(questionId);
@@ -514,51 +521,20 @@
   </script>
   <script>
     function toggleButtonText() {
-        // Get the button element
-        var button = document.getElementById("toggleButton");
+      
+      var button = document.getElementById("toggleButton");
+      var svg = button.querySelector("svg");
 
-        button.classList.toggle("bg-warning");
-        button.classList.toggle("bg-danger");
-
-        // Toggle the button text
-        if (button.innerText === "Flag") {
-            button.innerText = "Offensive!";
-        } else {
-            button.innerText = "Flag";
-        }
+      if (button.textContent.trim() === "Flag") {
+      button.textContent = " Offensive!";
+      button.style.backgroundColor = "red";
+      } else {
+        button.textContent = " Flag";
+        button.style.backgroundColor = "#6bc46d"; 
+      }
+      button.insertBefore(svg, button.firstChild);
 
     }
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function(){
-      tableBody.addEventListener('click', function (event) {
-      // Check if the clicked element is a "minus" or "plus" div
-      if (event.target.id === 'minus' || event.target.id === 'plus') {
-        // Find the parent row of the clicked element
-        const row = event.target.closest('tr');
-
-        if (row) {
-          // Find the input field within the row
-          const inputField = row.querySelector('.form-control.text-center.my-2');
-
-          if (inputField) {
-            // Get the current value of the input field
-            let value = parseInt(inputField.value) || 0;
-
-            // Check if the clicked element is "minus" or "plus" and adjust the value accordingly
-            if (event.target.id === 'minus') {
-              value = Math.max(1, value - 1); // Decrease the value, but not below 1
-            } else if (event.target.id === 'plus') {
-              value = Math.min(5, value + 1); // Increase the value, but not above 5
-            }
-
-            // Update the input field with the new value
-            inputField.value = value;
-          }
-        }
-      }
-    });
-    })
   </script>
   {% endblock %}
   
