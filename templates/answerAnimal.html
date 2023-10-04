@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Answer Luganda Questions Page{%
-endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Answer Questions Page{% endblock %}
+{% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -183,7 +183,7 @@ endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_review') }}"
+                  href="{{ url_for('web.expert_dashboard_animal') }}"
                   >Review Questions</a
                 >
               </li>
@@ -191,7 +191,7 @@ endblock %} {% block content %}
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_answer') }}"
+                  href="{{ url_for('web.answer_questions_animal') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -199,7 +199,7 @@ endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_rank') }}"
+                  href="{{ url_for('web.rank_answers_animal') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -335,6 +335,7 @@ endblock %} {% block content %}
     .addEventListener("DOMContentLoaded", function () {
       const token = localStorage.getItem("token"); // Get the token from local storage
 
+      // Fetch top users data
       fetch("/api/v1/questions/random_question_answer", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -343,7 +344,7 @@ endblock %} {% block content %}
         .then((response) => response.json())
         .then((randomQuestion) => {
           const anyQuestion = randomQuestion.find(
-            (question) => question.question_language === "Luganda"
+            (question) => question.question_language === "Any Language"
           );
           const oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = anyQuestion.sentence
@@ -375,6 +376,7 @@ endblock %} {% block content %}
       const itemBody = {
         answer: answer,
       };
+      console.log(answer);
       const response = await fetch(
         `/api/v1/questions/add_answer/${questionId}`,
         {

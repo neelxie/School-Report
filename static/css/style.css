@@ -174,6 +174,39 @@ body {
   color: #3ac47d;
 }
 
+.minus,.plus {
+  width: 30px;
+  height: 30px;
+  background-color: #6bc46d;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 20px;
+  line-height: 30px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-left: 1.5rem;
+}
+
+.fitting{
+  width: max-content;
+}
+
+.showDigit{
+  display: block;
+  width: 5rem;
+  height: calc(1.5em + .75rem + 2px);
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
 @media only screen and (max-width: 1320px) {
   .header-user-info {
     display: block !important;

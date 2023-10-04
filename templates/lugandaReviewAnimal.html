@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Experts Review Question Page{%
-endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Experts Luganda Review Question
+Page{% endblock %} {% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -157,7 +157,7 @@ endblock %} {% block content %}
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.expert_dashboard') }}"
+                  href="{{ url_for('web.luganda_review') }}"
                   >Review Questions</a
                 >
               </li>
@@ -165,7 +165,7 @@ endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.answer_questions') }}"
+                  href="{{ url_for('web.luganda_answer') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -173,7 +173,7 @@ endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.rank_answers') }}"
+                  href="{{ url_for('web.luganda_rank') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -299,248 +299,70 @@ endblock %} {% block content %}
                     style="text-transform: capitalize"
                   ></span>
                 </div>
+                <hr class="hr" />
                 <div class="h4 text-dark font-weight-bold mb-3">
                   <span class="text-primary mr-3 h2 font-weight-bold"
                     >Question:</span
                   ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
                 </div>
+                <hr class="hr" />
                 <div id="selectedTopics">
-                  <h3>Selected Topics:</h3>
-                  <ul id="selectedTopicsList"></ul>
+                  <h4 class="text-primary font-weight-bold h3">
+                    Please choose additional topics if necessary:
+                  </h4>
                 </div>
 
                 <div class="h4 text-dark font-weight-bold mb-5"></div>
-                <div class="mb-3" id="topicForm">
-                  <div class="h4">
-                    <label>
-                      <input
-                        type="radio"
-                        name="topicType"
-                        value="Plant"
-                        checked
-                      />
-                      Plant
-                    </label>
-
-                    <label>
-                      <input
-                        type="radio"
-                        name="topicType"
-                        value="Animal"
-                        class="text-primary"
-                      />
-                      Animal
-                    </label>
+                <div class="mb-5 h4" id="topicForm">
+                  <div>
+                    <label for="topics" class="font-weight-bold"
+                      >Select Topic:</label
+                    >
+                    <select
+                      id="topics"
+                      class="select m-2"
+                      onchange="populateSubTopics()"
+                    >
+                      <option value="">Select a Topic</option>
+                      <option value="topic1">
+                        Livestock selection and breeding
+                      </option>
+                      <option value="topic2">
+                        Animal housing and facilities
+                      </option>
+                      <option value="topic3">Feed and nutrition</option>
+                      <option value="topic4">
+                        Health and disease management
+                      </option>
+                      <option value="topic5">Reproduction and birthing</option>
+                      <option value="topic6">
+                        Pasture and grazing management
+                      </option>
+                      <option value="topic7">
+                        Handling and husbandry practices
+                      </option>
+                      <option value="topic8">Marketing and sales</option>
+                      <option value="topic9">
+                        Technology in animal farming
+                      </option>
+                      <option value="topic10">
+                        Sustainable animal farming practices
+                      </option>
+                      <option value="topic11">
+                        Animal transportation and handling
+                      </option>
+                      <option value="topic12">
+                        Business management for animal farming
+                      </option>
+                    </select>
                   </div>
-                  <div id="plantTopics" style="display: block">
-                    <h3 class="text-primary">Plant Topics:</h3>
-                    <div class="h5 font-weight-bold">
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Planting and Sowing"
-                        />
-                        Planting and Sowing
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Fertilization"
-                        />
-                        Fertilization
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Soil Health and Properties"
-                        />
-                        Soil Health and Properties
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Harvesting and Post-Harvest Handling"
-                        />
-                        Harvesting and Post-Harvest Handling
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Farm Management"
-                        />
-                        Farm Management
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Weed Management"
-                        />
-                        Weed Management
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Irrigation and Water Management"
-                        />
-                        Irrigation and Water Management
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Pest and Disease Management"
-                        />
-                        Pest and Disease Management
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Weather and Climate"
-                        />
-                        Weather and Climate
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Crop Markets, Products, and Prices"
-                        />
-                        Crop Markets, Products, and Prices
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Crop Selection and Rotation"
-                        />
-                        Crop Selection and Rotation
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Farming Tools and Technologies"
-                        />
-                        Farming Tools and Technologies
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Food Security"
-                        />
-                        Food Security
-                      </label>
-                      <label>
-                        <input type="checkbox" name="topics" value="Others" />
-                        Others
-                      </label>
-                    </div>
-                  </div>
-                  <div id="animalTopics" style="display: none">
-                    <h3 class="text-primary">Animal Topics:</h3>
-                    <div class="h5 font-weight-bold">
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Health and Veterinary Care"
-                        />
-                        Animal Health and Veterinary Care
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Husbandry"
-                        />
-                        Animal Husbandry
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal/Livestock Selection"
-                        />
-                        Animal/Livestock Selection
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Production"
-                        />
-                        Animal Production
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Marketing"
-                        />
-                        Animal Marketing
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Diseases, Management, and Prevention"
-                        />
-                        Animal Diseases, Management, and Prevention
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Breeding and Reproduction"
-                        />
-                        Animal Breeding and Reproduction
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Housing and Shelter"
-                        />
-                        Animal Housing and Shelter
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Feeds and Nutrition"
-                        />
-                        Animal Feeds and Nutrition
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Animal Pasture and Grazing Management"
-                        />
-                        Animal Pasture and Grazing Management
-                      </label>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="topics"
-                          value="Aquaculture"
-                        />
-                        Aquaculture
-                      </label>
-                      <label>
-                        <input type="checkbox" name="topics" value="Others" />
-                        Others
-                      </label>
-                    </div>
+                  <div class="">
+                    <label for="subTopics" class="font-weight-bold"
+                      >Select Sub-Topic:</label
+                    >
+                    <select id="subTopics" class="select m-2">
+                      <option value="">Select a Sub-Topic</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -780,20 +602,20 @@ endblock %} {% block content %}
           (question) => question.question_language === "Luganda"
         );
         const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = anyQuestion.sentence;
+        oneQuestion.textContent = lugandaQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = anyQuestion.sentence;
+        oneQuestion1.textContent = lugandaQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = anyQuestion.sentence;
+        oneQuestion2.textContent = lugandaQuestion.sentence;
         const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = anyQuestion.topics
-          ? anyQuestion.topics
+        questionTopic.textContent = lugandaQuestion.topics
+          ? lugandaQuestion.topics
           : "No Topic";
         const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = anyQuestion.category
-          ? anyQuestion.category
+        questionCategory.textContent = lugandaQuestion.category
+          ? lugandaQuestion.category
           : "No Category";
-        var questionId = anyQuestion.id;
+        var questionId = lugandaQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
@@ -828,5 +650,128 @@ endblock %} {% block content %}
         .catch((error) => console.error("Error parsing response:", error));
     }
   });
+</script>
+<script>
+  const topics = {
+    topic1: [
+      "Animal characteristics and traits",
+      "Genetic testing and selection",
+      "Breeding methods",
+      "Healthy breeding herd",
+      "Recordkeeping for breeding",
+      "Artificial insemination",
+    ],
+    topic2: [
+      "Livestock housing design",
+      "Types of housing",
+      "Ventilation and temperature",
+      "Sanitation and waste management",
+      "Fencing and gate maintenance",
+      "Animal welfare considerations",
+    ],
+    topic3: [
+      "Nutrient requirements",
+      "Types of feed",
+      "Feed storage and management",
+      "Grazing management",
+      "Managing feed costs",
+      "Preventing nutritional deficiencies",
+    ],
+    topic4: [
+      "Vaccinations and preventative care ",
+      "Parasite control",
+      "Biosecurity measures",
+      "Quarantine procedures",
+      "Disease diagnosis and treatment",
+      "Veterinary care",
+    ],
+    topic5: [
+      "Breeding and reproduction management",
+      "Pregnancy and gestation care",
+      "Parturition and labor assistance",
+      "Calf and lamb care",
+      "Post-birth care for dams",
+      "Reproductive health management",
+    ],
+    topic6: [
+      "Rotational grazing systems",
+      "Pasture renovation and maintenance",
+      "Managing forage species",
+      "Grazing strategies",
+      "Soil health and fertility",
+      "Utilizing alternative forages",
+    ],
+    topic7: [
+      "Training for safe handling",
+      "Proper animal restraint",
+      "Identifying and treating injuries",
+      "Managing difficult animals",
+      "Behavioral management",
+      "Low-stress animal handling",
+    ],
+    topic8: [
+      "Target markets",
+      "Buyer relationships",
+      "Price strategies",
+      "Packaging and labeling",
+      "Marketing plan",
+      "Direct sales",
+    ],
+    topic9: [
+      "Drones and GPS",
+      "Sensor monitoring",
+      "Digital record-keeping",
+      "Precision feeding",
+      "Efficient animal care",
+      "Animal welfare tech",
+    ],
+    topic10: [
+      "Alternative housing methods",
+      "Conservation grazing",
+      "Renewable resources",
+      "Composting and waste",
+      "Sustainable standards",
+      "Environmental impact",
+    ],
+    topic11: [
+      "Transport Regulations",
+      "Loading and unloading",
+      "Animal welfare",
+      "Transportation vehicles",
+      "Handling procedures",
+      "Documentation and records",
+    ],
+    topic12: [
+      "Financial planning",
+      "Cash flow management",
+      "Book keeping",
+      "Risk management",
+      "Employee management",
+      "Business evaluation",
+    ],
+  };
+
+  function populateSubTopics() {
+    const topicsSelect = document.getElementById("topics");
+    const subTopicsSelect = document.getElementById("subTopics");
+
+    const selectedTopic = topicsSelect.value;
+    subTopicsSelect.innerHTML = ""; // Clear existing options
+
+    if (selectedTopic !== "") {
+      const subTopics = topics[selectedTopic];
+      subTopics.forEach((subTopic) => {
+        const option = document.createElement("option");
+        option.value = subTopic;
+        option.textContent = subTopic;
+        subTopicsSelect.appendChild(option);
+      });
+    } else {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "Select a Sub-Topic";
+      subTopicsSelect.appendChild(option);
+    }
+  }
 </script>
 {% endblock %}

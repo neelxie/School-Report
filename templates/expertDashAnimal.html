@@ -1,0 +1,778 @@
+{% extends "base.html" %} {% block title %}Experts Review Question Page{%
+endblock %} {% block content %}
+
+<div
+  class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
+>
+  <div class="app-header header-shadow">
+    <div class="app-header__logo">
+      <div class="" id=""></div>
+      <div class="header__pane ml-auto"></div>
+    </div>
+    <div class="app-header__mobile-menu"></div>
+    <div class="app-header__menu"></div>
+    <div class="app-header__content">
+      <div class="app-header-right">
+        <div class="header-btn-lg pr-0">
+          <div class="widget-content p-0">
+            <div class="widget-content-wrapper">
+              <div class="widget-content-left ml-3 header-user-info">
+                <div class="widget-heading" id="user-info"></div>
+                <div class="widget-subheading">Expert</div>
+              </div>
+              <div class="widget-content-right header-user-info ml-3">
+                <button
+                  type="button"
+                  class="btn-shadow p-1 btn btn-primary btn-sm"
+                  id="logoutButton"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-theme-settings">
+    <div class="theme-settings__inner">
+      <div class="scrollbar-container">
+        <div class="theme-settings__options-wrapper">
+          <h3 class="themeoptions-heading">Layout Options</h3>
+          <div class="p-3">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div class="widget-content p-0">
+                  <div class="widget-content-wrapper">
+                    <div class="widget-content-left mr-3">
+                      <div
+                        class="switch has-switch switch-container-class"
+                        data-class="fixed-header"
+                      >
+                        <div class="switch-animate switch-on">
+                          <input
+                            type="checkbox"
+                            checked
+                            data-toggle="toggle"
+                            data-onstyle="success"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left">
+                      <div class="widget-heading">Fixed Header</div>
+                      <div class="widget-subheading">
+                        Makes the header top fixed, always visible!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item">
+                <div class="widget-content p-0">
+                  <div class="widget-content-wrapper">
+                    <div class="widget-content-left mr-3">
+                      <div
+                        class="switch has-switch switch-container-class"
+                        data-class="fixed-footer"
+                      >
+                        <div class="switch-animate switch-off">
+                          <input
+                            type="checkbox"
+                            data-toggle="toggle"
+                            data-onstyle="success"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left">
+                      <div class="widget-heading">Fixed Footer</div>
+                      <div class="widget-subheading">
+                        Makes the app footer bottom fixed, always visible!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="p-3">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <h5 class="pb-2">Page Section Tabs</h5>
+                <div class="theme-settings-swatches">
+                  <div role="group" class="mt-2 btn-group">
+                    <button
+                      type="button"
+                      class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-line"
+                    >
+                      Line
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-shadow"
+                    >
+                      Shadow
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-main text-responsive">
+    <div class="app-main__outer">
+      <div class="app-main__inner">
+        <a
+          type="button"
+          class="btn btn-warning mb-3"
+          href="{{ url_for('web.dash') }}"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-arrow-bar-left"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+            ></path>
+          </svg>
+          Back to Dashboard
+        </a>
+        <div class="row">
+          <div class="col-9 col-sm-12">
+            <ul class="nav nav-pills nav-fill">
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  style="font-size: 1.5rem"
+                  href="{{ url_for('web.expert_dashboard_animal') }}"
+                  >Review Questions</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-success"
+                  style="font-size: 1.5rem"
+                  href="{{ url_for('web.answer_questions_animal') }}"
+                  >Answer Questions</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-success"
+                  style="font-size: 1.5rem"
+                  href="{{ url_for('web.rank_answers_animal') }}"
+                  >Rank Answers</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 card">
+            <h1 class="text-center fs-4">Question Evaluation</h1>
+            <form id="signUpForm" class="border border-dark">
+              <div class="form-header d-flex mb-4 font-weight-bold h3">
+                <span class="stepIndicator font-weight-bold">Agriculture</span>
+                <span class="stepIndicator font-weight-bold"
+                  >Clarity/Grammar</span
+                >
+                <span class="stepIndicator font-weight-bold">Topic</span>
+              </div>
+              <!-- end step indicators -->
+
+              <!-- step one -->
+              <div class="step">
+                <div
+                  class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
+                >
+                  <div class="text-center text-primary h2 font-weight-bold">
+                    Instructions:
+                  </div>
+                  <p class="h3">1. Read the Question.</p>
+                  <p class="h3">
+                    2. If the question is related to agriculture, click
+                    <strong>"Next."</strong>
+                  </p>
+                  <p class="h3">
+                    3. If the question is not related to agriculture, click
+                    <strong>"No."</strong>
+                  </p>
+                </div>
+                <div class="mb-3">
+                  <div class="h4 text-dark font-weight-bold">
+                    <span class="text-primary mr-3">Question:</span
+                    ><span id="oneQuestion" class="h2 font-weight-bold"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- step two -->
+              <div class="step">
+                <div
+                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
+                >
+                  <p class="text-center text-primary h2 font-weight-bold">
+                    Instructions:
+                  </p>
+                  <p class="h3">
+                    1. Determine if the question is clear and grammatically
+                    correct.
+                  </p>
+                  <p class="h3">
+                    2. If the question is clear and grammatically correct, click
+                    <strong>"Next."</strong>
+                  </p>
+                  <p class="h3">
+                    3. If the question needs improvement, rewrite it correctly
+                    it to improve clarity and grammar.
+                  </p>
+                  <p class="h3">4. Click <strong>Next.</strong></p>
+                </div>
+                <div class="mb-3">
+                  <div class="h4 text-dark font-weight-bold">
+                    <span class="text-primary mr-3">Question:</span
+                    ><span id="oneQuestion1" class="h2 font-weight-bold"></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <input
+                    type="text"
+                    name="rephrased"
+                    id="rephrased"
+                    class="border border-dark h3"
+                    placeholder="Rephrase the question here."
+                  />
+                </div>
+              </div>
+
+              <!-- step three -->
+              <div class="step">
+                <div
+                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
+                >
+                  <p class="text-center text-primary h3 font-weight-bold">
+                    Instructions:
+                  </p>
+                  <p class="h3">
+                    1. Determine if the topic accurately represents the
+                    question.
+                  </p>
+                  <p class="h3">
+                    2. If accurate, click the <strong>"Submit"</strong> button
+                    below.
+                  </p>
+                  <p class="h3">
+                    3. If inaccurate or not provided, select an accurate topic
+                    from the dropdown menu.
+                  </p>
+                  <p class="h3">
+                    4. After selecting the correct topic, click the
+                    <strong>"Submit"</strong> button.
+                  </p>
+                </div>
+                <div class="h4 text-dark pb-2">
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Topic:</span
+                  ><strong
+                    id="questionTopic"
+                    class="h2 font-weight-bold"
+                  ></strong>
+                  &nbsp;
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Category:</span
+                  ><span
+                    id="questionCategory"
+                    class="h2 font-weight-bold"
+                    style="text-transform: capitalize"
+                  ></span>
+                </div>
+                <hr class="hr" />
+                <div class="h4 text-dark font-weight-bold mb-3">
+                  <span class="text-primary mr-3 h2 font-weight-bold"
+                    >Question:</span
+                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                </div>
+                <hr class="hr" />
+                <div id="selectedTopics">
+                  <h4 class="text-primary font-weight-bold h3">
+                    Please choose additional topics if necessary:
+                  </h4>
+                </div>
+
+                <div class="h4 text-dark font-weight-bold mb-5"></div>
+                <div class="mb-5 h4" id="topicForm">
+                  <div>
+                    <label for="topics" class="font-weight-bold"
+                      >Select Topic:</label
+                    >
+                    <select
+                      id="topics"
+                      class="select m-2"
+                      onchange="populateSubTopics()"
+                    >
+                      <option value="">Select a Topic</option>
+                      <option value="topic1">
+                        Livestock selection and breeding
+                      </option>
+                      <option value="topic2">
+                        Animal housing and facilities
+                      </option>
+                      <option value="topic3">Feed and nutrition</option>
+                      <option value="topic4">
+                        Health and disease management
+                      </option>
+                      <option value="topic5">Reproduction and birthing</option>
+                      <option value="topic6">
+                        Pasture and grazing management
+                      </option>
+                      <option value="topic7">
+                        Handling and husbandry practices
+                      </option>
+                      <option value="topic8">Marketing and sales</option>
+                      <option value="topic9">
+                        Technology in animal farming
+                      </option>
+                      <option value="topic10">
+                        Sustainable animal farming practices
+                      </option>
+                      <option value="topic11">
+                        Animal transportation and handling
+                      </option>
+                      <option value="topic12">
+                        Business management for animal farming
+                      </option>
+                    </select>
+                  </div>
+                  <div class="">
+                    <label for="subTopics" class="font-weight-bold"
+                      >Select Sub-Topic:</label
+                    >
+                    <select id="subTopics" class="select m-2">
+                      <option value="">Select a Sub-Topic</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- start previous / next buttons -->
+              <div class="form-footer d-flex">
+                <button
+                  type="button"
+                  id="prevBtn"
+                  onclick="nextPrev(-1)"
+                  class="bg-warning font-weight-bold text-white"
+                >
+                  Previous
+                </button>
+                <button
+                  type="button"
+                  id="nextBtn"
+                  onclick="nextPrev(1)"
+                  class="font-weight-bold"
+                >
+                  Next
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="app-wrapper-footer">
+        <div class="app-footer">
+          <div class="app-footer__inner">
+            <div class="app-footer-left">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a href="https://air.ug" class="nav-link"> air.ug </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const token = "{{ token }}";
+  const user = "{{ user }}";
+  const role = "{{ role }}";
+
+  const userElement = document.getElementById("user-info");
+  var currentTab = 0;
+
+  // Retrieve data from local storage
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
+    userElement.textContent = storedUser;
+  } else {
+    userElement.textContent = Expert;
+  }
+  function logout() {
+    // Clear the user token from localStorage
+    localStorage.clear();
+
+    // Redirect to the index.html page
+    window.location.href = "/"; // Redirect to the index page
+  }
+
+  function reload() {
+    window.location.reload();
+  }
+
+  // Attach the logout function to the logout button/link
+  const logoutButton = document.getElementById("logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logout);
+  }
+
+  function fixStepIndicator(n) {
+    var i,
+      x = document.getElementsByClassName("stepIndicator");
+    for (i = 0; i < x.length; i++) {
+      x[i].className = x[i].className.replace(" active", "");
+    }
+    x[n].className += " active";
+  }
+  function showTab(n) {
+    var x = document.getElementsByClassName("step");
+    x[n].style.display = "block";
+
+    var prevBtn = document.getElementById("prevBtn");
+    if (n == 0) {
+      prevBtn.innerHTML = "No";
+      prevBtn.setAttribute("onclick", "nextPrev(-1, true)");
+    } else {
+      prevBtn.innerHTML = "Previous";
+      prevBtn.setAttribute("onclick", "nextPrev(-1, false)");
+    }
+
+    var nextBtn = document.getElementById("nextBtn");
+    if (n == x.length - 1) {
+      nextBtn.innerHTML = "Submit";
+    } else {
+      nextBtn.innerHTML = "Next";
+    }
+
+    fixStepIndicator(n);
+  }
+
+  function nextPrev(n) {
+    var x = document.getElementsByClassName("step");
+    if (n == 1 && !true) return false;
+    x[currentTab].style.display = "none";
+    currentTab = currentTab + n;
+    if (currentTab >= x.length) {
+      submitForm();
+      // document.getElementById("signUpForm").submit();
+
+      return false;
+    }
+    showTab(currentTab);
+  }
+
+  const mytoken = localStorage.getItem("token");
+  let rephrased = document.getElementById("rephrased");
+  let displayValue = document.getElementById("displayValue");
+  let questio = document.getElementById("oneQuestion2");
+  rephrased.addEventListener("input", function () {
+    displayValue.textContent = rephrased.value;
+    // questio.textContent = ''
+  });
+
+  function toggleTopics() {
+    const topicType = document.querySelector(
+      'input[name="topicType"]:checked'
+    ).value;
+    const plantTopics = document.getElementById("plantTopics");
+    const animalTopics = document.getElementById("animalTopics");
+
+    if (topicType === "Plant") {
+      plantTopics.style.display = "block";
+      animalTopics.style.display = "none";
+    } else {
+      plantTopics.style.display = "none";
+      animalTopics.style.display = "block";
+    }
+  }
+
+  const topicTypeRadios = document.querySelectorAll('input[name="topicType"]');
+  topicTypeRadios.forEach((radio) => {
+    radio.addEventListener("change", toggleTopics);
+  });
+
+  async function submitForm() {
+    event.preventDefault();
+
+    var form = document.getElementById("signUpForm");
+    var formData = new FormData(form);
+
+    let questionId2 = parseInt(form.getAttribute("data-question-id"));
+    const rephrased = document.getElementById("rephrased");
+    const displayValue = document.getElementById("displayValue");
+
+    const formx = document.getElementById("topicForm");
+    const selectedTopicsList = document.getElementById("selectedTopicsList");
+    const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
+
+    let my_topics = [];
+    let selectedTopicsString = "";
+    checkboxes.forEach((checkbox) => {
+      console.log(checkbox.value);
+      selectedTopicsString += checkbox.value + ",";
+    });
+    let itemBody = {};
+
+    if (rephrased !== "" && selectedTopicsString !== "") {
+      itemBody = { rephrased: rephrased, topic: selectedTopicsString };
+    } else if (rephrased !== "") {
+      itemBody = { rephrased: rephrased };
+    } else if (selectedTopicsString !== "") {
+      itemBody = { topic: selectedTopicsString };
+    } else {
+      itemBody = {};
+    }
+    try {
+      const response = await fetch(
+        `/api/v1/questions/question_review/${questionId2}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${mytoken}`,
+          },
+          body: JSON.stringify(itemBody),
+        }
+      );
+
+      const responseData = await response.json();
+      if (response) {
+        window.location.reload();
+        // window.location.href = window.location.href;
+      } else {
+        errorMessage.textContent = responseData.error;
+      }
+    } catch (error) {
+      console.error("Error parsing response:", error);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the token from local storage
+    const token = localStorage.getItem("token");
+
+    function showFormWithQuestionId(questionId) {
+      // Display the form and set the question ID as a data attribute
+      var form = document.getElementById("signUpForm");
+      form.style.display = "block";
+      form.setAttribute("data-question-id", questionId);
+    }
+    // Current tab is set to be the first tab (0)
+    showTab(currentTab); // Display the current tab
+
+    // Fetch top users data
+    fetch("/api/v1/questions/random_question_review", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((randomQuestion) => {
+        const anyQuestion = randomQuestion.find(
+          (question) => question.question_language === "Any Language"
+        );
+        const englishQuestion = randomQuestion.find(
+          (question) => question.question_language === "English"
+        );
+        const lugandaQuestion = randomQuestion.find(
+          (question) => question.question_language === "Luganda"
+        );
+        const oneQuestion = document.getElementById("oneQuestion");
+        oneQuestion.textContent = anyQuestion.sentence;
+        const oneQuestion1 = document.getElementById("oneQuestion1");
+        oneQuestion1.textContent = anyQuestion.sentence;
+        const oneQuestion2 = document.getElementById("oneQuestion2");
+        oneQuestion2.textContent = anyQuestion.sentence;
+        const questionTopic = document.getElementById("questionTopic");
+        questionTopic.textContent = anyQuestion.topics
+          ? anyQuestion.topics
+          : "No Topic";
+        const questionCategory = document.getElementById("questionCategory");
+        questionCategory.textContent = anyQuestion.category
+          ? anyQuestion.category
+          : "No Category";
+        var questionId = anyQuestion.id;
+        // console.log(questionId);
+        showFormWithQuestionId(questionId);
+        const incorrectQuestion = document.getElementById("prevBtn");
+        if (incorrectQuestion) {
+          incorrectQuestion.addEventListener("click", async function (event) {
+            event.preventDefault();
+            let questionId1 = parseInt(questionId);
+            // console.log(questionId1);
+            if (prevBtn.innerHTML === "No") {
+              await updateQuestion(questionId1);
+            }
+          });
+        }
+      })
+      .catch((error) => console.error(error));
+
+    function updateQuestion(questionId) {
+      const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((responseData) => {
+          if (response) {
+            window.location.reload();
+          } else {
+            console.error("Error updating question:");
+          }
+        })
+        .catch((error) => console.error("Error parsing response:", error));
+    }
+  });
+</script>
+<script>
+  const topics = {
+    topic1: [
+      "Animal characteristics and traits",
+      "Genetic testing and selection",
+      "Breeding methods",
+      "Healthy breeding herd",
+      "Recordkeeping for breeding",
+      "Artificial insemination",
+    ],
+    topic2: [
+      "Livestock housing design",
+      "Types of housing",
+      "Ventilation and temperature",
+      "Sanitation and waste management",
+      "Fencing and gate maintenance",
+      "Animal welfare considerations",
+    ],
+    topic3: [
+      "Nutrient requirements",
+      "Types of feed",
+      "Feed storage and management",
+      "Grazing management",
+      "Managing feed costs",
+      "Preventing nutritional deficiencies",
+    ],
+    topic4: [
+      "Vaccinations and preventative care ",
+      "Parasite control",
+      "Biosecurity measures",
+      "Quarantine procedures",
+      "Disease diagnosis and treatment",
+      "Veterinary care",
+    ],
+    topic5: [
+      "Breeding and reproduction management",
+      "Pregnancy and gestation care",
+      "Parturition and labor assistance",
+      "Calf and lamb care",
+      "Post-birth care for dams",
+      "Reproductive health management",
+    ],
+    topic6: [
+      "Rotational grazing systems",
+      "Pasture renovation and maintenance",
+      "Managing forage species",
+      "Grazing strategies",
+      "Soil health and fertility",
+      "Utilizing alternative forages",
+    ],
+    topic7: [
+      "Training for safe handling",
+      "Proper animal restraint",
+      "Identifying and treating injuries",
+      "Managing difficult animals",
+      "Behavioral management",
+      "Low-stress animal handling",
+    ],
+    topic8: [
+      "Target markets",
+      "Buyer relationships",
+      "Price strategies",
+      "Packaging and labeling",
+      "Marketing plan",
+      "Direct sales",
+    ],
+    topic9: [
+      "Drones and GPS",
+      "Sensor monitoring",
+      "Digital record-keeping",
+      "Precision feeding",
+      "Efficient animal care",
+      "Animal welfare tech",
+    ],
+    topic10: [
+      "Alternative housing methods",
+      "Conservation grazing",
+      "Renewable resources",
+      "Composting and waste",
+      "Sustainable standards",
+      "Environmental impact",
+    ],
+    topic11: [
+      "Transport Regulations",
+      "Loading and unloading",
+      "Animal welfare",
+      "Transportation vehicles",
+      "Handling procedures",
+      "Documentation and records",
+    ],
+    topic12: [
+      "Financial planning",
+      "Cash flow management",
+      "Book keeping",
+      "Risk management",
+      "Employee management",
+      "Business evaluation",
+    ],
+  };
+
+  function populateSubTopics() {
+    const topicsSelect = document.getElementById("topics");
+    const subTopicsSelect = document.getElementById("subTopics");
+
+    const selectedTopic = topicsSelect.value;
+    subTopicsSelect.innerHTML = ""; // Clear existing options
+
+    if (selectedTopic !== "") {
+      const subTopics = topics[selectedTopic];
+      subTopics.forEach((subTopic) => {
+        const option = document.createElement("option");
+        option.value = subTopic;
+        option.textContent = subTopic;
+        subTopicsSelect.appendChild(option);
+      });
+    } else {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "Select a Sub-Topic";
+      subTopicsSelect.appendChild(option);
+    }
+  }
+</script>
+
+{% endblock %}
