@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Answer Questions Page{% endblock %}
-{% block content %}
+{% extends "base.html" %} {% block title %}Answer English Questions Page{%
+endblock %} {% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -156,46 +156,48 @@
   <div class="app-main">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a
-          type="button"
-          class="btn btn-warning mb-3"
-          href="{{ url_for('web.crop_expert') }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-arrow-bar-left"
-            viewBox="0 0 16 16"
+        <div class="row justify-content-between px-2">
+          <a
+            type="button"
+            class="btn btn-warning mb-3"
+            href="{{ url_for('web.crop_expert') }}"
           >
-            <path
-              fill-rule="evenodd"
-              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-            ></path>
-          </svg>
-          Back to Dashboard
-        </a>
-        <a
-          type="button"
-          class="btn btn-success"
-          href="{{ url_for('web.my_answers') }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-arrow-bar-right"
-            viewBox="0 0 16 16"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-bar-left"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+              ></path>
+            </svg>
+            Back to Dashboard
+          </a>
+          <a
+            type="button"
+            class="btn btn-success mb-3"
+            href="{{ url_for('web.my_answers') }}"
           >
-            <path
-              fill-rule="evenodd"
-              d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z"
-            ></path>
-          </svg>
-          My Answers
-        </a>
+            My Answers
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-bar-right"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z"
+              ></path>
+            </svg>
+          </a>
+        </div>
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill justify-content-around">
@@ -203,7 +205,7 @@
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.expert_dashboard_crop') }}"
+                  href="{{ url_for('web.english_review_crop') }}"
                   >Review Questions</a
                 >
               </li>
@@ -211,7 +213,7 @@
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.answer_questions_crop') }}"
+                  href="{{ url_for('web.english_answer_crop') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -219,7 +221,7 @@
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.rank_answers_crop') }}"
+                  href="{{ url_for('web.english_rank_crop') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -355,8 +357,7 @@
     .addEventListener("DOMContentLoaded", function () {
       const token = localStorage.getItem("token"); // Get the token from local storage
 
-      // Fetch top users data
-      fetch("/api/v1/questions/random_question_answer_crop", {
+      fetch("/api/v1/questions/random_question_answer", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -364,7 +365,7 @@
         .then((response) => response.json())
         .then((randomQuestion) => {
           const anyQuestion = randomQuestion.find(
-            (question) => question.question_language === "Any Language"
+            (question) => question.question_language === "English"
           );
           const oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = anyQuestion.sentence
@@ -396,7 +397,6 @@
       const itemBody = {
         answer: answer,
       };
-      console.log(answer);
       const response = await fetch(
         `/api/v1/questions/add_answer/${questionId}`,
         {
