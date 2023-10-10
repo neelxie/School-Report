@@ -133,7 +133,7 @@ Page{% endblock %} {% block content %}
         <a
           type="button"
           class="btn btn-warning mb-3"
-          href="{{ url_for('web.dash') }}"
+          href="{{ url_for('web.animal_expert') }}"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -585,7 +585,7 @@ Page{% endblock %} {% block content %}
     showTab(currentTab); // Display the current tab
 
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/random_question_review_animal", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -159,7 +159,7 @@
         <a
           type="button"
           class="btn btn-warning mb-3"
-          href="{{ url_for('web.dash') }}"
+          href="{{ url_for('web.animal_expert') }}"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -336,7 +336,7 @@
       const token = localStorage.getItem("token"); // Get the token from local storage
 
       // Fetch top users data
-      fetch("/api/v1/questions/random_question_answer", {
+      fetch("/api/v1/questions/random_question_answer_animal", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

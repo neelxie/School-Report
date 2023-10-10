@@ -186,7 +186,6 @@
                   <thead>
                     <tr>
                       <th>Answer</th>
-                      <th class="text-center">Answer ID</th>
                       <th class="text-center">Question ID</th>
                       <th class="text-center">Date</th>
                     </tr>
@@ -361,7 +360,7 @@
     showTab(currentTab); // Display the current tab
 
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/random_question_review_animal", {
       headers: {
         Authorization: `Bearer ${mytoken}`,
       },
@@ -446,7 +445,6 @@
           tableRow.appendChild(cell);
 
           tableRow.innerHTML += `
-          <td class="text-center text-muted">${answer.id}</td>
          
           <td class="text-center">${answer.question_id}</td>
           
