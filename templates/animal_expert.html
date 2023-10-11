@@ -175,28 +175,6 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="main-card mb-3 card">
-              <div class="card-header">Answers Added</div>
-              <div class="table-responsive">
-                <table
-                  class="align-middle mb-0 table table-bordered table-striped table-hover english bg-animation h4"
-                >
-                  <thead>
-                    <tr>
-                      <th>Answer</th>
-                      <th class="text-center">Answer ID</th>
-                      <th class="text-center">Question ID</th>
-                      <th class="text-center">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody class="font-weight-bold"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -309,7 +287,7 @@
     const rephrased = document.getElementById("rephrased");
     const topic = document.getElementById("topic").value;
     const displayValue = document.getElementById("displayValue");
-    
+
     let itemBody = {};
 
     if (rephrased !== "" && topic !== "") {
@@ -361,7 +339,7 @@
     showTab(currentTab); // Display the current tab
 
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/random_question_review_animal", {
       headers: {
         Authorization: `Bearer ${mytoken}`,
       },
@@ -421,40 +399,6 @@
         })
         .catch((error) => console.error("Error parsing response:", error));
     }
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get the token from local storage
-    const token = localStorage.getItem("token");
-    // Fetch top users data
-    fetch("/api/v1/questions/user_answers", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((userAnswers) => {
-        const tableBody = document.querySelector(".english tbody");
-        userAnswers.forEach((answer, index) => {
-          const tableRow = document.createElement("tr");
-          const anchor = document.createElement("a");
-          anchor.href = `/answer_page.html?answer_id=${answer.id}`;
-          anchor.textContent = answer.answer_text;
-          const cell = document.createElement("td");
-          cell.appendChild(anchor);
-          tableRow.appendChild(cell);
-
-          tableRow.innerHTML += `
-          <td class="text-center text-muted">${answer.id}</td>
-         
-          <td class="text-center">${answer.question_id}</td>
-          
-          <td class="text-center">${answer.created_at}</td>`;
-          tableBody.appendChild(tableRow);
-        });
-      })
-      .catch((error) => console.error("Error fetching english data:"));
   });
 </script>
 {% endblock %}

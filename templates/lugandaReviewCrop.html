@@ -133,7 +133,7 @@ Page{% endblock %} {% block content %}
         <a
           type="button"
           class="btn btn-warning mb-3"
-          href="{{ url_for('web.dash') }}"
+          href="{{ url_for('web.crop_expert') }}"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +157,7 @@ Page{% endblock %} {% block content %}
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_review') }}"
+                  href="{{ url_for('web.luganda_review_crop') }}"
                   >Review Questions</a
                 >
               </li>
@@ -165,7 +165,7 @@ Page{% endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_answer') }}"
+                  href="{{ url_for('web.luganda_answer_crop') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -173,7 +173,7 @@ Page{% endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_rank') }}"
+                  href="{{ url_for('web.luganda_rank_crop') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -575,7 +575,7 @@ Page{% endblock %} {% block content %}
     showTab(currentTab); // Display the current tab
 
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/random_question_review_crop", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

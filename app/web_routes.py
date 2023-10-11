@@ -392,6 +392,15 @@ def runyankole():
         "runyankole.html", token=access_token, role=role, user=username
     )
 
+@web_bp.route("/my-answers")
+def my_answers():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "myanswers.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/upload_dataset")
 def upload_dataset():

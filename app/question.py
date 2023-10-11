@@ -238,7 +238,7 @@ def get_question(id):
 @questions.get("/all")
 def get_questions():
     questions = Question.query.filter(
-        or_(Question.cleaned.is_(None), Question.cleaned != True)
+        (Question.cleaned.is_(None) | (Question.cleaned != True))
     ).all()
 
     if not questions:
@@ -305,16 +305,15 @@ def list_questions():
     total_questions = len(all_questions)
     questions_per_language = (
         db.session.query(Question.language, func.count(Question.id))
-        .filter(or_(Question.cleaned.is_(None), Question.cleaned != True))
+        .filter(Question.cleaned.is_(None) | (Question.cleaned != True))
         .group_by(Question.language)
         .all()
     )
 
-    # average_daily_questions = total_questions / (Question.query.filter(Question.created_at >= datetime.date.today()).count() or 1)
     average_daily_questions = total_questions / (
         Question.query.filter(
-            or_(Question.cleaned.is_(None), Question.cleaned != True),
-            Question.created_at >= datetime.date.today(),
+            (Question.cleaned.is_(None) | (Question.cleaned != True)) &
+            (Question.created_at >= datetime.date.today())
         ).count()
         or 1
     )
@@ -322,8 +321,8 @@ def list_questions():
     one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
     average_weekly_questions = total_questions / (
         Question.query.filter(
-            or_(Question.cleaned.is_(None), Question.cleaned != True),
-            Question.created_at >= one_week_ago,
+            (Question.cleaned.is_(None) | (Question.cleaned != True)) &
+            (Question.created_at >= one_week_ago)
         ).count()
         or 1
     )
@@ -333,13 +332,13 @@ def list_questions():
     average_questions_per_user = total_questions / (total_users or 1)
 
     plant_question_count = Question.query.filter(
-        or_(Question.cleaned.is_(None), Question.cleaned != True),
-        func.lower(Question.category) == "crop",
+        (Question.cleaned.is_(None) | (Question.cleaned != True)) &
+        (func.lower(Question.category) == "crop")
     ).count()
 
     animal_question_count = Question.query.filter(
-        or_(Question.cleaned.is_(None), Question.cleaned != True),
-        func.lower(Question.category) == "animal",
+        (Question.cleaned.is_(None) | (Question.cleaned != True)) &
+        (func.lower(Question.category) == "animal")
     ).count()
 
     response_data = {
@@ -396,35 +395,201 @@ def random_question_and_add_answer():
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
 
-@questions.route("/random_question_review", methods=["GET"])
+@questions.route("/random_question_review_crop", methods=["GET"])
 @jwt_required()
-def random_question_for_review():
+def random_question_for_review_crop():
     english_filter = func.lower(Question.language) == "english"
     luganda_filter = func.lower(Question.language) == "luganda"
     runyankole_filter = func.lower(Question.language) == "runyankole"
     unreviewed_filter = Question.reviewed == False
     cleaned_filter = Question.cleaned == True
+    crop_category_filter = Question.category == "Crop"
 
     english_random_unreviewed_question = (
-        Question.query.filter(english_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(crop_category_filter, english_filter, unreviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(luganda_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(crop_category_filter, luganda_filter, unreviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     runyankole_random_unreviewed_question = (
-        Question.query.filter(runyankole_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(crop_category_filter, runyankole_filter, unreviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     random_unreviewed_question = (
-        Question.query.filter(unreviewed_filter, cleaned_filter)
+        Question.query.filter(crop_category_filter, unreviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    questions_data = []
+
+    if english_random_unreviewed_question:
+        questions_data.append(
+            format_question(english_random_unreviewed_question, "English")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "English",
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections",
+            }
+        )
+
+    if luganda_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(luganda_random_unreviewed_question, "Luganda")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Luganda",
+                "sentence": "There are no more luganda questions, Please evaluate English questions",
+            }
+        )
+
+    if runyankole_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(runyankole_random_unreviewed_question, "Runyankole")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Runyakole",
+                "sentence": "There are no more Runyankole questions, Please evaluate English questions",
+            }
+        )
+
+    if random_unreviewed_question:
+        questions_data.append(
+            format_question(random_unreviewed_question, "Any Language")
+        )
+
+    if questions_data:
+        return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+    
+
+@questions.route("/random_question_review_animal", methods=["GET"])
+@jwt_required()
+def random_question_for_review_animal():
+    english_filter = func.lower(Question.language) == "english"
+    luganda_filter = func.lower(Question.language) == "luganda"
+    runyankole_filter = func.lower(Question.language) == "runyankole"
+    unreviewed_filter = Question.reviewed == False
+    cleaned_filter = Question.cleaned == True
+    animal_category_filter = Question.category == "Animal"
+
+    english_random_unreviewed_question = (
+        Question.query.filter(animal_category_filter, english_filter, unreviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    luganda_random_unreviewed_question = (
+        Question.query.filter(animal_category_filter, luganda_filter, unreviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    runyankole_random_unreviewed_question = (
+        Question.query.filter(animal_category_filter, runyankole_filter, unreviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    random_unreviewed_question = (
+        Question.query.filter(animal_category_filter, unreviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    questions_data = []
+
+    if english_random_unreviewed_question:
+        questions_data.append(
+            format_question(english_random_unreviewed_question, "English")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "English",
+                "sentence": "There are no more questions to evaluate, go to the answer/rank questions sections",
+            }
+        )
+
+    if luganda_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(luganda_random_unreviewed_question, "Luganda")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Luganda",
+                "sentence": "There are no more luganda questions, Please evaluate English questions",
+            }
+        )
+
+    if runyankole_random_unreviewed_question is not None:
+        questions_data.append(
+            format_question(runyankole_random_unreviewed_question, "Runyankole")
+        )
+    else:
+        questions_data.append(
+            {
+                "question_language": "Runyakole",
+                "sentence": "There are no more Runyankole questions, Please evaluate English questions",
+            }
+        )
+
+    if random_unreviewed_question:
+        questions_data.append(
+            format_question(random_unreviewed_question, "Any Language")
+        )
+
+    if questions_data:
+        return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+@questions.route("/random_question_answer_crop", methods=["GET"])
+@jwt_required()
+def random_question_for_answer_crop():
+    english_filter = func.lower(Question.language) == "english"
+    luganda_filter = func.lower(Question.language) == "luganda"
+    runyankole_filter = func.lower(Question.language) == "runyankole"
+    reviewed_filter = Question.reviewed == True
+    cleaned_filter = Question.cleaned == True
+    crop_category_filter = Question.category == "Crop"
+
+    english_random_unreviewed_question = (
+        Question.query.filter(crop_category_filter, english_filter, reviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    luganda_random_unreviewed_question = (
+        Question.query.filter(crop_category_filter, luganda_filter, reviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    runyankole_random_unreviewed_question = (
+        Question.query.filter(crop_category_filter, runyankole_filter, reviewed_filter, cleaned_filter)
+        .order_by(func.random())
+        .first()
+    )
+
+    random_unreviewed_question = (
+        Question.query.filter(crop_category_filter, reviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
@@ -478,35 +643,36 @@ def random_question_for_review():
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
 
-@questions.route("/random_question_answer", methods=["GET"])
+@questions.route("/random_question_answer_animal", methods=["GET"])
 @jwt_required()
-def random_question_for_answer():
+def random_question_for_answer_animal():
     english_filter = func.lower(Question.language) == "english"
     luganda_filter = func.lower(Question.language) == "luganda"
     runyankole_filter = func.lower(Question.language) == "runyankole"
     reviewed_filter = Question.reviewed == True
     cleaned_filter = Question.cleaned == True
+    animal_category_filter = Question.category == "Animal"
 
     english_random_unreviewed_question = (
-        Question.query.filter(english_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(animal_category_filter, english_filter, reviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(luganda_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(animal_category_filter, luganda_filter, reviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     runyankole_random_unreviewed_question = (
-        Question.query.filter(runyankole_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(animal_category_filter, runyankole_filter, reviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
 
     random_unreviewed_question = (
-        Question.query.filter(reviewed_filter, cleaned_filter)
+        Question.query.filter(animal_category_filter, reviewed_filter, cleaned_filter)
         .order_by(func.random())
         .first()
     )
@@ -675,8 +841,8 @@ def get_random_unanswered_question(user_id):
 @jwt_required()
 def get_luganda_questions():
     luganda_questions = Question.query.filter(
-        or_(Question.cleaned.is_(None), Question.cleaned != True),
-        func.lower(Question.language) == "luganda",
+        (Question.cleaned.is_(None) | (Question.cleaned != 't')) &
+        (func.lower(Question.language) == "luganda")
     ).all()
 
     if luganda_questions:
@@ -691,6 +857,7 @@ def get_luganda_questions():
                 "category": question.category,
                 "animal_crop": question.animal_crop,
                 "location": question.location,
+                "cleaned": question.cleaned,
             }
             questions_data.append(question_data)
 
@@ -699,12 +866,12 @@ def get_luganda_questions():
         return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
 
 
-@questions.route("/english", methods=["GET"])
+@questions.route("/english", methods=["GET"]) 
 @jwt_required()
 def get_english_questions():
     english_questions = Question.query.filter(
-        or_(Question.cleaned.is_(None), Question.cleaned != True),
-        func.lower(Question.language) == "english",
+        (Question.cleaned.is_(None) | (Question.cleaned != 't')) &
+        (func.lower(Question.language) == "english")
     ).all()
 
     if english_questions:
@@ -719,6 +886,7 @@ def get_english_questions():
                 "category": question.category,
                 "animal_crop": question.animal_crop,
                 "location": question.location,
+                "cleaned": question.cleaned,
             }
             questions_data.append(question_data)
 

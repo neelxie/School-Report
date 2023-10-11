@@ -156,26 +156,48 @@
   <div class="app-main">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a
-          type="button"
-          class="btn btn-warning mb-3"
-          href="{{ url_for('web.dash') }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-arrow-bar-left"
-            viewBox="0 0 16 16"
+        <div class="row justify-content-between px-2">
+          <a
+            type="button"
+            class="btn btn-warning mb-3"
+            href="{{ url_for('web.animal_expert') }}"
           >
-            <path
-              fill-rule="evenodd"
-              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-            ></path>
-          </svg>
-          Back to Dashboard
-        </a>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-bar-left"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+              ></path>
+            </svg>
+            Back to Dashboard
+          </a>
+          <a
+            type="button"
+            class="btn btn-success mb-3"
+            href="{{ url_for('web.my_answers') }}"
+          >
+            My Answers
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-bar-right"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z"
+              ></path>
+            </svg>
+          </a>
+        </div>
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill justify-content-around">
@@ -336,7 +358,7 @@
       const token = localStorage.getItem("token"); // Get the token from local storage
 
       // Fetch top users data
-      fetch("/api/v1/questions/random_question_answer", {
+      fetch("/api/v1/questions/random_question_answer_animal", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
