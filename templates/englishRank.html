@@ -364,6 +364,10 @@
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
+        if (randomQuestion.message === "No questions available with answers."){
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         const englishQuestionAndAnswerData = randomQuestion.question_and_answer_data.filter(item => {
           return item.question.language.toLowerCase() === 'english';
         });

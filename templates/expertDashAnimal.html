@@ -532,7 +532,6 @@ endblock %} {% block content %}
     let my_topics = [];
     let selectedTopicsString = "";
     checkboxes.forEach((checkbox) => {
-      console.log(checkbox.value);
       selectedTopicsString += checkbox.value + ",";
     });
     let itemBody = {};
@@ -585,13 +584,18 @@ endblock %} {% block content %}
     showTab(currentTab); // Display the current tab
 
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/random_question_review_animal", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
+        console.log(randomQuestion)
+        if (randomQuestion.message === "No questions available with answers."){
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         const anyQuestion = randomQuestion.find(
           (question) => question.question_language === "Any Language"
         );

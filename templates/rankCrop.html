@@ -364,9 +364,10 @@ block content %}
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        const englishQuestionAndAnswerData = randomQuestion.question_and_answer_data.filter(item => {
-          return item.question.language.toLowerCase() === 'english';
-        });
+        if (randomQuestion.message === "No questions available with answers."){
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         let randomQuestionData = randomQuestion.random_question_data;
         const { answers} = randomQuestionData
         qnAnswers = answers
@@ -438,7 +439,7 @@ block content %}
         var questionId = randomQuestionData.id;
         showFormWithQuestionId(questionId);
       })
-      .catch((error) => console.error("Error fetching question:"));
+      .catch((error) => console.log("Error fetching question:", error));
   });
 </script>
 <script>

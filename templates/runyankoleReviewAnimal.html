@@ -591,13 +591,18 @@ Page{% endblock %} {% block content %}
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        const anyQuestion = randomQuestion.find(
-          (question) => question.question_language === "Any Language"
-        );
-        const runyankoleQuestion = randomQuestion.find(
+        
+        let runyankoleQuestion = randomQuestion.find(
           (question) => question.question_language === "Runyankole"
         );
-
+        let desiredObject = randomQuestion.find(obj => obj.question_language === "Runyakole");
+        console.log(desiredObject);
+        if (desiredObject.sentence === "There are no more Runyankole questions, Please evaluate English questions"){
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "There are no more Runyankole questions, Please evaluate English questions";
+        }
+        console.log(randomQuestion)
+        // console.log(runyankoleQuestion);
         const oneQuestion = document.getElementById("oneQuestion");
         oneQuestion.textContent = runyankoleQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");

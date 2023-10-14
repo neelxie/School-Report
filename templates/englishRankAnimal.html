@@ -357,18 +357,18 @@
     }
   
     // Fetch top users data
-    fetch("/api/v1/questions/answered_question_ranking", {
+    fetch("/api/v1/questions/answered_question_ranking_animal", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        const englishQuestionAndAnswerData = randomQuestion.question_and_answer_data.filter(item => {
-          return item.question.language.toLowerCase() === 'english';
-        });
-        let englishQuestion = randomQuestion.question_and_answer_data.find(item => item.question.language.toLowerCase() === "english");
-        console.log(englishQuestion)
+        console.log(randomQuestion.message)
+        if (randomQuestion.message === "No questions available with answers."){
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         let randomQuestionData = randomQuestion.random_question_data;
         const { answers, question} = englishQuestion
         qnAnswers = answers

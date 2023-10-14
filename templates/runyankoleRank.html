@@ -364,11 +364,10 @@
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        const englishQuestionAndAnswerData = randomQuestion.question_and_answer_data.filter(item => {
-          return item.question.language.toLowerCase() === 'runyankole';
-        });
-        let englishQuestion = randomQuestion.question_and_answer_data.find(item => item.question.language.toLowerCase() === "english");
-        
+        if (randomQuestion.message === "No questions available with answers."){
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         let randomQuestionData = randomQuestion.random_question_data;
         const { answers, question} = englishQuestion
         qnAnswers = answers
