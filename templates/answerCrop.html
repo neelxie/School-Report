@@ -253,7 +253,7 @@
                         <td id="oneQuestion" class="font-weight-bold h2"></td>
                       </tr>
                       <tr>
-                        <th class="text-primary pr-3 h3">Language:</th>
+                        <th class="text-primary pr-3 h3">Location:</th>
                         <td
                           id="questionLanguage"
                           class="font-weight-bold h2"
@@ -262,6 +262,15 @@
                       <tr>
                         <th class="text-primary pr-3 h3">Topic:</th>
                         <td id="questionTopic" class="font-weight-bold h2"></td>
+                      </tr>
+
+                      <tr class="border">
+                        <th class="text-primary pr-3 h3">Category:</th>
+                        <td id="categor" class="font-weight-bold h2"></td>
+                      </tr>
+                      <tr class="border">
+                        <th class="text-primary pr-3 h3">Sub-category:</th>
+                        <td id="actualItem" class="font-weight-bold h2"></td>
                       </tr>
                     </tbody>
                   </table>
@@ -374,11 +383,16 @@
             ? anyQuestion.sentence
             : "--No Questions.--";
           const questionLanguage = document.getElementById("questionLanguage");
-          questionLanguage.textContent = anyQuestion.language;
+          questionLanguage.textContent = anyQuestion.location;
           const questionTopic = document.getElementById("questionTopic");
           questionTopic.textContent = anyQuestion.topics
             ? anyQuestion.topics
             : "No Topic";
+
+          const categor = document.getElementById("categor");
+          categor.textContent = anyQuestion.category;
+          const actualItem = document.getElementById("actualItem");
+          actualItem.textContent = anyQuestion.animal_crop;
           var questionId = anyQuestion.id;
           showFormWithQuestionId(questionId);
         });

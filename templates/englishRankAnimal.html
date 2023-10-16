@@ -254,6 +254,9 @@
                     <div class=" h3">
                       Topic:&nbsp;<strong id="questionTopic" class="text-capitalize text-primary"></strong>
                     </div>
+                    <div class=" h3">
+                      Location:&nbsp;<strong id="questionLocation" class="text-capitalize text-primary"></strong>
+                    </div>
                     <table class="table">
                       <thead>
                         <tr class="h4">
@@ -379,6 +382,9 @@
         questionTopic.textContent = question.topic
           ? question.topic
           : "No Topic";
+        
+        let questionLocation = document.getElementById("questionLocation");
+        questionLocation.textContent = question.location
         const tableBody = document.getElementById('answerTableBody');
         answers.forEach((answer, index) => {
           const newRow = document.createElement('tr');

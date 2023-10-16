@@ -284,13 +284,20 @@ Page{% endblock %} {% block content %}
                   </p>
                 </div>
                 <div class="h4 text-dark pb-2">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Topic:</span
-                  ><strong
-                    id="questionTopic"
-                    class="h2 font-weight-bold"
-                  ></strong>
-                  &nbsp;
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Question:</span
+                    ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                  </div>
+                  <hr class="hr" />
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Topic:</span
+                    ><strong
+                      id="questionTopic"
+                      class="h2 font-weight-bold"
+                    ></strong>
+                  </div>
                   <span class="text-primary mr-3 h2 font-weight-bold"
                     >Category:</span
                   ><span
@@ -298,17 +305,19 @@ Page{% endblock %} {% block content %}
                     class="h2 font-weight-bold"
                     style="text-transform: capitalize"
                   ></span>
-                </div>
-                <hr class="hr" />
-                <div class="h4 text-dark font-weight-bold mb-3">
+                  &nbsp;
                   <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Question:</span
-                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                    >Actual Crop:</span
+                  ><span
+                    id="actualItem"
+                    class="h2 font-weight-bold"
+                    style="text-transform: capitalize"
+                  ></span>
                 </div>
                 <hr class="hr" />
                 <div id="selectedTopics">
                   <h4 class="text-primary font-weight-bold h3">
-                    Please choose additional topics if necessary:
+                    Tag additional topics for this question:
                   </h4>
                 </div>
 
@@ -360,8 +369,8 @@ Page{% endblock %} {% block content %}
                     <label for="subTopics" class="font-weight-bold"
                       >Select Sub-Topic:</label
                     >
-                    <select id="subTopics" class="select m-2">
-                      <option value="">Select a Sub-Topic</option>
+                    <select id="subTopics" class="select m-2" multiple>
+                      <!-- <option value="">Select a Sub-Topic</option> -->
                     </select>
                   </div>
                 </div>
@@ -615,6 +624,8 @@ Page{% endblock %} {% block content %}
         questionCategory.textContent = englishQuestion.category
           ? englishQuestion.category
           : "No Category";
+        const actualItem = document.getElementById("actualItem");
+        actualItem.textContent = englishQuestion.animal_crop;
         var questionId = englishQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
@@ -755,22 +766,32 @@ Page{% endblock %} {% block content %}
     const topicsSelect = document.getElementById("topics");
     const subTopicsSelect = document.getElementById("subTopics");
 
-    const selectedTopic = topicsSelect.value;
+    // const selectedTopic = topicsSelect.value;
     subTopicsSelect.innerHTML = ""; // Clear existing options
 
-    if (selectedTopic !== "") {
-      const subTopics = topics[selectedTopic];
-      subTopics.forEach((subTopic) => {
-        const option = document.createElement("option");
-        option.value = subTopic;
-        option.textContent = subTopic;
-        subTopicsSelect.appendChild(option);
+    const selectedTopics = Array.from(topicsSelect.selectedOptions).map(
+      (option) => option.value
+    );
+
+    if (selectedTopics.length > 0) {
+      selectedTopics.forEach((selectedTopic) => {
+        const subTopics = topics[selectedTopic];
+        subTopics.forEach((subTopic) => {
+          const label = document.createElement("label");
+          label.className = "checkbox-label";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.value = subTopic;
+          checkbox.name = "selectedSubTopics";
+          label.appendChild(checkbox);
+
+          const labelText = document.createTextNode(subTopic);
+          label.appendChild(labelText);
+
+          subTopicsSelect.appendChild(label);
+        });
       });
-    } else {
-      const option = document.createElement("option");
-      option.value = "";
-      option.textContent = "Select a Sub-Topic";
-      subTopicsSelect.appendChild(option);
     }
   }
 </script>

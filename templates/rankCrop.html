@@ -254,6 +254,11 @@ block content %}
                     <div class=" h3">
                       Topic:&nbsp;<strong id="questionTopic" class="text-capitalize text-primary"></strong>
                     </div>
+                    <div class=" h3">
+                      Location:&nbsp;<strong id="questionLocation" class="text-capitalize text-primary"></strong>&nbsp;
+                      Category:&nbsp;<strong id="questionCategor" class="text-capitalize text-primary"></strong>&nbsp;
+                      Sub-Category:&nbsp;<strong id="questionSub" class="text-capitalize text-primary"></strong>
+                    </div>
                     <table class="table">
                       <thead>
                         <tr class="h4">
@@ -378,6 +383,12 @@ block content %}
         questionTopic.textContent = randomQuestionData.topic
           ? randomQuestionData.topic
           : "No Topic";
+        let questionLocation = document.getElementById("questionLocation");
+        questionLocation.textContent = randomQuestionData.location
+        let questionCategor = document.getElementById("questionCategor");
+        questionCategor.textContent = randomQuestionData.category
+        let questionSub = document.getElementById("questionSub");
+        questionSub.textContent = randomQuestionData.animal_crop
         const tableBody = document.getElementById('answerTableBody');
         answers.forEach((answer, index) => {
           const newRow = document.createElement('tr');

@@ -284,13 +284,20 @@ Page{% endblock %} {% block content %}
                   </p>
                 </div>
                 <div class="h4 text-dark pb-2">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Topic:</span
-                  ><strong
-                    id="questionTopic"
-                    class="h2 font-weight-bold"
-                  ></strong>
-                  &nbsp;
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Question:</span
+                    ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                  </div>
+                  <hr class="hr" />
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Topic:</span
+                    ><strong
+                      id="questionTopic"
+                      class="h2 font-weight-bold"
+                    ></strong>
+                  </div>
                   <span class="text-primary mr-3 h2 font-weight-bold"
                     >Category:</span
                   ><span
@@ -298,16 +305,19 @@ Page{% endblock %} {% block content %}
                     class="h2 font-weight-bold"
                     style="text-transform: capitalize"
                   ></span>
-                </div>
-                <div class="h4 text-dark font-weight-bold mb-3">
+                  &nbsp;
                   <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Question:</span
-                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                    >Actual Crop:</span
+                  ><span
+                    id="actualItem"
+                    class="h2 font-weight-bold"
+                    style="text-transform: capitalize"
+                  ></span>
                 </div>
                 <hr class="hr" />
                 <div id="selectedTopics">
                   <h4 class="text-primary font-weight-bold h3">
-                    Please choose additional topics if necessary:
+                    Tag additional topics for this question:
                   </h4>
                 </div>
 
@@ -591,17 +601,22 @@ Page{% endblock %} {% block content %}
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        
         let runyankoleQuestion = randomQuestion.find(
           (question) => question.question_language === "Runyankole"
         );
-        let desiredObject = randomQuestion.find(obj => obj.question_language === "Runyakole");
+        let desiredObject = randomQuestion.find(
+          (obj) => obj.question_language === "Runyakole"
+        );
         console.log(desiredObject);
-        if (desiredObject.sentence === "There are no more Runyankole questions, Please evaluate English questions"){
+        if (
+          desiredObject.sentence ===
+          "There are no more Runyankole questions, Please evaluate English questions"
+        ) {
           let oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = "There are no more Runyankole questions, Please evaluate English questions";
+          oneQuestion.textContent =
+            "There are no more Runyankole questions, Please evaluate English questions";
         }
-        console.log(randomQuestion)
+        console.log(randomQuestion);
         // console.log(runyankoleQuestion);
         const oneQuestion = document.getElementById("oneQuestion");
         oneQuestion.textContent = runyankoleQuestion.sentence;
@@ -617,6 +632,8 @@ Page{% endblock %} {% block content %}
         questionCategory.textContent = runyankoleQuestion.category
           ? runyankoleQuestion.category
           : "No Category";
+        const actualItem = document.getElementById("actualItem");
+        actualItem.textContent = runyankoleQuestion.animal_crop;
         var questionId = runyankoleQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
