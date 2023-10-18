@@ -284,13 +284,20 @@ endblock %} {% block content %}
                   </p>
                 </div>
                 <div class="h4 text-dark pb-2">
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Topic:</span
-                  ><strong
-                    id="questionTopic"
-                    class="h2 font-weight-bold"
-                  ></strong>
-                  &nbsp;
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Question:</span
+                    ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                  </div>
+                  <hr class="hr" />
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Topic:</span
+                    ><strong
+                      id="questionTopic"
+                      class="h2 font-weight-bold"
+                    ></strong>
+                  </div>
                   <span class="text-primary mr-3 h2 font-weight-bold"
                     >Category:</span
                   ><span
@@ -298,17 +305,19 @@ endblock %} {% block content %}
                     class="h2 font-weight-bold"
                     style="text-transform: capitalize"
                   ></span>
-                </div>
-                <hr class="hr" />
-                <div class="h4 text-dark font-weight-bold mb-3">
+                  &nbsp;
                   <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Question:</span
-                  ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                    >Actual Crop:</span
+                  ><span
+                    id="actualItem"
+                    class="h2 font-weight-bold"
+                    style="text-transform: capitalize"
+                  ></span>
                 </div>
                 <hr class="hr" />
                 <div id="selectedTopics">
                   <h4 class="text-primary font-weight-bold h3">
-                    Please choose additional topics if necessary:
+                    Tag additional topics for this question:
                   </h4>
                 </div>
 
@@ -532,7 +541,6 @@ endblock %} {% block content %}
     let my_topics = [];
     let selectedTopicsString = "";
     checkboxes.forEach((checkbox) => {
-      console.log(checkbox.value);
       selectedTopicsString += checkbox.value + ",";
     });
     let itemBody = {};
@@ -585,13 +593,18 @@ endblock %} {% block content %}
     showTab(currentTab); // Display the current tab
 
     // Fetch top users data
-    fetch("/api/v1/questions/random_question_review", {
+    fetch("/api/v1/questions/random_question_review_animal", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
+        console.log(randomQuestion);
+        if (randomQuestion.message === "No questions available with answers.") {
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         const anyQuestion = randomQuestion.find(
           (question) => question.question_language === "Any Language"
         );
@@ -615,6 +628,8 @@ endblock %} {% block content %}
         questionCategory.textContent = anyQuestion.category
           ? anyQuestion.category
           : "No Category";
+        const actualItem = document.getElementById("actualItem");
+        actualItem.textContent = anyQuestion.animal_crop;
         var questionId = anyQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);

@@ -17,12 +17,8 @@ block content %}
           <div class="widget-content p-0">
             <div class="widget-content-wrapper">
               <div class="widget-content-left ml-3 header-user-info">
-                <div class="widget-heading" id="user-info">
-          
-                </div>
-                <div class="widget-subheading">
-                  Expert
-                </div>
+                <div class="widget-heading" id="user-info"></div>
+                <div class="widget-subheading">Expert</div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
                 <button
@@ -161,25 +157,25 @@ block content %}
     <div class="app-main__outer">
       <div class="app-main__inner">
         <a
-            type="button"
-            class="btn btn-warning mb-3"
-            href="{{ url_for('web.crop_expert') }}"
+          type="button"
+          class="btn btn-warning mb-3"
+          href="{{ url_for('web.crop_expert') }}"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-arrow-bar-left"
+            viewBox="0 0 16 16"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-bar-left"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-              ></path>
-            </svg>
-            Back to Dashboard
-          </a>
+            <path
+              fill-rule="evenodd"
+              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+            ></path>
+          </svg>
+          Back to Dashboard
+        </a>
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
@@ -217,42 +213,94 @@ block content %}
                 <form id="rankForm" class="py-5 px-5">
                   <fieldset>
                     <div
-                      class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
+                      class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none accordion-container"
                     >
-                      <div class="text-center text-primary h2 font-weight-bold">
+                      <div
+                        class="text-center text-primary h2 font-weight-bold vert"
+                      >
                         Instructions:
                       </div>
-                      <p class="h2 font-weight-bold">Answers will be ranked according to the following criteria:</p>
-                      <p class="h4"><u><strong>Coherence</strong> - means the quality of being logical and consistent in terms of a answer.</u>
-                          <p class="h4">A coherent answer should follow the topic, context, and structure of the input text or query. A coherent answer should also avoid repetition, contradiction, or irrelevant information.</p>
-                      </p>
-                      <p class="h4"><u><strong>Fluency</strong> - means the ability to use a language smoothly, accurately, and effortlessly in terms of an answer.</u>
-                        <p class="h4">A fluent answer should follow the grammatical, syntactic, and lexical rules of the language, and avoid errors, pauses, or repetitions that may hinder the communication. A fluent answer should also convey the intended meaning and tone of the question.</p>
-                      </p>
-                      <p class="h4"><u><strong>Relevance</strong> - means the quality of being closely connected or appropriate in terms of an answer.</u>
-                        <p class="h4">A relevant answer should match the question in terms of meaning, intention, and style. 
-                          A relevant answer should also satisfy the information need or goal of the farmer.
+                      <div class="panel">
+                        <p class="h2 font-weight-bold">
+                          Answers will be ranked according to the following
+                          criteria:
                         </p>
-                      </p>
-                      <p class="h3 text-primary font-weight-bold">
-                        Select the option that most accurately reflects your
-                        level of agreement with the provided answers by rating
-                        them on a scale of 1 to 5:
-                      </p>
-                      <p class="h4">1 = Strongly disagree</p>
-                      <p class="h4">2 = Disagree</p>
-                      <p class="h4">3 = Neither agree nor disagree</p>
-                      <p class="h4">4 = Agree</p>
-                      <p class="h4">5 = Strongly agree</p>
-                      <p class="h3">
-                        Note: You can assign the same value to multiple answers.
-                      </p>
+                        <p class="h4 accordion">
+                          <strong>Coherence/fluency</strong> - smooth, accurate,
+                          and effortless responses in terms of language use.
+                        </p>
+
+                        <p
+                          class="h4 panel border border-success border-top-0 mb-2 text-justify"
+                        >
+                          Encompass logical and consistent responses that follow
+                          the topic, context, and structure, avoiding
+                          repetition, contradiction, or irrelevant information
+                          (coherence). A high linguistic quality response should
+                          convey the intended meaning, tone, and context of the
+                          query while adhering to the grammatical, syntactic,
+                          and lexical rules of the language.
+                        </p>
+
+                        <p class="h4 accordion">
+                          <strong>Relevance</strong> - means the quality of
+                          being closely connected or appropriate in terms of an
+                          answer.
+                        </p>
+                        <p class="h4 panel border border-success border-top-0 text-justify">
+                          A relevant answer should match the question in terms
+                          of meaning, intention, and style. A relevant answer
+                          should also satisfy the information need or goal of
+                          the farmer.
+                        </p>
+                        <p class="h4 accordion">
+                          <strong>Context</strong> - means the surrounding
+                          information that aids in understanding a question's
+                          answer.
+                        </p>
+                        <p class="h4 panel border border-success border-top-0 text-justify">
+                          refers to the specific conditions, factors, or
+                          circumstances related to the question at hand, such as
+                          the type of crop, location, weather, or farming
+                          practices, which are essential for evaluating the most
+                          comprehensive and relevant response. Your evaluation
+                          here answers this question.
+                          <strong>Is this answer context specific?</strong>
+                        </p>
+                        <p class="h3 text-primary font-weight-bold">
+                          Select the option that most accurately reflects your
+                          level of agreement with the provided answers by rating
+                          them on a scale of 1 to 5:
+                        </p>
+                        <p class="h4">1 = Strongly disagree</p>
+                        <p class="h4">2 = Disagree</p>
+                        <p class="h4">3 = Neither agree nor disagree</p>
+                        <p class="h4">4 = Agree</p>
+                        <p class="h4">5 = Strongly agree</p>
+                      </div>
                     </div>
-                    <div class="list-group-item bg-success text-center h2">
+                    <div class="list-group-item bg-success text-justify h2 mb-4">
                       <strong id="oneQuestion"></strong>
                     </div>
-                    <div class=" h3">
-                      Topic:&nbsp;<strong id="questionTopic" class="text-capitalize text-primary"></strong>
+                    <div class="h3 ">
+                      Topic:&nbsp;<strong
+                        id="questionTopic"
+                        class="text-capitalize text-primary"
+                      ></strong>
+                    </div>
+                    <div class="h3">
+                      Location:&nbsp;<strong
+                        id="questionLocation"
+                        class="text-capitalize text-primary"
+                      ></strong
+                      >&nbsp; Category:&nbsp;<strong
+                        id="questionCategor"
+                        class="text-capitalize text-primary"
+                      ></strong
+                      >&nbsp; Sub-Category:&nbsp;<strong
+                        id="questionSub"
+                        class="text-capitalize text-primary"
+                      ></strong>
                     </div>
                     <table class="table">
                       <thead>
@@ -260,25 +308,28 @@ block content %}
                           <th class="">
                             <u>Answers</u>
                           </th>
-                          <th class="text-center" >
-                            Relevance
-                          </th>
-                          <th class="text-center" >
-                            Coherence
-                          </th>
-                          <th class="text-center">
-                            Fluency
-                          </th>
+                          <th class="text-center">Relevance</th>
+                          <th class="text-center">Coherence/Fluency</th>
+                          <th class="text-center">Context</th>
+                        </tr>
                       </thead>
-                      <tbody id="answerTableBody">
-                      </tbody>
+
+                      <tbody id="answerTableBody"></tbody>
                     </table>
-                    
+
                     <div class="d-flex justify-content-between">
-                      <button style="font-size: 1.5rem" class="btn btn-warning my-3" onclick="reloadPage()">
+                      <button
+                        style="font-size: 1.5rem"
+                        class="btn btn-warning my-3"
+                        onclick="reloadPage()"
+                      >
                         Skip
                       </button>
-                      <button style="font-size: 1.5rem" class="btn btn-primary my-3" type="submit">
+                      <button
+                        style="font-size: 1.5rem"
+                        class="btn btn-primary my-3"
+                        type="submit"
+                      >
                         Submit
                       </button>
                     </div>
@@ -343,7 +394,7 @@ block content %}
 
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
-    
+
     const logoutButton = document.getElementById("logoutButton");
     if (logoutButton) {
       logoutButton.addEventListener("click", logout);
@@ -355,7 +406,7 @@ block content %}
       form.style.display = "block";
       form.setAttribute("data-question-id", questionId);
     }
-  
+
     // Fetch top users data
     fetch("/api/v1/questions/answered_question_ranking_crop", {
       headers: {
@@ -364,39 +415,50 @@ block content %}
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        const englishQuestionAndAnswerData = randomQuestion.question_and_answer_data.filter(item => {
-          return item.question.language.toLowerCase() === 'english';
-        });
+        if (randomQuestion.message === "No questions available with answers.") {
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         let randomQuestionData = randomQuestion.random_question_data;
-        const { answers} = randomQuestionData
-        qnAnswers = answers
+        const { answers } = randomQuestionData;
+        qnAnswers = answers;
         let oneQuestion = document.getElementById("oneQuestion");
         oneQuestion.textContent = randomQuestionData.sentence;
-  
+
         let questionTopic = document.getElementById("questionTopic");
         questionTopic.textContent = randomQuestionData.topic
           ? randomQuestionData.topic
           : "No Topic";
-        const tableBody = document.getElementById('answerTableBody');
+        let questionLocation = document.getElementById("questionLocation");
+        questionLocation.textContent = randomQuestionData.location;
+        let questionCategor = document.getElementById("questionCategor");
+        questionCategor.textContent = randomQuestionData.category;
+        let questionSub = document.getElementById("questionSub");
+        questionSub.textContent = randomQuestionData.animal_crop;
+        const tableBody = document.getElementById("answerTableBody");
         answers.forEach((answer, index) => {
-          const newRow = document.createElement('tr');
+          const newRow = document.createElement("tr");
           newRow.innerHTML = `
-              <td class="h3">${answer.answer_text}</td>
+              <td class="h3 text-justify">${answer.answer_text}</td>
               <td class="text-center rankIncrease" id="rankIncrease">
                 <div  class="minus">-</div>
                 <input type="text" class="showDigit text-center my-2" value=1 readonly>
                 <div class="plus">+</div>
               </td>
-              <td class="text-center rankIncrease" id="rankIncrease">
+              <td class="text-center rankIncrease greed" id="rankIncrease">
                 <div  class="minus">-</div>
                 <input type="text" class="showDigit text-center my-2" value=1 readonly>
                 <div class="plus">+</div>
               </td>
-              <td class="text-center rankIncrease" id="rankIncrease">
-                <div  class="minus">-</div>
-                <input type="text" class="showDigit text-center my-2" value=1 readonly>
-                <div class="plus">+</div>
+              <td class="text-center radioButtn">
+                <label class="mr-2">
+                  <input type="radio" name="choice" value="yes"> Yes
+                </label>
+                <label>
+                  <input type="radio" name="choice" value="no"> No
+                </label>
               </td>
+
               <td class="text-center">
                 <button type="button" class="btn btn-success fitting" onclick="toggleButtonText()" id="toggleButton">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag" viewBox="0 0 16 16">
@@ -407,38 +469,37 @@ block content %}
               </td>
           `;
           tableBody.appendChild(newRow);
-          let rankIncreaseCells = newRow.querySelectorAll('.rankIncrease');
-            rankIncreaseCells.forEach((cell) => {
-                const minusDiv = cell.querySelector('.minus');
-                const plusDiv = cell.querySelector('.plus');
-                const inputField = cell.querySelector('input');
+          let rankIncreaseCells = newRow.querySelectorAll(".rankIncrease");
+          rankIncreaseCells.forEach((cell) => {
+            const minusDiv = cell.querySelector(".minus");
+            const plusDiv = cell.querySelector(".plus");
+            const inputField = cell.querySelector("input");
 
-                minusDiv.addEventListener('click', () => {
-                  let currentValue = parseInt(inputField.value, 10);
-                  if (isNaN(currentValue)) {
-                      currentValue = 1;
-                  } else if (currentValue > 1) {
-                      currentValue--;
-                  }
-                  inputField.value = currentValue;
-
-                });
-
-                plusDiv.addEventListener('click', () => {
-                  let currentValue = parseInt(inputField.value, 10);
-                  if (isNaN(currentValue)) {
-                      currentValue = 1;
-                  } else if (currentValue < 5) {
-                      currentValue++;
-                  }
-                  inputField.value = currentValue;
-                });
+            minusDiv.addEventListener("click", () => {
+              let currentValue = parseInt(inputField.value, 10);
+              if (isNaN(currentValue)) {
+                currentValue = 1;
+              } else if (currentValue > 1) {
+                currentValue--;
+              }
+              inputField.value = currentValue;
             });
-        })
+
+            plusDiv.addEventListener("click", () => {
+              let currentValue = parseInt(inputField.value, 10);
+              if (isNaN(currentValue)) {
+                currentValue = 1;
+              } else if (currentValue < 5) {
+                currentValue++;
+              }
+              inputField.value = currentValue;
+            });
+          });
+        });
         var questionId = randomQuestionData.id;
         showFormWithQuestionId(questionId);
       })
-      .catch((error) => console.error("Error fetching question:"));
+      .catch((error) => console.log("Error fetching question:", error));
   });
 </script>
 <script>
@@ -451,21 +512,21 @@ block content %}
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
-      
-      const answerElements = document.querySelectorAll('.answer-rank');
+
+      const answerElements = document.querySelectorAll(".answer-rank");
       const rankings = [];
       let currentAnswer = {};
       answerElements.forEach((element, index) => {
         if (index % 3 === 0) {
-          if (currentAnswer.hasOwnProperty('answerText')) {
+          if (currentAnswer.hasOwnProperty("answerText")) {
             rankings.push(currentAnswer);
           }
           currentAnswer = {
-            answer_id : qnAnswers[rankings.length].id,
+            answer_id: qnAnswers[rankings.length].id,
             answerText: qnAnswers[rankings.length].answer_text,
             relevance: null,
             coherence: null,
-            fluency: null
+            fluency: null,
           };
         }
 
@@ -486,22 +547,19 @@ block content %}
 
       // Prepare the data to send to the API
       const data = {
-        questionId, 
-        rankings
+        questionId,
+        rankings,
       };
 
-      console.log(data)
-      const response = await fetch(
-        `/api/v1/questions/store_answer_ranks`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      console.log(data);
+      const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
       try {
         const responseData = await response.json();
@@ -521,19 +579,118 @@ block content %}
 </script>
 <script>
   function toggleButtonText() {
-    
     var button = document.getElementById("toggleButton");
     var svg = button.querySelector("svg");
 
     if (button.textContent.trim() === "Flag") {
-    button.textContent = " Offensive!";
-    button.style.backgroundColor = "red";
+      button.textContent = " Offensive!";
+      button.style.backgroundColor = "red";
     } else {
       button.textContent = " Flag";
-      button.style.backgroundColor = "#6bc46d"; 
+      button.style.backgroundColor = "#6bc46d";
     }
     button.insertBefore(svg, button.firstChild);
-
   }
+</script>
+<script>
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function () {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  }
+</script>
+<style>
+  .accordion {
+    background-color: #d8f3dc;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    /* outline: none; */
+    transition: 0.4s;
+  }
+
+  .active,
+  .accordion:hover {
+    background-color: #b7e4c7;
+  }
+
+  .accordion:after {
+    content: "\002B";
+    color: blue;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+
+  .vert:after {
+    content: "\2193";
+    font-weight: bold;
+    font-size: 44px; 
+    color: #007bff;
+    cursor: pointer;
+  }
+
+  .active:after {
+    content: "\2212";
+  }
+
+  .panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+
+  .radioButtn {
+    font-size: 1rem;
+    font-weight: 600;
+    padding-top: 2.3rem!important;
+  }
+
+  label {
+    display: inline-block;
+    width: 30px;
+    height: 25px;
+    background-color: #a9d6e5;
+    border: 1px solid #61a5c2;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 25px;
+    cursor: pointer;
+  }
+</style>
+<script>
+  var container = document.querySelector(".accordion-container");
+  var accordions = container.querySelectorAll(".vert");
+
+  accordions.forEach(function (acc) {
+    acc.addEventListener("click", function () {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + 20 + "px";
+      }
+    });
+  });
+  var firstAccordion = accordions[0];
+  var firstPanel = firstAccordion.nextElementSibling;
+  firstAccordion.classList.add("active");
+  firstPanel.style.maxHeight = firstPanel.scrollHeight + 150 + "px";
 </script>
 {% endblock %}
