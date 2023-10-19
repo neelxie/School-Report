@@ -226,20 +226,32 @@ block content %}
                           criteria:
                         </p>
                         <p class="h4 accordion">
-                          <strong>Coherence/fluency</strong> - smooth, accurate,
-                          and effortless responses in terms of language use.
+                          <strong>Coherence</strong> - means the quality of
+                          being logical and consistent in terms of a answer.
                         </p>
 
                         <p
                           class="h4 panel border border-success border-top-0 mb-2 text-justify"
                         >
-                          Encompass logical and consistent responses that follow
-                          the topic, context, and structure, avoiding
-                          repetition, contradiction, or irrelevant information
-                          (coherence). A high linguistic quality response should
-                          convey the intended meaning, tone, and context of the
-                          query while adhering to the grammatical, syntactic,
-                          and lexical rules of the language.
+                          A coherent answer should follow the topic, context,
+                          and structure of the input text or query. A coherent
+                          answer should also avoid repetition, contradiction, or
+                          irrelevant information.
+                        </p>
+                        <p class="h4 accordion">
+                          <strong>Fluency</strong> - means the ability to use a
+                          language smoothly, accurately, and effortlessly in
+                          terms of an answer.
+                        </p>
+
+                        <p
+                          class="h4 panel border border-success border-top-0 mb-2 text-justify"
+                        >
+                          A fluent answer should follow the grammatical,
+                          syntactic, and lexical rules of the language, and
+                          avoid errors, pauses, or repetitions that may hinder
+                          the communication. A fluent answer should also convey
+                          the intended meaning and tone of the question.
                         </p>
 
                         <p class="h4 accordion">
@@ -247,7 +259,9 @@ block content %}
                           being closely connected or appropriate in terms of an
                           answer.
                         </p>
-                        <p class="h4 panel border border-success border-top-0 text-justify">
+                        <p
+                          class="h4 panel border border-success border-top-0 text-justify"
+                        >
                           A relevant answer should match the question in terms
                           of meaning, intention, and style. A relevant answer
                           should also satisfy the information need or goal of
@@ -258,7 +272,9 @@ block content %}
                           information that aids in understanding a question's
                           answer.
                         </p>
-                        <p class="h4 panel border border-success border-top-0 text-justify">
+                        <p
+                          class="h4 panel border border-success border-top-0 text-justify"
+                        >
                           refers to the specific conditions, factors, or
                           circumstances related to the question at hand, such as
                           the type of crop, location, weather, or farming
@@ -279,10 +295,12 @@ block content %}
                         <p class="h4">5 = Strongly agree</p>
                       </div>
                     </div>
-                    <div class="list-group-item bg-success text-justify h2 mb-4">
+                    <div
+                      class="list-group-item bg-success text-justify h2 mb-4"
+                    >
                       <strong id="oneQuestion"></strong>
                     </div>
-                    <div class="h3 ">
+                    <div class="h3">
                       Topic:&nbsp;<strong
                         id="questionTopic"
                         class="text-capitalize text-primary"
@@ -309,8 +327,10 @@ block content %}
                             <u>Answers</u>
                           </th>
                           <th class="text-center">Relevance</th>
-                          <th class="text-center">Coherence/Fluency</th>
+                          <th class="text-center">Coherence</th>
+                          <th class="text-center">Fluency</th>
                           <th class="text-center">Context</th>
+                          <th class="text-center">Report</th>
                         </tr>
                       </thead>
 
@@ -450,6 +470,11 @@ block content %}
                 <input type="text" class="showDigit text-center my-2" value=1 readonly>
                 <div class="plus">+</div>
               </td>
+              <td class="text-center rankIncrease" id="rankIncrease">
+                <div  class="minus">-</div>
+                <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                <div class="plus">+</div>
+              </td>
               <td class="text-center radioButtn">
                 <label class="mr-2">
                   <input type="radio" name="choice" value="yes"> Yes
@@ -551,7 +576,6 @@ block content %}
         rankings,
       };
 
-      console.log(data);
       const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
         method: "POST",
         headers: {
@@ -637,7 +661,7 @@ block content %}
   .vert:after {
     content: "\2193";
     font-weight: bold;
-    font-size: 44px; 
+    font-size: 44px;
     color: #007bff;
     cursor: pointer;
   }
@@ -657,7 +681,7 @@ block content %}
   .radioButtn {
     font-size: 1rem;
     font-weight: 600;
-    padding-top: 2.3rem!important;
+    padding-top: 2.3rem !important;
   }
 
   label {
@@ -670,6 +694,9 @@ block content %}
     text-align: center;
     line-height: 25px;
     cursor: pointer;
+  }
+  table tr td:not(:first-child) {
+    max-width: 6rem;
   }
 </style>
 <script>

@@ -333,35 +333,53 @@ endblock %} {% block content %}
                       onchange="populateSubTopics()"
                     >
                       <option value="">Select a Topic</option>
-                      <option value="topic1">Soil Preparation</option>
-                      <option value="topic2">Planting</option>
-                      <option value="topic3">Crop Management</option>
-                      <option value="topic4">Harvesting</option>
-                      <option value="topic5">Marketing and Sales</option>
-                      <option value="topic6">Crop Diversity</option>
-                      <option value="topic7">
+                      <option value="Soil Preparation">Soil Preparation</option>
+                      <option value="Planting">Planting</option>
+                      <option value="Crop Management">Crop Management</option>
+                      <option value="Harvesting">Harvesting</option>
+                      <option value="Marketing and Sales">
+                        Marketing and Sales
+                      </option>
+                      <option value="Crop Diversity">Crop Diversity</option>
+                      <option value="Genetically Modified Crops (GMOs)">
                         Genetically Modified Crops (GMOs)
                       </option>
-                      <option value="topic8">
+                      <option value="Integrated Pest Management (IPM)">
                         Integrated Pest Management (IPM)
                       </option>
-                      <option value="topic9">
+                      <option
+                        value="Climate and Weather Impacts on Crop Farming"
+                      >
                         Climate and Weather Impacts on Crop Farming
                       </option>
-                      <option value="topic10">Sustainable Agriculture</option>
-                      <option value="topic11">Equipment and Technology</option>
-                      <option value="topic12">
+                      <option value="Sustainable Agriculture">
+                        Sustainable Agriculture
+                      </option>
+                      <option value="Equipment and Technology">
+                        Equipment and Technology
+                      </option>
+                      <option value="Government Policies and Programs">
                         Government Policies and Programs
                       </option>
                     </select>
                   </div>
-                  <div class="">
+                  <div class="d-flex align-items-baseline">
                     <label for="subTopics" class="font-weight-bold"
                       >Select Sub-Topic:</label
                     >
                     <select id="subTopics" class="select m-2">
                       <option value="">Select a Sub-Topic</option>
                     </select>
+                    <div class="m-1 ml-5">
+                      <button type="button" onclick="addSelectedTopic()" class="btn btn-primary">
+                        Add Selected Topic
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="font-weight-bold">Selected Topics:</div>
+                    <ul id="selectedTopicsList"></ul>
                   </div>
                 </div>
               </div>
@@ -653,7 +671,7 @@ endblock %} {% block content %}
 </script>
 <script>
   const topics = {
-    topic1: [
+    "Soil Preparation": [
       "Digging/ Cultivation",
       "Fertilization",
       "Irrigation",
@@ -661,7 +679,7 @@ endblock %} {% block content %}
       "Soil sterilization/steaming",
       "Organic Farming practices",
     ],
-    topic2: [
+    Planting: [
       "Seed Selection",
       "Seed Treatment",
       "Timing of planting",
@@ -670,7 +688,7 @@ endblock %} {% block content %}
       "Intercropping",
       "Companion Planting",
     ],
-    topic3: [
+    "Crop Management": [
       "Pest Management",
       "Disease Management",
       "Nutrient Management",
@@ -680,7 +698,7 @@ endblock %} {% block content %}
       "Mulching",
       "Pruning and Thinning",
     ],
-    topic4: [
+    Harvesting: [
       "Timing of Harvest",
       "Harvesting Techniques",
       "PostHarvest Handling techniques",
@@ -688,7 +706,7 @@ endblock %} {% block content %}
       "Grading and Sorting",
       "Mechanical Harvesting",
     ],
-    topic5: [
+    "Marketing and Sales": [
       "Market Research",
       "Branding",
       "Packaging and Labeling",
@@ -697,7 +715,7 @@ endblock %} {% block content %}
       "Contract Farming",
       "ValueAdded Products",
     ],
-    topic6: [
+    "Crop Diversity": [
       "Monoculture vs. Polyculture",
       "Horticulture",
       "Specialty Crops",
@@ -706,7 +724,7 @@ endblock %} {% block content %}
       "Crop Diversity benefits",
       "Sustainable Agriculture Practices",
     ],
-    topic7: [
+    "Genetically Modified Crops (GMOs)": [
       "History and Controversy",
       "Creation of GMOs",
       "Pros and Cons of GMOs",
@@ -714,7 +732,7 @@ endblock %} {% block content %}
       "Biotechnology in Agriculture",
       "Future use GMOs",
     ],
-    topic8: [
+    "Integrated Pest Management (IPM)": [
       "Principles and Components",
       "Biological Controls",
       "Weed Controls",
@@ -724,7 +742,7 @@ endblock %} {% block content %}
       "IPM products",
       "IPM in Practice",
     ],
-    topic9: [
+    "Climate and Weather Impacts on Crop Farming": [
       "Effects of Temperature and Precipitation",
       "Drought and Water Scarcity",
       "Extreme Weather Events",
@@ -732,7 +750,7 @@ endblock %} {% block content %}
       "Adapting to Climate Change",
       "Resilience in Crop Farming",
     ],
-    topic10: [
+    "Sustainable Agriculture": [
       "Principles of Sustainability",
       "Conservation Practices",
       "Soil Health and Erosion Control",
@@ -740,7 +758,7 @@ endblock %} {% block content %}
       "Biodiversity Conservation",
       "Economic and Social Sustainability",
     ],
-    topic11: [
+    "Equipment and Technology": [
       "Tractors and Implements",
       "Precision Agriculture Tools",
       "GPS and GIS Mapping",
@@ -748,7 +766,7 @@ endblock %} {% block content %}
       "Harvesting Machinery",
       "Farm Management Software",
     ],
-    topic12: [
+    "Government Policies and Programs": [
       "Agricultural Subsidies",
       "Crop Insurance",
       "Conservation Programs",
@@ -763,7 +781,7 @@ endblock %} {% block content %}
     const subTopicsSelect = document.getElementById("subTopics");
 
     const selectedTopic = topicsSelect.value;
-    subTopicsSelect.innerHTML = ""; // Clear existing options
+    subTopicsSelect.innerHTML = "";
 
     if (selectedTopic !== "") {
       const subTopics = topics[selectedTopic];
@@ -779,6 +797,69 @@ endblock %} {% block content %}
       option.textContent = "Select a Sub-Topic";
       subTopicsSelect.appendChild(option);
     }
+  }
+
+  //   if (selectedTopic !== "") {
+  //     const subTopics = topics[selectedTopic];
+  //     subTopics.forEach((subTopic) => {
+  //       const option = document.createElement("option");
+  //       option.value = subTopic;
+  //       option.textContent = subTopic;
+  //       subTopicsSelect.appendChild(option);
+  //     });
+  //   } else {
+  //     const option = document.createElement("option");
+  //     option.value = "";
+  //     option.textContent = "Select a Sub-Topic";
+  //     subTopicsSelect.appendChild(option);
+  //   }
+  // }
+
+  const selectedTopics = [];
+
+  function addSelectedTopic() {
+    event.preventDefault();
+
+    const topicsSelect = document.getElementById("topics");
+    const selectedTopic = topicsSelect.value;
+    const selectedSubTopic = document.getElementById("subTopics").value;
+
+    if (selectedTopic !== "" && selectedSubTopic !== "") {
+      selectedTopics.push({ topic: selectedTopic, subTopic: selectedSubTopic });
+      updateSelectedTopicsList();
+      resetSelections();
+    }
+  }
+
+  function updateSelectedTopicsList() {
+    const selectedTopicsList = document.getElementById("selectedTopicsList");
+    selectedTopicsList.innerHTML = "";
+
+    selectedTopics.forEach((topicObj) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${topicObj.topic} - ${topicObj.subTopic}`;
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      removeButton.classList.add("remove-button-class");
+      removeButton.addEventListener("click", () =>
+        removeSelectedTopic(topicObj)
+      );
+      listItem.appendChild(removeButton);
+      selectedTopicsList.appendChild(listItem);
+    });
+  }
+
+  function removeSelectedTopic(topicObj) {
+    const index = selectedTopics.indexOf(topicObj);
+    if (index !== -1) {
+      selectedTopics.splice(index, 1);
+      updateSelectedTopicsList();
+    }
+  }
+
+  function resetSelections() {
+    document.getElementById("topics").value = "";
+    document.getElementById("subTopics").value = "";
   }
 </script>
 {% endblock %}

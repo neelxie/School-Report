@@ -24,10 +24,6 @@ body {
   flex-wrap: wrap;
 }
 
-.greed{
-  padding-left: 5rem!important;
-}
-
 .organize a {
   font-size: 2rem;
   line-height: 2.5;
@@ -37,6 +33,24 @@ body {
 
 .btn {
   font-size: 1rem;
+}
+
+.remove-button-class{
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  transition: color .15s,background-color .15s,border-color .15s,box-shadow .15s;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #b81f44;
+  border-color: #ad1e40;
+  margin-left: 5rem;
 }
 
 .fullscreen-bg {
