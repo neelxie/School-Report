@@ -90,7 +90,7 @@ class Answer(db.Model):
     relevance = db.Column(db.Integer, nullable=True, default=0)
     coherence = db.Column(db.Integer, nullable=True, default=0)
     offensive = db.Column(db.Boolean, default=False)
-    # context  = db.Column(db.String, nullable=True)
+    context  = db.Column(db.String, nullable=True)
 
     def __repr__(self) -> str:
         return f"Answer>>> {self.answer_text}"
