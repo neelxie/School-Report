@@ -226,20 +226,32 @@ block content %}
                           criteria:
                         </p>
                         <p class="h4 accordion">
-                          <strong>Coherence/fluency</strong> - smooth, accurate,
-                          and effortless responses in terms of language use.
+                          <strong>Coherence</strong> - means the quality of
+                          being logical and consistent in terms of a answer.
                         </p>
 
                         <p
                           class="h4 panel border border-success border-top-0 mb-2 text-justify"
                         >
-                          Encompass logical and consistent responses that follow
-                          the topic, context, and structure, avoiding
-                          repetition, contradiction, or irrelevant information
-                          (coherence). A high linguistic quality response should
-                          convey the intended meaning, tone, and context of the
-                          query while adhering to the grammatical, syntactic,
-                          and lexical rules of the language.
+                          A coherent answer should follow the topic, context,
+                          and structure of the input text or query. A coherent
+                          answer should also avoid repetition, contradiction, or
+                          irrelevant information.
+                        </p>
+                        <p class="h4 accordion">
+                          <strong>Fluency</strong> - means the ability to use a
+                          language smoothly, accurately, and effortlessly in
+                          terms of an answer.
+                        </p>
+
+                        <p
+                          class="h4 panel border border-success border-top-0 mb-2 text-justify"
+                        >
+                          A fluent answer should follow the grammatical,
+                          syntactic, and lexical rules of the language, and
+                          avoid errors, pauses, or repetitions that may hinder
+                          the communication. A fluent answer should also convey
+                          the intended meaning and tone of the question.
                         </p>
 
                         <p class="h4 accordion">
@@ -247,7 +259,9 @@ block content %}
                           being closely connected or appropriate in terms of an
                           answer.
                         </p>
-                        <p class="h4 panel border border-success border-top-0 text-justify">
+                        <p
+                          class="h4 panel border border-success border-top-0 text-justify"
+                        >
                           A relevant answer should match the question in terms
                           of meaning, intention, and style. A relevant answer
                           should also satisfy the information need or goal of
@@ -258,7 +272,9 @@ block content %}
                           information that aids in understanding a question's
                           answer.
                         </p>
-                        <p class="h4 panel border border-success border-top-0 text-justify">
+                        <p
+                          class="h4 panel border border-success border-top-0 text-justify"
+                        >
                           refers to the specific conditions, factors, or
                           circumstances related to the question at hand, such as
                           the type of crop, location, weather, or farming
@@ -279,10 +295,12 @@ block content %}
                         <p class="h4">5 = Strongly agree</p>
                       </div>
                     </div>
-                    <div class="list-group-item bg-success text-justify h2 mb-4">
+                    <div
+                      class="list-group-item bg-success text-justify h2 mb-4"
+                    >
                       <strong id="oneQuestion"></strong>
                     </div>
-                    <div class="h3 ">
+                    <div class="h3">
                       Topic:&nbsp;<strong
                         id="questionTopic"
                         class="text-capitalize text-primary"
@@ -309,8 +327,10 @@ block content %}
                             <u>Answers</u>
                           </th>
                           <th class="text-center">Relevance</th>
-                          <th class="text-center">Coherence/Fluency</th>
+                          <th class="text-center">Coherence</th>
+                          <th class="text-center">Fluency</th>
                           <th class="text-center">Context</th>
+                          <th class="text-center">Report</th>
                         </tr>
                       </thead>
 
@@ -391,6 +411,7 @@ block content %}
     window.location.href = "/"; // Redirect to the index page
   }
   let qnAnswers = [];
+  let radioValues = {}
 
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
@@ -450,17 +471,22 @@ block content %}
                 <input type="text" class="showDigit text-center my-2" value=1 readonly>
                 <div class="plus">+</div>
               </td>
+              <td class="text-center rankIncrease" id="rankIncrease">
+                <div  class="minus">-</div>
+                <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                <div class="plus">+</div>
+              </td>
               <td class="text-center radioButtn">
                 <label class="mr-2">
-                  <input type="radio" name="choice" value="yes"> Yes
+                  <input type="radio" name="choice${index}" value="yes"> Yes
                 </label>
                 <label>
-                  <input type="radio" name="choice" value="no"> No
+                  <input type="radio" name="choice${index}" value="no"> No
                 </label>
               </td>
 
               <td class="text-center">
-                <button type="button" class="btn btn-success fitting" onclick="toggleButtonText()" id="toggleButton">
+                <button type="button" class="btn btn-success fitting" onclick="toggleButtonText(${index})" id="toggleButton_${index}">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag" viewBox="0 0 16 16">
                     <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001M14 1.221c-.22.078-.48.167-.766.255-.81.252-1.872.523-2.734.523-.886 0-1.592-.286-2.203-.534l-.008-.003C7.662 1.21 7.139 1 6.5 1c-.669 0-1.606.229-2.415.478A21.294 21.294 0 0 0 3 1.845v6.433c.22-.078.48-.167.766-.255C4.576 7.77 5.638 7.5 6.5 7.5c.847 0 1.548.28 2.158.525l.028.01C9.32 8.29 9.86 8.5 10.5 8.5c.668 0 1.606-.229 2.415-.478A21.317 21.317 0 0 0 14 7.655V1.222z"></path>
                   </svg>
@@ -495,6 +521,17 @@ block content %}
               inputField.value = currentValue;
             });
           });
+          const radioButtons = newRow.querySelectorAll('input[type="radio"]');
+          radioButtons.forEach((radio) => {
+            radio.addEventListener("change", () => {
+              const answerId = answer.id;
+              const value = radio.value;
+              radioValues[answerId] = value;
+              // console.log(
+              //   `Answer ID ${answerId}: Radio value changed to ${value}`
+              // );
+            });
+          });
         });
         var questionId = randomQuestionData.id;
         showFormWithQuestionId(questionId);
@@ -516,6 +553,7 @@ block content %}
       const answerElements = document.querySelectorAll(".answer-rank");
       const rankings = [];
       let currentAnswer = {};
+      let currentAnswerIndex = 0;
       answerElements.forEach((element, index) => {
         if (index % 3 === 0) {
           if (currentAnswer.hasOwnProperty("answerText")) {
@@ -552,34 +590,35 @@ block content %}
       };
 
       console.log(data);
-      const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
 
-      try {
-        const responseData = await response.json();
-        if (response.ok) {
-          window.location.reload();
-          window.location.href = window.location.href;
-        } else {
-          errorMessage.textContent = responseData.error;
-        }
-      } catch (error) {
-        console.error("Error parsing response:");
-      } finally {
-        window.location.reload();
-      }
+      // const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
+      //   method: "POST",
+      //   headers: {
+      //     "content-type": "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   body: JSON.stringify(data),
+      // });
+
+      // try {
+      //   const responseData = await response.json();
+      //   if (response.ok) {
+      //     window.location.reload();
+      //     window.location.href = window.location.href;
+      //   } else {
+      //     errorMessage.textContent = responseData.error;
+      //   }
+      // } catch (error) {
+      //   console.error("Error parsing response:");
+      // } finally {
+      //   window.location.reload();
+      // }
     });
   });
 </script>
 <script>
-  function toggleButtonText() {
-    var button = document.getElementById("toggleButton");
+  function toggleButtonText(index) {
+    var button = document.getElementById(`toggleButton_${index}`);
     var svg = button.querySelector("svg");
 
     if (button.textContent.trim() === "Flag") {
@@ -637,7 +676,7 @@ block content %}
   .vert:after {
     content: "\2193";
     font-weight: bold;
-    font-size: 44px; 
+    font-size: 44px;
     color: #007bff;
     cursor: pointer;
   }
@@ -657,7 +696,7 @@ block content %}
   .radioButtn {
     font-size: 1rem;
     font-weight: 600;
-    padding-top: 2.3rem!important;
+    padding-top: 2.3rem !important;
   }
 
   label {
@@ -670,6 +709,9 @@ block content %}
     text-align: center;
     line-height: 25px;
     cursor: pointer;
+  }
+  table tr td:not(:first-child) {
+    max-width: 6rem;
   }
 </style>
 <script>
