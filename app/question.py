@@ -1239,31 +1239,28 @@ def store_answer_ranks():
     try:
         for ranking in rankings:
             answer_id = ranking.get("answer_id")
-            relevance = ranking.get("relevance")
-            coherence = ranking.get("coherence")
-            fluency = ranking.get("fluency")
-            context = ranking.get("context")
-            offensive = ranking.get("isFlagged")
-            print(offensive)
-            print(type(offensive))
-
             answer = Answer.query.get(answer_id)
+
             if answer:
-                answer.relevance = relevance
-                answer.coherence = coherence
-                answer.fluency = fluency
-                answer.context = context
-                # if offensive == True:
-                #     answer.offensive = True
+                answer.relevance = ranking.get("relevance")
+                answer.coherence = ranking.get("coherence")
+                answer.fluency = ranking.get("fluency")
+                answer.context = ranking.get("context")
+                if ranking.get("isFlagged"):
+                    answer.offensive = True
 
         if question:
-            ranking_count = question.ranking_count
-            question.ranking_count += 1
+            if question.ranking_count is None:
+                question.ranking_count = 1
+            else:
+                ranking_count = question.ranking_count
+                question.ranking_count += 1
+            
             ranking_count += 1
-            question.finished = True
+            
             question.ranked_by = user_id
 
-        if ranking_count == 3:
+        if ranking_count == 3 or question.ranking_count == 3:
             question.finished = True
 
         db.session.commit()
@@ -1271,6 +1268,7 @@ def store_answer_ranks():
 
     except Exception as e:
         db.session.rollback()
+        print("here here")
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
 
 @questions.route("/expert-stats", methods=["GET"])

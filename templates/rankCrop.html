@@ -557,7 +557,7 @@ block content %}
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
 
-    rankForm.addEventListener("submit", function (event) {
+    rankForm.addEventListener("submit", async function (event) {
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
@@ -593,30 +593,28 @@ block content %}
         rankings,
       };
 
-      console.log(data);
+      const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
-      // const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
-      //   method: "POST",
-      //   headers: {
-      //     "content-type": "application/json",
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      //   body: JSON.stringify(data),
-      // });
-
-      // try {
-      //   const responseData = await response.json();
-      //   if (response.ok) {
-      //     window.location.reload();
-      //     window.location.href = window.location.href;
-      //   } else {
-      //     errorMessage.textContent = responseData.error;
-      //   }
-      // } catch (error) {
-      //   console.error("Error parsing response:");
-      // } finally {
-      //   window.location.reload();
-      // }
+      try {
+        const responseData = await response.json();
+        if (response.ok) {
+          window.location.reload();
+          window.location.href = window.location.href;
+        } else {
+          errorMessage.textContent = responseData.error;
+        }
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.reload();
+      }
     });
   });
 </script>
