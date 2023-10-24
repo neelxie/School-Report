@@ -410,8 +410,18 @@ block content %}
     // Redirect to the index.html page
     window.location.href = "/"; // Redirect to the index page
   }
+
+  function getSelectedRadioValue(element) {
+    const radioButtons = element.querySelectorAll('input[type="radio"]');
+    for (const radio of radioButtons) {
+      if (radio.checked) {
+        return radio.value;
+      }
+    }
+    return "not selected";
+  }
   let qnAnswers = [];
-  let radioValues = {}
+  let radioValues = {};
 
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
@@ -459,21 +469,23 @@ block content %}
         const tableBody = document.getElementById("answerTableBody");
         answers.forEach((answer, index) => {
           const newRow = document.createElement("tr");
+          newRow.classList.add("answer-rank");
+          newRow.dataset.answerId = answer.id;
           newRow.innerHTML = `
               <td class="h3 text-justify">${answer.answer_text}</td>
               <td class="text-center rankIncrease" id="rankIncrease">
                 <div  class="minus">-</div>
-                <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                <input type="text" class="showDigit text-center my-2 relevance" value=1 readonly>
                 <div class="plus">+</div>
               </td>
               <td class="text-center rankIncrease greed" id="rankIncrease">
                 <div  class="minus">-</div>
-                <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                <input type="text" class="showDigit text-center my-2 coherence" value=1 readonly>
                 <div class="plus">+</div>
               </td>
               <td class="text-center rankIncrease" id="rankIncrease">
                 <div  class="minus">-</div>
-                <input type="text" class="showDigit text-center my-2" value=1 readonly>
+                <input type="text" class="showDigit text-center my-2 fluency" value=1 readonly>
                 <div class="plus">+</div>
               </td>
               <td class="text-center radioButtn">
@@ -545,45 +557,37 @@ block content %}
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
 
-    rankForm.addEventListener("submit", async function (event) {
+    rankForm.addEventListener("submit", function (event) {
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
 
       const answerElements = document.querySelectorAll(".answer-rank");
-      const rankings = [];
+      let rankings = [];
       let currentAnswer = {};
-      let currentAnswerIndex = 0;
+      let contextError;
+
       answerElements.forEach((element, index) => {
-        if (index % 3 === 0) {
-          if (currentAnswer.hasOwnProperty("answerText")) {
-            rankings.push(currentAnswer);
-          }
-          currentAnswer = {
-            answer_id: qnAnswers[rankings.length].id,
-            answerText: qnAnswers[rankings.length].answer_text,
-            relevance: null,
-            coherence: null,
-            fluency: null,
-          };
+        let answerID = element.dataset.answerId;
+        const contextValue = getSelectedRadioValue(element);
+        if (contextValue === "not selected") {
+          alert("Please select a context for all the answers.");
+          return;
         }
+        const answerObject = {
+          answer_id: answerID,
+          answerText: element.querySelector(".h3").textContent,
+          relevance: parseInt(element.querySelector(".relevance").value),
+          coherence: parseInt(element.querySelector(".coherence").value),
+          fluency: parseInt(element.querySelector(".fluency").value),
+          isFlagged:
+            element.querySelector(".btn").textContent.trim() === "Offensive!",
+          context: contextValue,
+        };
 
-        // Determine which field (relevance, coherence, fluency) this input belongs to
-        if (index % 3 === 0) {
-          currentAnswer.relevance = parseInt(element.value);
-        } else if (index % 3 === 1) {
-          currentAnswer.coherence = parseInt(element.value);
-        } else if (index % 3 === 2) {
-          currentAnswer.fluency = parseInt(element.value);
-        }
-
-        // If this is the last input field, push the answer to rankings
-        if (index === answerElements.length - 1) {
-          rankings.push(currentAnswer);
-        }
+        rankings.push(answerObject);
       });
 
-      // Prepare the data to send to the API
       const data = {
         questionId,
         rankings,

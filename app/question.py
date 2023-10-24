@@ -1229,28 +1229,42 @@ def store_answer_ranks():
 
     if question_id is None or rankings is None:
         return jsonify({"message": "Invalid data format"}), HTTP_400_BAD_REQUEST
+    
+    question = Question.query.get(question_id)
+    
+    if question is None:
+        return jsonify({'error': 'Question not found'}), HTTP_404_NOT_FOUND
 
+    ranking_count = 0
     try:
         for ranking in rankings:
             answer_id = ranking.get("answer_id")
             relevance = ranking.get("relevance")
             coherence = ranking.get("coherence")
             fluency = ranking.get("fluency")
-
-            # Calculate the answer rank as the summation of relevance, coherence, and fluency
-            answer_rank = relevance + coherence + fluency
+            context = ranking.get("context")
+            offensive = ranking.get("isFlagged")
+            print(offensive)
+            print(type(offensive))
 
             answer = Answer.query.get(answer_id)
             if answer:
                 answer.relevance = relevance
                 answer.coherence = coherence
                 answer.fluency = fluency
-                answer.rank = answer_rank
+                answer.context = context
+                # if offensive == True:
+                #     answer.offensive = True
 
-        question = Question.query.get(question_id)
         if question:
+            ranking_count = question.ranking_count
+            question.ranking_count += 1
+            ranking_count += 1
             question.finished = True
             question.ranked_by = user_id
+
+        if ranking_count == 3:
+            question.finished = True
 
         db.session.commit()
         return jsonify({"message": "Answer ranks stored successfully"}), HTTP_200_OK
@@ -1258,7 +1272,6 @@ def store_answer_ranks():
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
-
 
 @questions.route("/expert-stats", methods=["GET"])
 @jwt_required()
