@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Experts Luganda Review Question
-Page{% endblock %} {% block content %}
+{% extends "base.html" %} {% block title %}Experts Review Question Page{%
+endblock %} {% block content %}
 
 <div
   class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
@@ -130,26 +130,6 @@ Page{% endblock %} {% block content %}
   <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a
-          type="button"
-          class="btn btn-warning mb-3"
-          href="{{ url_for('web.animal_expert') }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-arrow-bar-left"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-            ></path>
-          </svg>
-          Back to Dashboard
-        </a>
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
@@ -157,7 +137,7 @@ Page{% endblock %} {% block content %}
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_review_animal') }}"
+                  href="{{ url_for('web.main_review') }}"
                   >Review Questions</a
                 >
               </li>
@@ -165,7 +145,7 @@ Page{% endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_answer_animal') }}"
+                  href="{{ url_for('web.main_answer') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -173,7 +153,7 @@ Page{% endblock %} {% block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.luganda_rank_animal') }}"
+                  href="{{ url_for('web.main_rank') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -191,9 +171,6 @@ Page{% endblock %} {% block content %}
                 >
                 <span class="stepIndicator font-weight-bold">Topic</span>
               </div>
-              <!-- end step indicators -->
-
-              <!-- step one -->
               <div class="step">
                 <div
                   class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
@@ -307,7 +284,7 @@ Page{% endblock %} {% block content %}
                   ></span>
                   &nbsp;
                   <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Actual Crop:</span
+                    >Sub Category:</span
                   ><span
                     id="actualItem"
                     class="h2 font-weight-bold"
@@ -333,45 +310,57 @@ Page{% endblock %} {% block content %}
                       onchange="populateSubTopics()"
                     >
                       <option value="">Select a Topic</option>
-                      <!-- <option value="topic1">
-                        Livestock selection and breeding
+                      <!-- <option value="Soil Preparation">Soil Preparation</option>
+                      <option value="Planting">Planting</option>
+                      <option value="Crop Management">Crop Management</option>
+                      <option value="Harvesting">Harvesting</option>
+                      <option value="Marketing and Sales">
+                        Marketing and Sales
                       </option>
-                      <option value="topic2">
-                        Animal housing and facilities
+                      <option value="Crop Diversity">Crop Diversity</option>
+                      <option value="Genetically Modified Crops (GMOs)">
+                        Genetically Modified Crops (GMOs)
                       </option>
-                      <option value="topic3">Feed and nutrition</option>
-                      <option value="topic4">
-                        Health and disease management
+                      <option value="Integrated Pest Management (IPM)">
+                        Integrated Pest Management (IPM)
                       </option>
-                      <option value="topic5">Reproduction and birthing</option>
-                      <option value="topic6">
-                        Pasture and grazing management
+                      <option
+                        value="Climate and Weather Impacts on Crop Farming"
+                      >
+                        Climate and Weather Impacts on Crop Farming
                       </option>
-                      <option value="topic7">
-                        Handling and husbandry practices
+                      <option value="Sustainable Agriculture">
+                        Sustainable Agriculture
                       </option>
-                      <option value="topic8">Marketing and sales</option>
-                      <option value="topic9">
-                        Technology in animal farming
+                      <option value="Equipment and Technology">
+                        Equipment and Technology
                       </option>
-                      <option value="topic10">
-                        Sustainable animal farming practices
-                      </option>
-                      <option value="topic11">
-                        Animal transportation and handling
-                      </option>
-                      <option value="topic12">
-                        Business management for animal farming
+                      <option value="Government Policies and Programs">
+                        Government Policies and Programs
                       </option> -->
                     </select>
                   </div>
-                  <div class="">
+                  <div class="d-flex align-items-baseline">
                     <label for="subTopics" class="font-weight-bold"
                       >Select Sub-Topic:</label
                     >
                     <select id="subTopics" class="select m-2">
                       <option value="">Select a Sub-Topic</option>
                     </select>
+                    <div class="m-1 ml-5">
+                      <button
+                        type="button"
+                        onclick="addSelectedTopic()"
+                        class="btn btn-primary"
+                      >
+                        Add Selected Topic
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="font-weight-bold">Selected Topics:</div>
+                    <ul id="selectedTopicsList"></ul>
                   </div>
                 </div>
               </div>
@@ -416,9 +405,29 @@ Page{% endblock %} {% block content %}
   </div>
 </div>
 <script>
-  const token = "{{ token }}";
-  const user = "{{ user }}";
-  const role = "{{ role }}";
+  function getValueFromLocalStorage(key, defaultValue) {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? storedValue : defaultValue;
+  }
+
+  // Retrieve values from localStorage or use default values
+  const token = getValueFromLocalStorage("token", "{{ token }}");
+  const user = getValueFromLocalStorage("user", "{{ user }}");
+  const role = getValueFromLocalStorage("role", "{{ role }}");
+  const language = getValueFromLocalStorage("language", "{{ language }}");
+  const category = getValueFromLocalStorage("category", "{{ category }}");
+  const sub_category = getValueFromLocalStorage(
+    "sub_category",
+    "{{ sub_category }}"
+  );
+
+  // Update localStorage with the current values
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", user);
+  localStorage.setItem("role", role);
+  localStorage.setItem("language", language);
+  localStorage.setItem("category", category);
+  localStorage.setItem("sub_category", sub_category);
 
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
@@ -541,7 +550,6 @@ Page{% endblock %} {% block content %}
     let my_topics = [];
     let selectedTopicsString = "";
     checkboxes.forEach((checkbox) => {
-      console.log(checkbox.value);
       selectedTopicsString += checkbox.value + ",";
     });
     let itemBody = {};
@@ -583,6 +591,9 @@ Page{% endblock %} {% block content %}
   document.addEventListener("DOMContentLoaded", function () {
     // Get the token from local storage
     const token = localStorage.getItem("token");
+    const language = localStorage.getItem("language");
+    const category = localStorage.getItem("category");
+    const sub_category = localStorage.getItem("sub_category");
 
     function showFormWithQuestionId(questionId) {
       // Display the form and set the question ID as a data attribute
@@ -593,40 +604,47 @@ Page{% endblock %} {% block content %}
     // Current tab is set to be the first tab (0)
     showTab(currentTab); // Display the current tab
 
-    // Fetch top users data
-    fetch("/api/v1/questions/random_question_review_animal", {
+    let userDetails = {
+      category: category,
+      language: language,
+      sub_category: sub_category,
+    };
+
+    fetch("/api/v1/questions/main_question_review", {
+      method: "POST",
       headers: {
+        "content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(userDetails),
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
+        console.log(randomQuestion);
+        if (randomQuestion.message === "No questions available.") {
+          let oneQuestion = document.getElementById("oneQuestion");
+          oneQuestion.textContent = "No questions available.";
+        }
         const anyQuestion = randomQuestion.find(
           (question) => question.question_language === "Any Language"
         );
-        const englishQuestion = randomQuestion.find(
-          (question) => question.question_language === "English"
-        );
-        const lugandaQuestion = randomQuestion.find(
-          (question) => question.question_language === "Luganda"
-        );
         const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = lugandaQuestion.sentence;
+        oneQuestion.textContent = anyQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = lugandaQuestion.sentence;
+        oneQuestion1.textContent = anyQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = lugandaQuestion.sentence;
+        oneQuestion2.textContent = anyQuestion.sentence;
         const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = lugandaQuestion.topics
-          ? lugandaQuestion.topics
+        questionTopic.textContent = anyQuestion.topics
+          ? anyQuestion.topics
           : "No Topic";
         const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = lugandaQuestion.category
-          ? lugandaQuestion.category
+        questionCategory.textContent = anyQuestion.category
+          ? anyQuestion.category
           : "No Category";
         const actualItem = document.getElementById("actualItem");
-        actualItem.textContent = lugandaQuestion.animal_crop;
-        var questionId = lugandaQuestion.id;
+        actualItem.textContent = anyQuestion.animal_crop;
+        var questionId = anyQuestion.id;
         // console.log(questionId);
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
@@ -663,114 +681,21 @@ Page{% endblock %} {% block content %}
   });
 </script>
 <script>
-  const topics = {
-    topic1: [
-      "Animal characteristics and traits",
-      "Genetic testing and selection",
-      "Breeding methods",
-      "Healthy breeding herd",
-      "Recordkeeping for breeding",
-      "Artificial insemination",
-    ],
-    topic2: [
-      "Livestock housing design",
-      "Types of housing",
-      "Ventilation and temperature",
-      "Sanitation and waste management",
-      "Fencing and gate maintenance",
-      "Animal welfare considerations",
-    ],
-    topic3: [
-      "Nutrient requirements",
-      "Types of feed",
-      "Feed storage and management",
-      "Grazing management",
-      "Managing feed costs",
-      "Preventing nutritional deficiencies",
-    ],
-    topic4: [
-      "Vaccinations and preventative care ",
-      "Parasite control",
-      "Biosecurity measures",
-      "Quarantine procedures",
-      "Disease diagnosis and treatment",
-      "Veterinary care",
-    ],
-    topic5: [
-      "Breeding and reproduction management",
-      "Pregnancy and gestation care",
-      "Parturition and labor assistance",
-      "Calf and lamb care",
-      "Post-birth care for dams",
-      "Reproductive health management",
-    ],
-    topic6: [
-      "Rotational grazing systems",
-      "Pasture renovation and maintenance",
-      "Managing forage species",
-      "Grazing strategies",
-      "Soil health and fertility",
-      "Utilizing alternative forages",
-    ],
-    topic7: [
-      "Training for safe handling",
-      "Proper animal restraint",
-      "Identifying and treating injuries",
-      "Managing difficult animals",
-      "Behavioral management",
-      "Low-stress animal handling",
-    ],
-    topic8: [
-      "Target markets",
-      "Buyer relationships",
-      "Price strategies",
-      "Packaging and labeling",
-      "Marketing plan",
-      "Direct sales",
-    ],
-    topic9: [
-      "Drones and GPS",
-      "Sensor monitoring",
-      "Digital record-keeping",
-      "Precision feeding",
-      "Efficient animal care",
-      "Animal welfare tech",
-    ],
-    topic10: [
-      "Alternative housing methods",
-      "Conservation grazing",
-      "Renewable resources",
-      "Composting and waste",
-      "Sustainable standards",
-      "Environmental impact",
-    ],
-    topic11: [
-      "Transport Regulations",
-      "Loading and unloading",
-      "Animal welfare",
-      "Transportation vehicles",
-      "Handling procedures",
-      "Documentation and records",
-    ],
-    topic12: [
-      "Financial planning",
-      "Cash flow management",
-      "Book keeping",
-      "Risk management",
-      "Employee management",
-      "Business evaluation",
-    ],
-  };
+  function getSelectedCategory() {
+    const selectedCategory = localStorage.getItem("category");
+    return selectedCategory;
+  }
 
   function populateSubTopics() {
-    const topicsSelect = document.getElementById("topics");
+    const selectedCategory = getSelectedCategory();
+    const topicsSelect = document.getElementById("topics").value;
     const subTopicsSelect = document.getElementById("subTopics");
 
-    const selectedTopic = topicsSelect.value;
-    subTopicsSelect.innerHTML = ""; // Clear existing options
+    // const selectedTopic = topicsSelect.value;
+    subTopicsSelect.innerHTML = "";
 
-    if (selectedTopic !== "") {
-      const subTopics = topics[selectedTopic];
+    if (selectedCategory !== "" && topicsSelect !== "") {
+      const subTopics = categories[selectedCategory][topicsSelect];
       subTopics.forEach((subTopic) => {
         const option = document.createElement("option");
         option.value = subTopic;
@@ -784,5 +709,274 @@ Page{% endblock %} {% block content %}
       subTopicsSelect.appendChild(option);
     }
   }
+
+  function populateTopics() {
+    let selectedCategory = getSelectedCategory();
+    console.log(selectedCategory);
+    const topicsSelect = document.getElementById("topics");
+    topicsSelect.innerHTML = "";
+
+    for (const topic in categories[selectedCategory]) {
+      const option = document.createElement("option");
+      option.value = topic;
+      option.textContent = topic;
+      topicsSelect.appendChild(option);
+    }
+    populateSubTopics();
+  }
+
+  const selectedTopics = [];
+
+  function addSelectedTopic() {
+    event.preventDefault();
+
+    const topicsSelect = document.getElementById("topics");
+    const selectedTopic = topicsSelect.value;
+    const selectedSubTopic = document.getElementById("subTopics").value;
+
+    if (selectedTopic !== "" && selectedSubTopic !== "") {
+      selectedTopics.push({ topic: selectedTopic, subTopic: selectedSubTopic });
+      updateSelectedTopicsList();
+      resetSelections();
+    }
+  }
+
+  function updateSelectedTopicsList() {
+    const selectedTopicsList = document.getElementById("selectedTopicsList");
+    selectedTopicsList.innerHTML = "";
+
+    selectedTopics.forEach((topicObj) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${topicObj.topic} - ${topicObj.subTopic}`;
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      removeButton.classList.add("remove-button-class");
+      removeButton.addEventListener("click", () =>
+        removeSelectedTopic(topicObj)
+      );
+      listItem.appendChild(removeButton);
+      selectedTopicsList.appendChild(listItem);
+    });
+  }
+
+  function removeSelectedTopic(topicObj) {
+    const index = selectedTopics.indexOf(topicObj);
+    if (index !== -1) {
+      selectedTopics.splice(index, 1);
+      updateSelectedTopicsList();
+    }
+  }
+
+  function resetSelections() {
+    document.getElementById("topics").value = "";
+    document.getElementById("subTopics").value = "";
+  }
+
+  const categories = {
+    crop: {
+      "Soil Preparation": [
+        "Digging/ Cultivation",
+        "Fertilization",
+        "Irrigation",
+        "Soil Testing",
+        "Soil sterilization/steaming",
+        "Organic Farming practices",
+      ],
+      Planting: [
+        "Seed Selection",
+        "Seed Treatment",
+        "Timing of planting",
+        "Planting Methods",
+        "Transplanting",
+        "Intercropping",
+        "Companion Planting",
+      ],
+      "Crop Management": [
+        "Pest Management",
+        "Disease Management",
+        "Nutrient Management",
+        "Water Management",
+        "Weed Control",
+        "Crop Rotation",
+        "Mulching",
+        "Pruning and Thinning",
+      ],
+      Harvesting: [
+        "Timing of Harvest",
+        "Harvesting Techniques",
+        "PostHarvest Handling techniques",
+        "Storage and Preservation",
+        "Grading and Sorting",
+        "Mechanical Harvesting",
+      ],
+      "Marketing and Sales": [
+        "Market Research",
+        "Branding",
+        "Packaging and Labeling",
+        "Distribution and Transportation",
+        "Direct Sales",
+        "Contract Farming",
+        "ValueAdded Products",
+      ],
+      "Crop Diversity": [
+        "Monoculture vs. Polyculture",
+        "Horticulture",
+        "Specialty Crops",
+        "Crop Rotation Strategies",
+        "Risk Management",
+        "Crop Diversity benefits",
+        "Sustainable Agriculture Practices",
+      ],
+      "Genetically Modified Crops (GMOs)": [
+        "History and Controversy",
+        "Creation of GMOs",
+        "Pros and Cons of GMOs",
+        "Regulation and Labeling",
+        "Biotechnology in Agriculture",
+        "Future use GMOs",
+      ],
+      "Integrated Pest Management (IPM)": [
+        "Principles and Components",
+        "Biological Controls",
+        "Weed Controls",
+        "Cultural Controls",
+        "Mechanical and Physical Controls",
+        "Chemical Controls",
+        "IPM products",
+        "IPM in Practice",
+      ],
+      "Climate and Weather Impacts on Crop Farming": [
+        "Effects of Temperature and Precipitation",
+        "Drought and Water Scarcity",
+        "Extreme Weather Events",
+        "Changing Seasons and Growing Periods",
+        "Adapting to Climate Change",
+        "Resilience in Crop Farming",
+      ],
+      "Sustainable Agriculture": [
+        "Principles of Sustainability",
+        "Conservation Practices",
+        "Soil Health and Erosion Control",
+        "Water Conservation and Management",
+        "Biodiversity Conservation",
+        "Economic and Social Sustainability",
+      ],
+      "Equipment and Technology": [
+        "Tractors and Implements",
+        "Precision Agriculture Tools",
+        "GPS and GIS Mapping",
+        "Irrigation Systems",
+        "Harvesting Machinery",
+        "Farm Management Software",
+      ],
+      "Government Policies and Programs": [
+        "Agricultural Subsidies",
+        "Crop Insurance",
+        "Conservation Programs",
+        "Trade Policies",
+        "Farm Bill",
+        "Agricultural Research and Development",
+      ],
+    },
+    animal: {
+      "Livestock selection and breeding": [
+        "Animal characteristics and traits",
+        "Genetic testing and selection",
+        "Breeding methods",
+        "Healthy breeding herd",
+        "Recordkeeping for breeding",
+        "Artificial insemination",
+      ],
+      "Animal housing and facilities": [
+        "Livestock housing design",
+        "Types of housing",
+        "Ventilation and temperature",
+        "Sanitation and waste management",
+        "Fencing and gate maintenance",
+        "Animal welfare considerations",
+      ],
+      "Feed and nutrition": [
+        "Nutrient requirements",
+        "Types of feed",
+        "Feed storage and management",
+        "Grazing management",
+        "Managing feed costs",
+        "Preventing nutritional deficiencies",
+      ],
+      "Health and disease management": [
+        "Vaccinations and preventative care ",
+        "Parasite control",
+        "Biosecurity measures",
+        "Quarantine procedures",
+        "Disease diagnosis and treatment",
+        "Veterinary care",
+      ],
+      "Reproduction and birthing": [
+        "Breeding and reproduction management",
+        "Pregnancy and gestation care",
+        "Parturition and labor assistance",
+        "Calf and lamb care",
+        "Post-birth care for dams",
+        "Reproductive health management",
+      ],
+      "Pasture and grazing management": [
+        "Rotational grazing systems",
+        "Pasture renovation and maintenance",
+        "Managing forage species",
+        "Grazing strategies",
+        "Soil health and fertility",
+        "Utilizing alternative forages",
+      ],
+      "Handling and husbandry practices": [
+        "Training for safe handling",
+        "Proper animal restraint",
+        "Identifying and treating injuries",
+        "Managing difficult animals",
+        "Behavioral management",
+        "Low-stress animal handling",
+      ],
+      "Marketing and sales": [
+        "Target markets",
+        "Buyer relationships",
+        "Price strategies",
+        "Packaging and labeling",
+        "Marketing plan",
+        "Direct sales",
+      ],
+      "Technology in animal farming": [
+        "Drones and GPS",
+        "Sensor monitoring",
+        "Digital record-keeping",
+        "Precision feeding",
+        "Efficient animal care",
+        "Animal welfare tech",
+      ],
+      "Sustainable animal farming practices": [
+        "Alternative housing methods",
+        "Conservation grazing",
+        "Renewable resources",
+        "Composting and waste",
+        "Sustainable standards",
+        "Environmental impact",
+      ],
+      "Animal transportation and handling": [
+        "Transport Regulations",
+        "Loading and unloading",
+        "Animal welfare",
+        "Transportation vehicles",
+        "Handling procedures",
+        "Documentation and records",
+      ],
+      "Business management for animal farming": [
+        "Financial planning",
+        "Cash flow management",
+        "Book keeping",
+        "Risk management",
+        "Employee management",
+        "Business evaluation",
+      ],
+    },
+  };
+  window.addEventListener("load", populateTopics);
 </script>
 {% endblock %}

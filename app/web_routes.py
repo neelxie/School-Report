@@ -35,7 +35,10 @@ def index():
                 session["token"] = access_token
                 session["role"] = user.role
                 session["username"] = user.username
-                return redirect(url_for("web.choose"))
+                session["language"] = user.language
+                session["category"] = user.category
+                session["sub_category"] = user.sub_category
+                return redirect(url_for("web.main_review"))
                 # return render_template(
                 #     "dashboard.html",
                 #     token=access_token,
@@ -58,6 +61,60 @@ def admin():
     username = session.get("username")
     return render_template("admin.html", token=access_token, role=role, user=username)
 
+
+@web_bp.route("/main_review")
+def main_review():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    return render_template(
+        "mainReview.html",
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+    )
+
+@web_bp.route("/main_answer")
+def main_answer():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    return render_template(
+        "mainAnswer.html",
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+    )
+
+@web_bp.route("/main_rank")
+def main_rank():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    return render_template(
+        "mainRank.html",
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+    )
 
 @web_bp.route("/choose")
 def choose():
@@ -146,6 +203,7 @@ def expert_dashboard_crop():
         "expertDashCrop.html", token=access_token, role=role, user=username
     )
 
+
 @web_bp.route("/expert_dash_animal")
 def expert_dashboard_animal():
     access_token = session.get("token")
@@ -221,7 +279,9 @@ def answer_questions_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("answerAnimal.html", token=access_token, role=role, user=username)
+    return render_template(
+        "answerAnimal.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/answer_crop")
@@ -229,7 +289,9 @@ def answer_questions_crop():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("answerCrop.html", token=access_token, role=role, user=username)
+    return render_template(
+        "answerCrop.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/rank_animal")
@@ -237,7 +299,9 @@ def rank_answers_animal():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("rankAnimal.html", token=access_token, role=role, user=username)
+    return render_template(
+        "rankAnimal.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/english_answer_animal")
@@ -299,12 +363,15 @@ def runyankole_rank_animal():
         "runyankoleRankAnimal.html", token=access_token, role=role, user=username
     )
 
+
 @web_bp.route("/rank_crop")
 def rank_answers_crop():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    return render_template("rankCrop.html", token=access_token, role=role, user=username)
+    return render_template(
+        "rankCrop.html", token=access_token, role=role, user=username
+    )
 
 
 @web_bp.route("/english_answer_crop")
@@ -391,6 +458,7 @@ def runyankole():
     return render_template(
         "runyankole.html", token=access_token, role=role, user=username
     )
+
 
 @web_bp.route("/my-answers")
 def my_answers():

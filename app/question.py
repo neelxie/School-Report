@@ -14,6 +14,8 @@ import pandas as pd
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.models import Question, db, User, Answer
 import datetime
+import random
+
 from sqlalchemy import func, or_
 from app.helper import admin_required
 
@@ -78,7 +80,7 @@ def handle_questions():
                 category=category,
                 animal_crop=animal_crop,
                 location=location,
-                sub_topic=sub_topic
+                sub_topic=sub_topic,
             )
             db.session.add(question)
             db.session.flush()
@@ -320,8 +322,8 @@ def list_questions():
 
     average_daily_questions = total_questions / (
         Question.query.filter(
-            (Question.cleaned.is_(None) | (Question.cleaned != True)) &
-            (Question.created_at >= datetime.date.today())
+            (Question.cleaned.is_(None) | (Question.cleaned != True))
+            & (Question.created_at >= datetime.date.today())
         ).count()
         or 1
     )
@@ -329,8 +331,8 @@ def list_questions():
     one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
     average_weekly_questions = total_questions / (
         Question.query.filter(
-            (Question.cleaned.is_(None) | (Question.cleaned != True)) &
-            (Question.created_at >= one_week_ago)
+            (Question.cleaned.is_(None) | (Question.cleaned != True))
+            & (Question.created_at >= one_week_ago)
         ).count()
         or 1
     )
@@ -340,13 +342,13 @@ def list_questions():
     average_questions_per_user = total_questions / (total_users or 1)
 
     plant_question_count = Question.query.filter(
-        (Question.cleaned.is_(None) | (Question.cleaned != True)) &
-        (func.lower(Question.category) == "crop")
+        (Question.cleaned.is_(None) | (Question.cleaned != True))
+        & (func.lower(Question.category) == "crop")
     ).count()
 
     animal_question_count = Question.query.filter(
-        (Question.cleaned.is_(None) | (Question.cleaned != True)) &
-        (func.lower(Question.category) == "animal")
+        (Question.cleaned.is_(None) | (Question.cleaned != True))
+        & (func.lower(Question.category) == "animal")
     ).count()
 
     response_data = {
@@ -405,6 +407,48 @@ def random_question_and_add_answer():
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
 
+@questions.route("/main_question_review", methods=["POST"])
+def main_question_review():
+    data = request.get_json()
+    print(data)
+    category = data.get("category", None)
+    language = data.get("language", None)
+    sub_category = data.get("sub_category", None)
+
+    filters = []
+
+    category_filter = func.lower(Question.category) == category
+    reviewed_filter = Question.reviewed == False
+
+    # filters = [Question.category == category, Question.reviewed == False]
+
+    if language:
+        languages = [lang.strip().lower() for lang in language.split(",")]
+        language_filter = func.lower(Question.language).in_(languages)
+        filters.append(language_filter)
+
+    if sub_category:
+        sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+        sub_category_filter = Question.animal_crop.in_(sub_categories)
+        filters.append(sub_category_filter)
+
+    matching_questions = (
+        Question.query.filter(category_filter, reviewed_filter, *filters)
+        .order_by(func.random())
+        .first()
+    )
+
+    questions_data = []
+
+    if matching_questions is not None:
+        questions_data.append(
+            format_question(matching_questions, "Any Language")
+        )
+        return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
+
 @questions.route("/random_question_review_crop", methods=["GET"])
 @jwt_required()
 def random_question_for_review_crop():
@@ -416,19 +460,25 @@ def random_question_for_review_crop():
     crop_category_filter = Question.category == "Crop"
 
     english_random_unreviewed_question = (
-        Question.query.filter(crop_category_filter, english_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(
+            crop_category_filter, english_filter, unreviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(crop_category_filter, luganda_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(
+            crop_category_filter, luganda_filter, unreviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     runyankole_random_unreviewed_question = (
-        Question.query.filter(crop_category_filter, runyankole_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(
+            crop_category_filter, runyankole_filter, unreviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
@@ -486,7 +536,7 @@ def random_question_for_review_crop():
         return jsonify(questions_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
-    
+
 
 @questions.route("/random_question_review_animal", methods=["GET"])
 @jwt_required()
@@ -499,19 +549,25 @@ def random_question_for_review_animal():
     animal_category_filter = Question.category == "Animal"
 
     english_random_unreviewed_question = (
-        Question.query.filter(animal_category_filter, english_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(
+            animal_category_filter, english_filter, unreviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(animal_category_filter, luganda_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(
+            animal_category_filter, luganda_filter, unreviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     runyankole_random_unreviewed_question = (
-        Question.query.filter(animal_category_filter, runyankole_filter, unreviewed_filter, cleaned_filter)
+        Question.query.filter(
+            animal_category_filter, runyankole_filter, unreviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
@@ -570,6 +626,48 @@ def random_question_for_review_animal():
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
+@jwt_required()
+@questions.route("/main_question_answer", methods=["POST"])
+def main_question_answer():
+    data = request.get_json()
+    print(data)
+    category = data.get("category", None)
+    language = data.get("language", None)
+    sub_category = data.get("sub_category", None)
+
+    filters = []
+
+    category_filter = func.lower(Question.category) == category
+    reviewed_filter = Question.reviewed == True
+
+    # filters = [Question.category == category, Question.reviewed == False]
+
+    if language:
+        languages = [lang.strip().lower() for lang in language.split(",")]
+        language_filter = func.lower(Question.language).in_(languages)
+        filters.append(language_filter)
+
+    if sub_category:
+        sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+        sub_category_filter = Question.animal_crop.in_(sub_categories)
+        filters.append(sub_category_filter)
+
+    matching_questions = (
+        Question.query.filter(category_filter, reviewed_filter, *filters)
+        .order_by(func.random())
+        .first()
+    )
+
+    questions_data = []
+
+    if matching_questions is not None:
+        questions_data.append(
+            format_question(matching_questions, "Any Language")
+        )
+        return jsonify(questions_data), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
 @questions.route("/random_question_answer_crop", methods=["GET"])
 @jwt_required()
 def random_question_for_answer_crop():
@@ -581,19 +679,25 @@ def random_question_for_answer_crop():
     crop_category_filter = Question.category == "Crop"
 
     english_random_unreviewed_question = (
-        Question.query.filter(crop_category_filter, english_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(
+            crop_category_filter, english_filter, reviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(crop_category_filter, luganda_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(
+            crop_category_filter, luganda_filter, reviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     runyankole_random_unreviewed_question = (
-        Question.query.filter(crop_category_filter, runyankole_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(
+            crop_category_filter, runyankole_filter, reviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
@@ -664,19 +768,25 @@ def random_question_for_answer_animal():
     animal_category_filter = Question.category == "Animal"
 
     english_random_unreviewed_question = (
-        Question.query.filter(animal_category_filter, english_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(
+            animal_category_filter, english_filter, reviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     luganda_random_unreviewed_question = (
-        Question.query.filter(animal_category_filter, luganda_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(
+            animal_category_filter, luganda_filter, reviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
 
     runyankole_random_unreviewed_question = (
-        Question.query.filter(animal_category_filter, runyankole_filter, reviewed_filter, cleaned_filter)
+        Question.query.filter(
+            animal_category_filter, runyankole_filter, reviewed_filter, cleaned_filter
+        )
         .order_by(func.random())
         .first()
     )
@@ -852,8 +962,8 @@ def get_random_unanswered_question(user_id):
 @jwt_required()
 def get_luganda_questions():
     luganda_questions = Question.query.filter(
-        (Question.cleaned.is_(None) | (Question.cleaned != 't')) &
-        (func.lower(Question.language) == "luganda")
+        (Question.cleaned.is_(None) | (Question.cleaned != "t"))
+        & (func.lower(Question.language) == "luganda")
     ).all()
 
     if luganda_questions:
@@ -878,12 +988,12 @@ def get_luganda_questions():
         return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
 
 
-@questions.route("/english", methods=["GET"]) 
+@questions.route("/english", methods=["GET"])
 @jwt_required()
 def get_english_questions():
     english_questions = Question.query.filter(
-        (Question.cleaned.is_(None) | (Question.cleaned != 't')) &
-        (func.lower(Question.language) == "english")
+        (Question.cleaned.is_(None) | (Question.cleaned != "t"))
+        & (func.lower(Question.language) == "english")
     ).all()
 
     if english_questions:
@@ -1246,11 +1356,11 @@ def store_answer_ranks():
 
     if question_id is None or rankings is None:
         return jsonify({"message": "Invalid data format"}), HTTP_400_BAD_REQUEST
-    
+
     question = Question.query.get(question_id)
-    
+
     if question is None:
-        return jsonify({'error': 'Question not found'}), HTTP_404_NOT_FOUND
+        return jsonify({"error": "Question not found"}), HTTP_404_NOT_FOUND
 
     ranking_count = 0
     try:
@@ -1272,9 +1382,9 @@ def store_answer_ranks():
             else:
                 ranking_count = question.ranking_count
                 question.ranking_count += 1
-            
+
             ranking_count += 1
-            
+
             question.ranked_by = user_id
 
         if ranking_count == 3 or question.ranking_count == 3:
@@ -1287,6 +1397,7 @@ def store_answer_ranks():
         db.session.rollback()
         print("here here")
         return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
+
 
 @questions.route("/expert-stats", methods=["GET"])
 @jwt_required()
@@ -1319,6 +1430,10 @@ def question_stats():
             "reviewed_questions_count": reviewed_questions_count,
             "answers_count": answers,
             "ranked_answers": ranked_answers,
+            "language": expert.language,
+            "expertise": expert.category,
+            "sub_category": expert.sub_category,
+            "created_at": expert.created_at,
         }
 
         expert_data.append(expert_info)

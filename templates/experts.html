@@ -208,6 +208,35 @@ content %}
                           placeholder="Last name"
                         />
                       </div>
+                      <div class="form-group">
+                        <label for="lastname">Language</label>
+                        <div class="container">
+                          <div class="select-btn">
+                            <span class="btn-text">Languages</span>
+                          </div>
+
+                          <ul class="list-items">
+                            <li class="item">
+                              <span class="checkbox">
+                                <i class="fa-solid fa-check check-icon"></i>
+                              </span>
+                              <span class="item-text">English</span>
+                            </li>
+                            <li class="item">
+                              <span class="checkbox">
+                                <i class="fa-solid fa-check check-icon"></i>
+                              </span>
+                              <span class="item-text">Luganda</span>
+                            </li>
+                            <li class="item">
+                              <span class="checkbox">
+                                <i class="fa-solid fa-check check-icon"></i>
+                              </span>
+                              <span class="item-text">Runyankole</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                     <div class="col">
                       <div class="form-group">
@@ -229,6 +258,19 @@ content %}
                           name="phone"
                           placeholder="Phone Number"
                         />
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Expertise</label>
+                        <select
+                          id="expertise"
+                          name="expertise"
+                          class="form-control"
+                          required
+                        >
+                          <option disabled selected value>Select</option>
+                          <option value="animal">Animal</option>
+                          <option value="crop">Crop</option>
+                        </select>
                       </div>
                     </div>
                     <div class="col">
@@ -255,6 +297,18 @@ content %}
                           name="email"
                           placeholder="Email"
                         />
+                      </div>
+                      <div class="form-group">
+                        <label for="subcategory">Subcategory</label>
+                        <select
+                          id="subcategory"
+                          name="subcategory[]"
+                          class="form-control"
+                          required
+                          multiple
+                        >
+                          <option disabled selected value>Select</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -403,6 +457,9 @@ content %}
                     <tr>
                       <th class="text-center">#</th>
                       <th>Name</th>
+                      <th class="text-center">Language</th>
+                      <th class="text-center">Expertise</th>
+                      <th class="text-center">Subcategory</th>
                       <th class="text-center">Reviewed</th>
                       <th class="text-center">Answered</th>
                       <th class="text-center">Ranked</th>
@@ -433,9 +490,45 @@ content %}
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    // document.getElementById('output').innerHTML = location.search;
+    // document.getElementByClassName("chosen-select").chosen();
     const form = document.getElementById("apiForm");
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
+    const selectedItems = new Set();
+
+    const selectBtn = document.querySelector(".select-btn"),
+      items = document.querySelectorAll(".item");
+
+    selectBtn.addEventListener("click", () => {
+      selectBtn.classList.toggle("open");
+    });
+
+    items.forEach((item) => {
+      item.addEventListener("click", () => {
+        item.classList.toggle("checked");
+        if (item.classList.contains("checked")) {
+          selectedItems.add(item.textContent); // Add selected item to the Set
+        } else {
+          selectedItems.delete(item.textContent); // Remove deselected item from the Set
+        }
+      });
+    });
+
+    // items.forEach((item) => {
+    //   item.addEventListener("click", () => {
+    //     item.classList.toggle("checked");
+
+    //     let checked = document.querySelectorAll(".checked"),
+    //       btnText = document.querySelector(".btn-text");
+
+    //     if (checked && checked.length > 0) {
+    //       btnText.innerText = `${checked.length} Selected`;
+    //     } else {
+    //       btnText.innerText = "Select Language";
+    //     }
+    //   });
+    // });
 
     apiForm.addEventListener("submit", async function (event) {
       event.preventDefault();
@@ -446,6 +539,16 @@ content %}
       const phone = document.getElementById("phone").value;
       const organisation = document.getElementById("organisation").value;
       const email = document.getElementById("email").value;
+      const category = document.getElementById("expertise").value;
+      const sub_category = document.getElementById("subcategory");
+      const selectedSubcategories = Array.from(
+        subcategorySelect.selectedOptions
+      ).map((option) => option.value);
+      const selectedArray = Array.from(selectedItems)
+        .map((item) => item.trim())
+        .join(", ");
+      const commaSeparatedString = selectedSubcategories.join(", ");
+
       const itemBody = {
         phone_number: phone,
         lastname: lastname,
@@ -453,6 +556,9 @@ content %}
         organisation: organisation,
         gender: gender,
         email: email,
+        language: selectedArray,
+        category: category,
+        sub_category: commaSeparatedString,
       };
 
       const response = await fetch("/api/v1/auth/register_expert", {
@@ -480,9 +586,158 @@ content %}
     });
   });
 </script>
+<style>
+  .select-btn {
+    border: 1px solid #ced4da;
+    display: flex;
+    height: calc(2.25rem + 2px);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+  .select-btn .btn-text {
+    font-size: 17px;
+    font-weight: 400;
+    color: #333;
+  }
+  .select-btn .arrow-dwn {
+    display: flex;
+    height: 21px;
+    width: 21px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 50%;
+    background: rgb(91, 73, 255);
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  .select-btn.open .arrow-dwn {
+    transform: rotate(-180deg);
+  }
+  .list-items {
+    position: relative;
+    margin-top: 15px;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    max-height: 220px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: none;
+  }
+  .select-btn.open ~ .list-items {
+    display: block;
+  }
 
+  .select-btn.open ~ .list-items::-webkit-scrollbar {
+    width: 8px;
+    height: 0;
+  }
+  .select-btn.open ~ .list-items::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+  .select-btn.open ~ .list-items::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .list-items .item {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0 15px;
+    border-radius: 8px;
+  }
+  .list-items .item:hover {
+    background-color: #e7edfe;
+  }
+  .item .item-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: #333;
+  }
+  .item .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    width: 16px;
+    border-radius: 4px;
+    margin-right: 12px;
+    border: 1.5px solid #c0c0c0;
+    transition: all 0.3s ease-in-out;
+  }
+  .item.checked .checkbox {
+    background-color: rgb(91, 73, 255);
+    border-color: rgb(91, 73, 255);
+  }
+  .checkbox .check-icon {
+    color: #fff;
+    font-size: 11px;
+    transform: scale(0);
+    transition: all 0.2s ease-in-out;
+  }
+  .item.checked .check-icon {
+    transform: scale(1);
+  }
+</style>
 <script>
-  const token = "{{ token }}";
+  const expertiseSelect = document.getElementById("expertise");
+  const subcategorySelect = document.getElementById("subcategory");
+
+  const subcategoryOptions = {
+    animal: [
+      "Cattle",
+      "Goats",
+      "Bees",
+      "Rabbits",
+      "Piggery",
+      "Poultry",
+      "Fish",
+    ],
+    crop: [
+      "Bananas",
+      "Cereals",
+      "Soybean",
+      "Cassava",
+      "Cocoa",
+      "Beans",
+      "Groundnuts",
+      "Sweetpotatoes",
+      "Vegetables",
+      "Coffee",
+    ],
+  };
+
+  function updateSubcategoryOptions() {
+    const selectedExpertise = expertiseSelect.value;
+    const options = subcategoryOptions[selectedExpertise] || [];
+
+    subcategorySelect.innerHTML = "";
+
+    options.forEach((optionText) => {
+      const option = document.createElement("option");
+      option.value = optionText;
+      option.text = optionText;
+      subcategorySelect.appendChild(option);
+    });
+  }
+
+  expertiseSelect.addEventListener("change", updateSubcategoryOptions);
+
+  updateSubcategoryOptions();
+</script>
+<script>
+  // const token = "{{ token }}";
   const user = "{{ user }}";
   const role = "{{ role }}";
 
@@ -555,6 +810,11 @@ content %}
         reviewedQuestions.textContent = reviewedqn + "%";
         const answeredQuestions = document.getElementById("answeredQuestions");
         answeredQuestions.textContent = answeredqn + "%";
+        topUsersData.experts.forEach((user) => {
+          user.created_at = new Date(user.created_at);
+        });
+
+        topUsersData.experts.sort((a, b) => b.created_at - a.created_at);
         const tableBody = document.querySelector(".experts tbody");
         topUsersData.experts.forEach((user, index) => {
           const tableRow = document.createElement("tr");
@@ -571,6 +831,9 @@ content %}
                   </div>
                 </td>
     
+                <td class="text-center">${user.language ? user.language : 'None'}</td>
+                <td class="text-center">${user.expertise ? user.expertise : 'None'}</td>
+                <td class="text-center">${user.sub_category ? user.sub_category : 'None'}</td>
                 <td class="text-center">${user.reviewed_questions_count}</td>
                 <td class="text-center">${user.answers_count}</td>
                 <td class="text-center">${user.ranked_answers}</td>`;

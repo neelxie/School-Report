@@ -5,6 +5,7 @@ from app.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_401_UNAUTHORIZED,
     HTTP_409_CONFLICT,
+    HTTP_404_NOT_FOUND
 )
 from flask import Blueprint, app, request, jsonify, g
 from flask_jwt_extended import (
@@ -124,14 +125,15 @@ def register_expert():
     email = data["email"].strip()
     gender = data["gender"]
     organisation = data["organisation"].strip()
+    language = data["language"].strip()
+    category = data["category"].strip()
+    sub_category = data["sub_category"].strip()
 
     if User.query.filter_by(phone_number=phone_number).first():
         return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
 
-    # Generate username by concatenating firstname and lastname
     username = f"{firstname.lower()}{lastname.lower()}"
 
-    # Use phone number as the initial password
     password = phone_number
 
     expert = User(
@@ -146,6 +148,9 @@ def register_expert():
         role="expert",
         organisation=organisation,
         email=email,
+        language=language,
+        category=category,
+        sub_category=sub_category,
     )
 
     db.session.add(expert)
@@ -273,6 +278,9 @@ def get_experts():
                 "organisation": farmer.organisation,
                 "gender": farmer.gender,
                 "email": farmer.email,
+                "language":farmer.language,
+                "expertise":farmer.category,
+                "sub_category":farmer.sub_category
             }
         )
     return (
@@ -343,3 +351,27 @@ def user_statistics():
         "experts": agricExperts,
     }
     return jsonify({"data": response_data}), HTTP_200_OK
+
+@jwt_required()
+@auth.post('/add_data/<int:user_id>')
+def add_data(user_id):
+    data = request.get_json()
+    
+    user = User.query.get(user_id)
+    
+    if not user:
+        return jsonify({'error': 'User not found'}), HTTP_404_NOT_FOUND
+    
+    if 'language' in data:
+        user.language = data['language']
+
+    if 'category' in data:
+        user.category = data['category']
+
+    if 'sub_category' in data:
+        user.sub_category = data['sub_category']
+    
+    db.session.commit()
+    
+    return jsonify({'message': 'User updated successfully'}), HTTP_200_OK
+

@@ -21,8 +21,12 @@ class User(db.Model):
     phone_number = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
+    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     organisation = db.Column(db.String(120))
     email = db.Column(db.String(120), unique=True, nullable=True)
+    language = db.Column(db.String(20), nullable=True)
+    category = db.Column(db.String(20), nullable=True)
+    sub_category = db.Column(db.String(20), nullable=True)
     questions = db.relationship(
         "Question", backref="user", foreign_keys="Question.user_id"
     )
@@ -88,6 +92,7 @@ class Answer(db.Model):
     source = db.Column(db.String(100), nullable=False)
     rank = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.now())
+    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     fluency = db.Column(db.Integer, nullable=True, default=0)
     relevance = db.Column(db.Integer, nullable=True, default=0)
     coherence = db.Column(db.Integer, nullable=True, default=0)
