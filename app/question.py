@@ -27,6 +27,7 @@ def format_question(question, language):
         "language": question.language,
         "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
         "topics": question.topic,
+        "sub_topic": question.sub_topic,
         "category": question.category,
         "animal_crop": question.animal_crop,
         "location": question.location,
@@ -40,9 +41,10 @@ def handle_questions():
     def process_single_question(question_data, current_user):
         sentence = question_data.get("sentence", "")
         language = question_data.get("language", "")
-        topic = question_data.get("topics", "")
+        topic = question_data.get("topic", "")
+        sub_topic = question_data.get("sub_topic", "")
         category = question_data.get("category", "")
-        animal_crop = question_data.get("crop_animal", "")
+        animal_crop = question_data.get("sub_category", "")
         location = question_data.get("location", "")
         today = datetime.date.today()
 
@@ -76,6 +78,7 @@ def handle_questions():
                 category=category,
                 animal_crop=animal_crop,
                 location=location,
+                sub_topic=sub_topic
             )
             db.session.add(question)
             db.session.flush()
@@ -96,6 +99,7 @@ def handle_questions():
                         "language": question.language,
                         "created_at": question.created_at,
                         "topics": question.topic,
+                        "sub_topic": question.sub_topic,
                         "category": question.category,
                         "animal_crop": question.animal_crop,
                         "location": question.location,
@@ -148,6 +152,7 @@ def handle_questions():
                         "language": question.language,
                         "created_at": question.created_at,
                         "topics": question.topic,
+                        "sub_topic": question.sub_topic,
                         "category": question.category,
                         "animal_crop": question.animal_crop,
                         "location": question.location,
@@ -173,9 +178,10 @@ def upload_json_file():
         for obj in json_data:
             sentence = obj["sentence"]
             language = obj["language"]
-            topic = obj.get("topics")
+            topic = obj.get("topic")
+            sub_topic = obj.get("sub_topic")
             category = obj.get("category")
-            animal_crop = obj.get("crop_animal")
+            animal_crop = obj.get("sub_category")
             location = obj.get("location")
 
             if Question.query.filter_by(sentence=sentence).first():
@@ -187,6 +193,7 @@ def upload_json_file():
                     language=language,
                     user_id=current_user,
                     topic=topic,
+                    sub_topic=sub_topic,
                     category=category,
                     animal_crop=animal_crop,
                     location=location,
@@ -258,6 +265,7 @@ def get_questions():
                 "language": question.language,
                 "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 "topics": question.topic,
+                "sub_topic": question.sub_topic,
                 "category": question.category,
                 "animal_crop": question.animal_crop,
                 "location": question.location,
@@ -355,6 +363,7 @@ def list_questions():
             {
                 "id": question.id,
                 "topics": question.topic,
+                "sub_topic": question.sub_topic,
                 "sentence": question.sentence,
                 "language": question.language,
                 "created_at": question.created_at,
@@ -386,6 +395,7 @@ def random_question_and_add_answer():
             "language": random_question.language,
             "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             "topics": random_question.topic,
+            "sub_topic": random_question.sub_topic,
             "category": random_question.category,
             "animal_crop": random_question.animal_crop,
             "location": random_question.location,
@@ -830,6 +840,7 @@ def get_random_unanswered_question(user_id):
             "category": random_question.category,
             "animal_crop": random_question.animal_crop,
             "location": random_question.location,
+            "sub_topic": random_question.sub_topic,
             # answer part
         }
         return jsonify(question_data), 200
@@ -854,6 +865,7 @@ def get_luganda_questions():
                 "language": question.language,
                 "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 "topics": question.topic,
+                "sub_topic": question.sub_topic,
                 "category": question.category,
                 "animal_crop": question.animal_crop,
                 "location": question.location,
@@ -883,6 +895,7 @@ def get_english_questions():
                 "language": question.language,
                 "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 "topics": question.topic,
+                "sub_topic": question.sub_topic,
                 "category": question.category,
                 "animal_crop": question.animal_crop,
                 "location": question.location,
@@ -1022,6 +1035,7 @@ def answered_question_ranking_animal():
                     "%Y-%m-%d %H:%M:%S"
                 ),
                 "topic": random_unreviewed_question.topic,
+                "sub_topic": random_unreviewed_question.sub_topic,
                 "category": random_unreviewed_question.category,
                 "animal_crop": random_unreviewed_question.animal_crop,
                 "location": random_unreviewed_question.location,
@@ -1067,6 +1081,7 @@ def answered_question_ranking_animal():
             "language": random_question.language,
             "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             "topic": random_question.topic,
+            "sub_topic": random_question.sub_topic,
             "category": random_question.category,
             "animal_crop": random_question.animal_crop,
             "location": random_question.location,
@@ -1139,6 +1154,7 @@ def answered_question_ranking_crop():
                     "%Y-%m-%d %H:%M:%S"
                 ),
                 "topic": random_unreviewed_question.topic,
+                "sub_topic": random_unreviewed_question.sub_topic,
                 "category": random_unreviewed_question.category,
                 "animal_crop": random_unreviewed_question.animal_crop,
                 "location": random_unreviewed_question.location,
@@ -1184,6 +1200,7 @@ def answered_question_ranking_crop():
             "language": random_question.language,
             "created_at": random_question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             "topic": random_question.topic,
+            "sub_topic": random_question.sub_topic,
             "category": random_question.category,
             "animal_crop": random_question.animal_crop,
             "location": random_question.location,
@@ -1363,6 +1380,7 @@ def get_answer(answer_id):
         "animal_crop": question.animal_crop,
         "category": question.category,
         "topic": question.topic,
+        "sub_topic": question.sub_topic,
     }
 
     return jsonify(response_data), HTTP_200_OK

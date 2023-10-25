@@ -34,12 +34,13 @@ class User(db.Model):
 class Question(db.Model):
     __tablename__ = "questions"
     id = db.Column(db.Integer, primary_key=True)
-    sentence = db.Column(db.Text, nullable=False)
+    sentence = db.Column(db.Text, nullable=True)
     language = db.Column(db.String(10), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user_accounts.id"), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
     topic = db.Column(db.String, nullable=True)
+    sub_topic = db.Column(db.String, nullable=True)
     reviewer_id = db.Column(
         db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
     )
@@ -70,6 +71,7 @@ class Question(db.Model):
         db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
     )
     answers = db.relationship("Answer", backref="question")
+    filename = db.Column(db.String, nullable=True)
     
 
     def __repr__(self) -> str:
