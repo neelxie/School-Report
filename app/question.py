@@ -15,9 +15,14 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from app.models import Question, db, User, Answer
 import datetime
 import random
+import os
+from os.path import join, dirname, realpath
+
 
 from sqlalchemy import func, or_
 from app.helper import admin_required
+
+UPLOADS_PATH = join(dirname(realpath(__file__)), "static/audio_uploads")
 
 questions = Blueprint("questions", __name__, url_prefix="/api/v1/questions")
 
@@ -164,6 +169,45 @@ def handle_questions():
             return jsonify(returned_data), HTTP_200_OK
         else:
             return jsonify({"error": "User not found"}), HTTP_404_NOT_FOUND
+
+
+@questions.route("/upload_question", methods=["POST"])
+@jwt_required()
+def upload_question():
+    if "audio" not in request.files:
+        return jsonify({"error": "No audio file provided"}), HTTP_400_BAD_REQUEST
+
+    language = request.form.get("language")
+    topic = request.form.get("topic", "")
+    sub_topic = request.form.get("sub_topic", "")
+    category = request.form.get("category", "")
+    animal_crop = request.form.get("sub_category", "")
+    location = request.form.get("location", "")
+
+    audio = request.files["audio"]
+
+    if audio:
+        filename = os.path.join("static", "audio_uploads", audio.filename)
+        if os.path.exists(filename):
+            return jsonify({"Error": "File with same name already exists"})
+        audio.save(filename)
+
+    current_user = get_jwt_identity()
+    question = Question(
+        language=language,
+        user_id=current_user,
+        topic=topic,
+        sub_topic=sub_topic,
+        filename=filename,
+        category=category,
+        animal_crop=animal_crop,
+        location=location,
+    )
+
+    db.session.add(question)
+    db.session.commit()
+
+    return jsonify({"message": "Question and audio uploaded successfully"}), 200
 
 
 @questions.route("/file_upload/", methods=["POST"])
@@ -441,9 +485,7 @@ def main_question_review():
     questions_data = []
 
     if matching_questions is not None:
-        questions_data.append(
-            format_question(matching_questions, "Any Language")
-        )
+        questions_data.append(format_question(matching_questions, "Any Language"))
         return jsonify(questions_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
@@ -626,6 +668,7 @@ def random_question_for_review_animal():
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
+
 @jwt_required()
 @questions.route("/main_question_answer", methods=["POST"])
 def main_question_answer():
@@ -661,12 +704,11 @@ def main_question_answer():
     questions_data = []
 
     if matching_questions is not None:
-        questions_data.append(
-            format_question(matching_questions, "Any Language")
-        )
+        questions_data.append(format_question(matching_questions, "Any Language"))
         return jsonify(questions_data), HTTP_200_OK
     else:
         return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
 
 @questions.route("/random_question_answer_crop", methods=["GET"])
 @jwt_required()
