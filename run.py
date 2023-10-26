@@ -26,6 +26,7 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    app.config['STATIC_FOLDER'] = 'static'
     app.config['SECRET_KEY'] = secrets.token_hex(16)
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
     
