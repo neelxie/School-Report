@@ -49,7 +49,7 @@ def handle_questions():
         sentence = question_data.get("sentence", "")
         language = question_data.get("language", "")
         topic = question_data.get("topic", "")
-        sub_topic = question_data.get("sub_topic", "")
+        sub_topic = question_data.get("sub_topics", "")
         category = question_data.get("category", "")
         animal_crop = question_data.get("sub_category", "")
         location = question_data.get("location", "")
@@ -179,7 +179,7 @@ def upload_question():
 
     language = request.form.get("language")
     topic = request.form.get("topic", "")
-    sub_topic = request.form.get("sub_topic", "")
+    sub_topic = request.form.get("sub_topics", "")
     category = request.form.get("category", "")
     animal_crop = request.form.get("sub_category", "")
     location = request.form.get("location", "")
@@ -251,7 +251,7 @@ def offline_upload():
                 question_data = {
                     "language": matching_metadata.get("language"),
                     "topic": matching_metadata.get("topic", ""),
-                    "sub_topic": matching_metadata.get("sub_topic", ""),
+                    "sub_topic": matching_metadata.get("sub_topics", ""),
                     "category": matching_metadata.get("category", ""),
                     "animal_crop": matching_metadata.get("sub_category", ""),
                     "location": matching_metadata.get("location", ""),
@@ -285,7 +285,7 @@ def upload_json_file():
             sentence = obj["sentence"]
             language = obj["language"]
             topic = obj.get("topic")
-            sub_topic = obj.get("sub_topic")
+            sub_topic = obj.get("sub_topics")
             category = obj.get("category")
             animal_crop = obj.get("sub_category")
             location = obj.get("location")
