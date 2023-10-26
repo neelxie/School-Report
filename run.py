@@ -12,24 +12,26 @@ from flask_jwt_extended import JWTManager
 
 
 def create_app(test_config=None):
-
-    app = Flask(__name__, instance_relative_config=True,)
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+    )
 
     if test_config is None:
         app.config.from_mapping(
             SECRET_KEY=os.environ.get("SECRET_KEY"),
             SQLALCHEMY_DATABASE_URI='postgresql://postgres:password@localhost:5432/gates',
-            # SQLALCHEMY_DATABASE_URI='postgresql://neelxie:password@localhost:5433/gates',
+            # SQLALCHEMY_DATABASE_URI="postgresql://neelxie:password@localhost:5433/gates",
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
-            JWT_SECRET_KEY='1bSR#Nw00Y3axSjcjrXrU9Cs%_wJ7S',
+            JWT_SECRET_KEY="1bSR#Nw00Y3axSjcjrXrU9Cs%_wJ7S",
         )
     else:
         app.config.from_mapping(test_config)
 
-    app.config['STATIC_FOLDER'] = 'static'
-    app.config['SECRET_KEY'] = secrets.token_hex(16)
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
-    
+    app.config["STATIC_FOLDER"] = "static"
+    app.config["SECRET_KEY"] = secrets.token_hex(16)
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=1)
+
     # allow cross-domain requests
     CORS(app)
 
@@ -42,23 +44,26 @@ def create_app(test_config=None):
     app.register_blueprint(auth)
     app.register_blueprint(questions)
 
-
     @app.errorhandler(404)
     def handle_404(e):
         # Check if the request accepts JSON response
         if request.accept_mimetypes.accept_json:
-            return jsonify({'error': 'Route or Page not found'}), 404
+            return jsonify({"error": "Route or Page not found"}), 404
         # For other formats (e.g., HTML), render the 404 template
-        return render_template('404.html'), 404
+        return render_template("404.html"), 404
 
     @app.errorhandler(HTTP_500_INTERNAL_SERVER_ERROR)
     def handle_500(e):
-        return jsonify({'error': 'Something went wrong, we are working on it'}), HTTP_500_INTERNAL_SERVER_ERROR
+        return (
+            jsonify({"error": "Something went wrong, we are working on it"}),
+            HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
     return app
+
 
 app = create_app()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

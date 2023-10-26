@@ -207,8 +207,68 @@ def upload_question():
     db.session.add(question)
     db.session.commit()
 
-    return jsonify({"message": "Question and audio uploaded successfully"}), 200
+    return jsonify({"message": "Question and audio uploaded successfully"}), HTTP_200_OK
 
+@questions.route('/offline_upload', methods=['POST'])
+@jwt_required()
+def offline_upload():
+
+    if 'file' not in request.files:
+        return jsonify({"error": "No metadata file provided"}), HTTP_400_BAD_REQUEST
+
+    if 'files' not in request.files:
+        return jsonify({"error": "No audio files provided"}), HTTP_400_BAD_REQUEST
+    
+    metadata_file = request.files.get('file')
+    audio_files = request.files.getlist('files')
+
+    metadata = json.loads(metadata_file.read().decode('utf-8'))
+
+    if not audio_files:
+        return jsonify({'error': 'No audio files provided'}), HTTP_400_BAD_REQUEST
+
+    if not metadata:
+        return jsonify({'error': 'Metadata file not provided'}), HTTP_400_BAD_REQUEST
+    
+    current_user = get_jwt_identity()
+
+    questions = []
+    for i, audio in enumerate(audio_files):
+        if audio:
+            filename = os.path.join("static", "audio_uploads", audio.filename)
+            if os.path.exists(filename):
+                return jsonify({"error": "File with the same name already exists"}), HTTP_400_BAD_REQUEST
+            audio.save(filename)
+            # i am assuming the metadata has the audio file name for correlation
+            # in my case am calling the metadata object attribute for the audio "audio_filename"
+            matching_metadata = None
+            for item in metadata:
+                if item.get("audio_filename") == audio.filename:
+                    matching_metadata = item
+                    break
+
+            if matching_metadata:
+                question_data = {
+                    "language": matching_metadata.get("language"),
+                    "topic": matching_metadata.get("topic", ""),
+                    "sub_topic": matching_metadata.get("sub_topic", ""),
+                    "category": matching_metadata.get("category", ""),
+                    "animal_crop": matching_metadata.get("sub_category", ""),
+                    "location": matching_metadata.get("location", ""),
+                    "user_id": current_user,
+                    "filename": filename,
+                }
+
+                question = Question(**question_data)
+                questions.append(question)
+            else:
+                # no matching metadata is found
+                return jsonify({"error": f"No metadata found for audio file: {audio.filename}"}), HTTP_400_BAD_REQUEST
+
+    db.session.add_all(questions)
+    db.session.commit()
+
+    return jsonify({"message": "Questions and audio uploaded successfully"}), HTTP_200_OK
 
 @questions.route("/file_upload/", methods=["POST"])
 @jwt_required()
