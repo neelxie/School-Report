@@ -270,34 +270,6 @@ def offline_upload():
 
     return jsonify({"message": "Questions and audio uploaded successfully"}), HTTP_200_OK
 
-    # for audio in audio_files:
-    #     if audio:
-    #         audio_filename = os.path.join("static", "audio_uploads", secure_filename(audio.filename))
-    #         if os.path.exists(audio_filename):
-    #             return jsonify({"error": "File with the same name already exists"}), HTTPStatus.BAD_REQUEST
-    #         audio.save(audio_filename)
-
-    #         # Create a question object with the corresponding metadata
-    #         question_data = {
-    #             "language": metadata.get("language"),
-    #             "topic": metadata.get("topic", ""),
-    #             "sub_topic": metadata.get("sub_topic", ""),
-    #             "category": metadata.get("category", ""),
-    #             "animal_crop": metadata.get("sub_category", ""),
-    #             "location": metadata.get("location", ""),
-    #             "user_id": get_jwt_identity(),
-    #             "filename": audio_filename,
-    #         }
-
-    #         question = Question(**question_data)
-    #         questions.append(question)
-
-    # db.session.add_all(questions)
-    # db.session.commit()
-
-    # return jsonify({"message": "Questions and audio uploaded successfully"}), HTTPStatus.OK
-
-
 @questions.route("/file_upload/", methods=["POST"])
 @jwt_required()
 def upload_json_file():
