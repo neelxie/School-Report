@@ -545,24 +545,41 @@ endblock %} {% block content %}
 
     const formx = document.getElementById("topicForm");
     const selectedTopicsList = document.getElementById("selectedTopicsList");
-    const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
+    // const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
 
     let my_topics = [];
     let selectedTopicsString = "";
-    checkboxes.forEach((checkbox) => {
-      selectedTopicsString += checkbox.value + ",";
+
+    let listItems = selectedTopicsList.querySelectorAll("li");
+
+    let values = [];
+
+    listItems.forEach((item) => {
+      values.push(item.textContent.replace("Remove", "").trim()); // Remove 'Remove' and trim extra whitespace.
     });
+
+    const commaSeparatedString = values.join(", ");
+
     let itemBody = {};
 
-    if (rephrased !== "" && selectedTopicsString !== "") {
-      itemBody = { rephrased: rephrased, topic: selectedTopicsString };
-    } else if (rephrased !== "") {
-      itemBody = { rephrased: rephrased };
-    } else if (selectedTopicsString !== "") {
-      itemBody = { topic: selectedTopicsString };
-    } else {
-      itemBody = {};
+    if (rephrased && commaSeparatedString) {
+      
+      itemBody = {
+        rephrased: rephrased.value,
+        topic: commaSeparatedString,
+      };
+    } else if (rephrased) {
+      
+      itemBody = {
+        rephrased: rephrased.value,
+      };
+    } else if (commaSeparatedString) {
+      
+      itemBody = {
+        topic: commaSeparatedString,
+      };
     }
+
     try {
       const response = await fetch(
         `/api/v1/questions/question_review/${questionId2}`,
