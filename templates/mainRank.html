@@ -156,26 +156,7 @@ block content %}
   <div class="app-main">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a
-          type="button"
-          class="btn btn-warning mb-3"
-          href="{{ url_for('web.crop_expert') }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-arrow-bar-left"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-            ></path>
-          </svg>
-          Back to Dashboard
-        </a>
+        
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
@@ -183,7 +164,7 @@ block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.expert_dashboard_crop') }}"
+                  href="{{ url_for('web.main_review') }}"
                   >Review Questions</a
                 >
               </li>
@@ -191,7 +172,7 @@ block content %}
                 <a
                   class="nav-link text-success"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.answer_questions_crop') }}"
+                  href="{{ url_for('web.main_answer') }}"
                   >Answer Questions</a
                 >
               </li>
@@ -199,7 +180,7 @@ block content %}
                 <a
                   class="nav-link active"
                   style="font-size: 1.5rem"
-                  href="{{ url_for('web.rank_answers_crop') }}"
+                  href="{{ url_for('web.main_rank') }}"
                   >Rank Answers</a
                 >
               </li>
@@ -439,7 +420,7 @@ block content %}
     }
 
     // Fetch top users data
-    fetch("/api/v1/questions/answered_question_ranking_crop", {
+    fetch("/api/v1/questions/answered_question_ranking_animal", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

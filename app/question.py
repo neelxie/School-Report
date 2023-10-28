@@ -1009,7 +1009,7 @@ def question_review(question_id):
             "rephrased"
         )  # Assuming rephrased data is sent in the request JSON
         if rephrased_data:
-            question.rephrased = rephrased_data
+            question.sentence = rephrased_data
 
         new_topic = request.json.get(
             "topic"
@@ -1216,7 +1216,7 @@ def answered_question_ranking_animal():
     user_id = get_jwt_identity()
     cleaned_filter = Question.cleaned == True
     answered_filter = Question.answered == True
-    unFinished_filter = Question.finished == False
+    # unFinished_filter = Question.finished == False
     question_and_answer_data = []
 
     languages = ["english", "luganda", "runyankole"]
@@ -1229,7 +1229,7 @@ def answered_question_ranking_animal():
                 language_filter,
                 answered_filter,
                 cleaned_filter,
-                unFinished_filter,
+                # unFinished_filter,
                 (func.lower(Question.category) == "animal"),
                 (~Question.answers.any(Answer.user_id == user_id)),
             )
@@ -1278,7 +1278,7 @@ def answered_question_ranking_animal():
         Question.query.filter(
             cleaned_filter,
             answered_filter,
-            unFinished_filter,
+            # unFinished_filter,
             (func.lower(Question.category) == "animal"),
             (~Question.answers.any(Answer.user_id == user_id)),
         )
