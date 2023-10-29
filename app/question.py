@@ -39,6 +39,7 @@ def format_question(question, language):
         "animal_crop": question.animal_crop,
         "location": question.location,
         "question_language": language,
+        "filename": question.filename,
     }
 
 
@@ -209,27 +210,27 @@ def upload_question():
 
     return jsonify({"message": "Question and audio uploaded successfully"}), HTTP_200_OK
 
-@questions.route('/offline_upload', methods=['POST'])
+
+@questions.route("/offline_upload", methods=["POST"])
 @jwt_required()
 def offline_upload():
-
-    if 'file' not in request.files:
+    if "file" not in request.files:
         return jsonify({"error": "No metadata file provided"}), HTTP_400_BAD_REQUEST
 
-    if 'files' not in request.files:
+    if "files" not in request.files:
         return jsonify({"error": "No audio files provided"}), HTTP_400_BAD_REQUEST
-    
-    metadata_file = request.files.get('file')
-    audio_files = request.files.getlist('files')
 
-    metadata = json.loads(metadata_file.read().decode('utf-8'))
+    metadata_file = request.files.get("file")
+    audio_files = request.files.getlist("files")
+
+    metadata = json.loads(metadata_file.read().decode("utf-8"))
 
     if not audio_files:
-        return jsonify({'error': 'No audio files provided'}), HTTP_400_BAD_REQUEST
+        return jsonify({"error": "No audio files provided"}), HTTP_400_BAD_REQUEST
 
     if not metadata:
-        return jsonify({'error': 'Metadata file not provided'}), HTTP_400_BAD_REQUEST
-    
+        return jsonify({"error": "Metadata file not provided"}), HTTP_400_BAD_REQUEST
+
     current_user = get_jwt_identity()
 
     questions = []
@@ -237,7 +238,10 @@ def offline_upload():
         if audio:
             filename = os.path.join("static", "audio_uploads", audio.filename)
             if os.path.exists(filename):
-                return jsonify({"error": "File with the same name already exists"}), HTTP_400_BAD_REQUEST
+                return (
+                    jsonify({"error": "File with the same name already exists"}),
+                    HTTP_400_BAD_REQUEST,
+                )
             audio.save(filename)
             # i am assuming the metadata has the audio file name for correlation
             # in my case am calling the metadata object attribute for the audio "audio_filename"
@@ -263,12 +267,21 @@ def offline_upload():
                 questions.append(question)
             else:
                 # no matching metadata is found
-                return jsonify({"error": f"No metadata found for audio file: {audio.filename}"}), HTTP_400_BAD_REQUEST
+                return (
+                    jsonify(
+                        {"error": f"No metadata found for audio file: {audio.filename}"}
+                    ),
+                    HTTP_400_BAD_REQUEST,
+                )
 
     db.session.add_all(questions)
     db.session.commit()
 
-    return jsonify({"message": "Questions and audio uploaded successfully"}), HTTP_200_OK
+    return (
+        jsonify({"message": "Questions and audio uploaded successfully"}),
+        HTTP_200_OK,
+    )
+
 
 @questions.route("/file_upload/", methods=["POST"])
 @jwt_required()
@@ -512,9 +525,10 @@ def random_question_and_add_answer():
 
 
 @questions.route("/main_question_review", methods=["POST"])
+@jwt_required()
 def main_question_review():
     data = request.get_json()
-    print(data)
+    
     category = data.get("category", None)
     language = data.get("language", None)
     sub_category = data.get("sub_category", None)
@@ -733,7 +747,7 @@ def random_question_for_review_animal():
 @questions.route("/main_question_answer", methods=["POST"])
 def main_question_answer():
     data = request.get_json()
-    print(data)
+
     category = data.get("category", None)
     language = data.get("language", None)
     sub_category = data.get("sub_category", None)
@@ -742,6 +756,7 @@ def main_question_answer():
 
     category_filter = func.lower(Question.category) == category
     reviewed_filter = Question.reviewed == True
+    unanswered_filter = Question.answered != True
 
     # filters = [Question.category == category, Question.reviewed == False]
 
@@ -756,7 +771,9 @@ def main_question_answer():
         filters.append(sub_category_filter)
 
     matching_questions = (
-        Question.query.filter(category_filter, reviewed_filter, *filters)
+        Question.query.filter(
+            category_filter, reviewed_filter, unanswered_filter, *filters
+        )
         .order_by(func.random())
         .first()
     )
@@ -1209,7 +1226,77 @@ def upload_excel_file():
                 HTTP_400_BAD_REQUEST,
             )
 
+@questions.route("/main_question_rank", methods=["POST"])
+@jwt_required()
+def main_question_rank():
+    data = request.get_json()
+    
+    category = data.get("category", None)
+    language = data.get("language", None)
+    sub_category = data.get("sub_category", None)
 
+    current_user = get_jwt_identity()
+
+    filters = []
+
+    category_filter = func.lower(Question.category) == category
+    reviewed_filter = Question.answered == True
+
+    # filters = [Question.category == category, Question.reviewed == False]
+
+    if language:
+        languages = [lang.strip().lower() for lang in language.split(",")]
+        language_filter = func.lower(Question.language).in_(languages)
+        filters.append(language_filter)
+
+    if sub_category:
+        sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+        sub_category_filter = Question.animal_crop.in_(sub_categories)
+        filters.append(sub_category_filter)
+
+    random_question_data = None
+    matching_questions = (
+        Question.query.filter(category_filter, reviewed_filter, (~Question.answers.any(Answer.user_id == current_user)), *filters)
+        .order_by(func.random())
+        .first()
+    )
+
+    if matching_questions:
+        random_question_data = {
+            "id": matching_questions.id,
+            "sentence": matching_questions.sentence,
+            "language": matching_questions.language,
+            "created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            "topic": matching_questions.topic,
+            "sub_topic": matching_questions.sub_topic,
+            "category": matching_questions.category,
+            "animal_crop": matching_questions.animal_crop,
+            "location": matching_questions.location,
+        }
+
+        # Create a list to store answer data for each associated answer
+        answer_list = []
+        for answer in matching_questions.answers:
+            answer_data = {
+                "id": answer.id,
+                "answer_text": answer.answer_text,
+                "source": answer.source,
+                "relevance": answer.relevance,
+                "coherence": answer.coherence,
+                "fluency": answer.fluency,
+                "rank": answer.rank,
+                "created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            answer_list.append(answer_data)
+
+        random_question_data["answers"] = answer_list
+
+    if random_question_data:
+        result_object = {"random_question_data": random_question_data}
+        return jsonify(result_object), HTTP_200_OK
+    else:
+        return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+    
 @questions.route("/answered_question_ranking_animal", methods=["GET"])
 @jwt_required()
 def answered_question_ranking_animal():

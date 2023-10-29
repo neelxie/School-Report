@@ -156,7 +156,6 @@ block content %}
   <div class="app-main">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        
         <div class="row">
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
@@ -178,7 +177,7 @@ block content %}
               </li>
               <li class="nav-item">
                 <a
-                  class="nav-link active"
+                  class="nav-link active my-element"
                   style="font-size: 1.5rem"
                   href="{{ url_for('web.main_rank') }}"
                   >Rank Answers</a
@@ -406,6 +405,9 @@ block content %}
 
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token");
+    const language = localStorage.getItem("language");
+    const category = localStorage.getItem("category");
+    const sub_category = localStorage.getItem("sub_category");
 
     const logoutButton = document.getElementById("logoutButton");
     if (logoutButton) {
@@ -419,14 +421,22 @@ block content %}
       form.setAttribute("data-question-id", questionId);
     }
 
-    // Fetch top users data
-    fetch("/api/v1/questions/answered_question_ranking_animal", {
+    let userDetails = {
+      category: category,
+      language: language,
+      sub_category: sub_category,
+    };
+    fetch("/api/v1/questions/main_question_rank", {
+      method: "POST",
       headers: {
+        "content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(userDetails),
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
+        console.log(randomQuestion);
         if (randomQuestion.message === "No questions available with answers.") {
           let oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = "No questions available.";
@@ -674,6 +684,10 @@ block content %}
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+  }
+
+  .my-element:after {
+    content: none; /* Or content: ""; */
   }
 
   .radioButtn {
