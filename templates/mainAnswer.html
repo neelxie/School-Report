@@ -157,7 +157,6 @@
     <div class="app-main__outer">
       <div class="app-main__inner">
         <div class="row justify-content-between px-2">
-          
           <a
             type="button"
             class="btn btn-success mb-3"
@@ -240,7 +239,7 @@
                         ></td>
                       </tr>
                       <tr>
-                        <th class="text-primary pr-3 h3">Topic:</th>
+                        <th class="text-primary pr-3 h3">Topics:</th>
                         <td id="questionTopic" class="font-weight-bold h2"></td>
                       </tr>
 
@@ -249,7 +248,9 @@
                         <td id="categor" class="font-weight-bold h2"></td>
                       </tr>
                       <tr class="border">
-                        <th class="text-primary pr-3 h3">Sub-category:</th>
+                        <th class="text-primary pr-3 h3 text-nowrap">
+                          Sub-category:
+                        </th>
                         <td id="actualItem" class="font-weight-bold h2"></td>
                       </tr>
                     </tbody>
@@ -341,16 +342,32 @@
 
   document
     .addEventListener("DOMContentLoaded", function () {
-      const token = localStorage.getItem("token"); // Get the token from local storage
+      const token = localStorage.getItem("token");
+      const language = localStorage.getItem("language");
+      const category = localStorage.getItem("category");
+      const sub_category = localStorage.getItem("sub_category");
 
-      // Fetch top users data
-      fetch("/api/v1/questions/random_question_answer_crop", {
+      let userDetails = {
+        category: category,
+        language: language,
+        sub_category: sub_category,
+      };
+
+      fetch("/api/v1/questions/main_question_answer", {
+        method: "POST",
         headers: {
+          "content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(userDetails),
       })
         .then((response) => response.json())
         .then((randomQuestion) => {
+          console.log(randomQuestion);
+          if (randomQuestion.message === "No questions available.") {
+            let oneQuestion = document.getElementById("oneQuestion");
+            oneQuestion.textContent = "No questions to answer.";
+          }
           const anyQuestion = randomQuestion.find(
             (question) => question.question_language === "Any Language"
           );
@@ -361,9 +378,22 @@
           const questionLanguage = document.getElementById("questionLanguage");
           questionLanguage.textContent = anyQuestion.location;
           const questionTopic = document.getElementById("questionTopic");
+          const derek = {
+            topics: "food",
+          };
           questionTopic.textContent = anyQuestion.topics
-            ? anyQuestion.topics
+            ? derek.topics.split(", &nbsp;&nbsp; ").join("")
             : "No Topic";
+          // if (anyQuestion.topics) {
+          //   const topicsArray = derek.topics.split(", ");
+          //   topicsArray.forEach(function (topic) {
+          //     const topicElement = document.createElement("p"); // or use "br" for line break
+          //     topicElement.textContent = topic;
+          //     questionTopic.appendChild(topicElement);
+          //   });
+          // } else {
+          //   questionTopic.textContent = "No Topic";
+          // }
 
           const categor = document.getElementById("categor");
           categor.textContent = anyQuestion.category;
@@ -389,7 +419,6 @@
       const itemBody = {
         answer: answer,
       };
-      console.log(answer);
       const response = await fetch(
         `/api/v1/questions/add_answer/${questionId}`,
         {
