@@ -751,6 +751,9 @@ def main_question_answer():
     category = data.get("category", None)
     language = data.get("language", None)
     sub_category = data.get("sub_category", None)
+    print(category)
+    print(language)
+    print(sub_category)
 
     filters = []
 
@@ -759,16 +762,28 @@ def main_question_answer():
     unanswered_filter = Question.answered != True
 
     # filters = [Question.category == category, Question.reviewed == False]
+    # string_list = comma_separated_string.split(',')
+
 
     if language:
-        languages = [lang.strip().lower() for lang in language.split(",")]
-        language_filter = func.lower(Question.language).in_(languages)
+        if ',' in language:
+            languages = [lang.strip().lower() for lang in language.split(",")]
+            language_filter = func.lower(Question.language).in_(languages)
+        else:
+            language_filter = func.lower(Question.language) == language.strip().lower()
         filters.append(language_filter)
-
     if sub_category:
-        sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
-        sub_category_filter = Question.animal_crop.in_(sub_categories)
+        if ',' in sub_category:
+            sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+            sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+        else:
+            sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
         filters.append(sub_category_filter)
+
+    # if sub_category:
+    #     sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+    #     sub_category_filter = Question.animal_crop.in_(sub_categories)
+    #     filters.append(sub_category_filter)
 
     matching_questions = (
         Question.query.filter(
@@ -779,6 +794,7 @@ def main_question_answer():
     )
 
     questions_data = []
+    print(matching_questions)
 
     if matching_questions is not None:
         questions_data.append(format_question(matching_questions, "Any Language"))
@@ -972,11 +988,13 @@ def add_answer(question_id):
     user_id = get_jwt_identity()
     answer_text = request.json["answer"].strip()
     # source = request.json["source"].strip()
+    print(data)
 
     question = Question.query.get(question_id)
     if not question:
         return jsonify({"message": "Question not found."}), HTTP_404_NOT_FOUND
 
+    print(question.answered)
     if answer_text and len(answer_text) > 7:
         new_answer = Answer(
             question_id=question_id,
@@ -988,6 +1006,9 @@ def add_answer(question_id):
         db.session.add(new_answer)
         question.answered = True
         db.session.commit()
+        print("Add new")
+        print(question.answered)
+        print(new_answer)
 
         return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
     return jsonify({"message": "Failed to add answer."})
@@ -1016,26 +1037,27 @@ def mark_question_as_reviewed(question_id):
 def question_review(question_id):
     user_id = get_jwt_identity()
     question = Question.query.get(question_id)
-
+    
     if question:
+
         question.reviewed = True
         question.correct = True  # Mark the question as correct
         question.reviewer_id = user_id
 
         rephrased_data = request.json.get(
             "rephrased"
-        )  # Assuming rephrased data is sent in the request JSON
+        )
         if rephrased_data:
             question.sentence = rephrased_data
 
         new_topic = request.json.get(
             "topic"
-        )  # Assuming new topic data is sent in the request JSON
+        )
         if question.topic:
             if new_topic:
                 new_topic += (
                     ", " + question.topic
-                )  # Append new topic to the current topic
+                )
         else:
             question.topic = new_topic  # Set new topic if no current topic exists
 
