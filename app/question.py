@@ -19,7 +19,7 @@ import os
 from os.path import join, dirname, realpath
 
 
-from sqlalchemy import func, or_, and_
+from sqlalchemy import func, or_, and_, not_
 from app.helper import admin_required
 
 UPLOADS_PATH = join(dirname(realpath(__file__)), "static/audio_uploads")
@@ -822,8 +822,8 @@ def main_question_answer():
 
 	matching_questions = Question.query.filter(
 		Question.category.ilike(category),
-    	Question.answered == True,
-    	# Question.answered.is_not(True),
+    	Question.reviewed == True,
+    	Question.answered.is_not(True),
 		*filters
 		).order_by(db.func.random()).first()
 
@@ -854,6 +854,7 @@ def add_answer(question_id):
 
 		db.session.add(new_answer)
 		question.answered = True
+		question.answer_expert_one = user_id
 		db.session.commit()
 
 		return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
@@ -887,7 +888,7 @@ def question_review(question_id):
 	if question:
 
 		question.reviewed = True
-		question.correct = True  # Mark the question as correct
+		question.correct = True 
 		question.reviewer_id = user_id
 
 		rephrased_data = request.json.get(
@@ -1126,49 +1127,58 @@ def main_question_rank():
 	matching_questions = (
 		Question.query.filter(
 			Question.category.ilike(category),
-    		Question.reviewed == True,
-    		Question.answered.is_not(True),
+    		Question.answered == True,
+    		Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
+			(Question.rank_expert_one == None) | (Question.rank_expert_one == None),
 			*filters)
-		# .order_by(db.func.random())
-		.all()
+		.order_by(db.func.random())
+		.first()
 	)
-	print(matching_questions)
-	# if matching_questions:
-	# 	random_question_data = {
-	# 		"id": matching_questions.id,
-	# 		"sentence": matching_questions.sentence,
-	# 		"language": matching_questions.language,
-	# 		"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-	# 		"topic": matching_questions.topic,
-	# 		"sub_topic": matching_questions.sub_topic,
-	# 		"category": matching_questions.category,
-	# 		"animal_crop": matching_questions.animal_crop,
-	# 		"location": matching_questions.location,
-	# 	}
+	
+	if matching_questions:
+		random_question_data = {
+			"id": matching_questions.id,
+			"sentence": matching_questions.sentence,
+			"language": matching_questions.language,
+			"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+			"topic": matching_questions.topic,
+			"sub_topic": matching_questions.sub_topic,
+			"category": matching_questions.category,
+			"animal_crop": matching_questions.animal_crop,
+			"location": matching_questions.location,
+			"filename": matching_questions.filename,
+		}
 
-	# 	# Create a list to store answer data for each associated answer
-	# 	answer_list = []
-	# 	for answer in matching_questions.answers:
-	# 		answer_data = {
-	# 			"id": answer.id,
-	# 			"answer_text": answer.answer_text,
-	# 			"source": answer.source,
-	# 			"relevance": answer.relevance,
-	# 			"coherence": answer.coherence,
-	# 			"fluency": answer.fluency,
-	# 			"rank": answer.rank,
-	# 			"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-	# 		}
-	# 		answer_list.append(answer_data)
+	    # Create a list to store answer data for each associated answer
+		answer_list = []
+		for answer in matching_questions.answers:
+			answer_data = {
+				"id": answer.id,
+				"answer_text": answer.answer_text,
+				"source": answer.source,
+				"relevance": answer.relevance,
+				"coherence": answer.coherence,
+				"fluency": answer.fluency,
+				"rank": answer.rank,
+				"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+			}
+			answer_list.append(answer_data)
+	    #     if question.rank_expert_one is None:
+        #     question.rank_expert_one = expert_id
+        #     question.ranking_count = 1
+        # else:
+        #     question.rank_expert_two = expert_id
+        #     question.ranking_count = 2
 
-	# 	random_question_data["answers"] = answer_list
 
-	if True:
-		result_object = {"random_question_data": True}
+		random_question_data["answers"] = answer_list
+
+	if random_question_data:
+		result_object = {"random_question_data": random_question_data}
 		return jsonify(result_object), HTTP_200_OK
 	else:
-		return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
 	
 @questions.route("/answered_question_ranking_animal", methods=["GET"])
 @jwt_required()
