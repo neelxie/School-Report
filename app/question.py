@@ -145,7 +145,7 @@ def handle_questions():
 				HTTP_400_BAD_REQUEST,
 			)
 
-		if isinstance(data, list):  # If it's a JSON file with multiple questions
+		if isinstance(data, list): 
 			results = []
 			for question_data in data:
 				result = process_single_question(question_data, current_user)
@@ -276,10 +276,14 @@ def offline_upload():
 	current_user = get_jwt_identity()
 
 	questions = []
+	dup_count = 0
+	duplicates = []
 	for i, audio in enumerate(audio_files):
 		if audio:
 			filename = os.path.join("static", "audio_uploads", audio.filename)
 			if os.path.exists(filename):
+				dup_count += 1
+				duplicates.append({"filename": filename})
 				return (
 					jsonify({"error": "File with the same name already exists"}),
 					HTTP_400_BAD_REQUEST,
@@ -319,8 +323,15 @@ def offline_upload():
 	db.session.add_all(questions)
 	db.session.commit()
 
+	num_questions = Question.query.filter_by(user_id=current_user).count()
 	return (
-		jsonify({"message": "Questions and audio uploaded successfully"}),
+		jsonify(
+			{
+				"num_questions": num_questions,
+				"duplicate_questions": dup_count,
+				"duplicates": duplicates,
+			}
+		),
 		HTTP_200_OK,
 	)
 
@@ -811,8 +822,8 @@ def main_question_answer():
 
 	matching_questions = Question.query.filter(
 		Question.category.ilike(category),
-    	Question.reviewed == True,
-    	Question.answered.is_not(True),
+    	Question.answered == True,
+    	# Question.answered.is_not(True),
 		*filters
 		).order_by(db.func.random()).first()
 
@@ -828,14 +839,11 @@ def add_answer(question_id):
 	data = request.get_json()
 	user_id = get_jwt_identity()
 	answer_text = request.json["answer"].strip()
-	# source = request.json["source"].strip()
-	print(data)
 
 	question = Question.query.get(question_id)
 	if not question:
 		return jsonify({"message": "Question not found."}), HTTP_404_NOT_FOUND
 
-	print(question.answered)
 	if answer_text and len(answer_text) > 7:
 		new_answer = Answer(
 			question_id=question_id,
@@ -847,9 +855,6 @@ def add_answer(question_id):
 		db.session.add(new_answer)
 		question.answered = True
 		db.session.commit()
-		print("Add new")
-		print(question.answered)
-		print(new_answer)
 
 		return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
 	return jsonify({"message": "Failed to add answer."})
@@ -1094,7 +1099,7 @@ def upload_excel_file():
 def main_question_rank():
 	data = request.get_json()
 	
-	category = data.get("category", None)
+	category = (data.get("category", None)).title()
 	language = data.get("language", None)
 	sub_category = data.get("sub_category", None)
 
@@ -1102,60 +1107,65 @@ def main_question_rank():
 
 	filters = []
 
-	category_filter = func.lower(Question.category) == category
-	reviewed_filter = Question.answered == True
-
-	# filters = [Question.category == category, Question.reviewed == False]
-
 	if language:
-		languages = [lang.strip().lower() for lang in language.split(",")]
-		language_filter = func.lower(Question.language).in_(languages)
+		if ',' in language:
+			languages = [lang.strip().lower() for lang in language.split(",")]
+			language_filter = func.lower(Question.language).in_(languages)
+		else:
+			language_filter = func.lower(Question.language) == language.strip().lower()
 		filters.append(language_filter)
-
 	if sub_category:
-		sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
-		sub_category_filter = Question.animal_crop.in_(sub_categories)
+		if ',' in sub_category:
+			sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+			sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+		else:
+			sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
 		filters.append(sub_category_filter)
 
 	random_question_data = None
 	matching_questions = (
-		Question.query.filter(category_filter, reviewed_filter, (~Question.answers.any(Answer.user_id == current_user)), *filters)
-		.order_by(func.random())
-		.first()
+		Question.query.filter(
+			Question.category.ilike(category),
+    		Question.reviewed == True,
+    		Question.answered.is_not(True),
+			(~Question.answers.any(Answer.user_id == current_user)),
+			*filters)
+		# .order_by(db.func.random())
+		.all()
 	)
+	print(matching_questions)
+	# if matching_questions:
+	# 	random_question_data = {
+	# 		"id": matching_questions.id,
+	# 		"sentence": matching_questions.sentence,
+	# 		"language": matching_questions.language,
+	# 		"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+	# 		"topic": matching_questions.topic,
+	# 		"sub_topic": matching_questions.sub_topic,
+	# 		"category": matching_questions.category,
+	# 		"animal_crop": matching_questions.animal_crop,
+	# 		"location": matching_questions.location,
+	# 	}
 
-	if matching_questions:
-		random_question_data = {
-			"id": matching_questions.id,
-			"sentence": matching_questions.sentence,
-			"language": matching_questions.language,
-			"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-			"topic": matching_questions.topic,
-			"sub_topic": matching_questions.sub_topic,
-			"category": matching_questions.category,
-			"animal_crop": matching_questions.animal_crop,
-			"location": matching_questions.location,
-		}
+	# 	# Create a list to store answer data for each associated answer
+	# 	answer_list = []
+	# 	for answer in matching_questions.answers:
+	# 		answer_data = {
+	# 			"id": answer.id,
+	# 			"answer_text": answer.answer_text,
+	# 			"source": answer.source,
+	# 			"relevance": answer.relevance,
+	# 			"coherence": answer.coherence,
+	# 			"fluency": answer.fluency,
+	# 			"rank": answer.rank,
+	# 			"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+	# 		}
+	# 		answer_list.append(answer_data)
 
-		# Create a list to store answer data for each associated answer
-		answer_list = []
-		for answer in matching_questions.answers:
-			answer_data = {
-				"id": answer.id,
-				"answer_text": answer.answer_text,
-				"source": answer.source,
-				"relevance": answer.relevance,
-				"coherence": answer.coherence,
-				"fluency": answer.fluency,
-				"rank": answer.rank,
-				"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-			}
-			answer_list.append(answer_data)
+	# 	random_question_data["answers"] = answer_list
 
-		random_question_data["answers"] = answer_list
-
-	if random_question_data:
-		result_object = {"random_question_data": random_question_data}
+	if True:
+		result_object = {"random_question_data": True}
 		return jsonify(result_object), HTTP_200_OK
 	else:
 		return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
