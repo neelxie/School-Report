@@ -362,15 +362,13 @@
         body: JSON.stringify(userDetails),
       })
         .then((response) => response.json())
-        .then((randomQuestion) => {
-          console.log(randomQuestion);
-          if (randomQuestion.message === "No questions available.") {
+        .then((anyQuestion) => {
+          // console.log(randomQuestion);
+          if (anyQuestion.message === "No questions available.") {
             let oneQuestion = document.getElementById("oneQuestion");
             oneQuestion.textContent = "No questions to answer.";
           }
-          const anyQuestion = randomQuestion.find(
-            (question) => question.question_language === "Any Language"
-          );
+          console.log(anyQuestion);
           const oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = anyQuestion.sentence
             ? anyQuestion.sentence
@@ -378,12 +376,13 @@
           const questionLanguage = document.getElementById("questionLanguage");
           questionLanguage.textContent = anyQuestion.location;
           const questionTopic = document.getElementById("questionTopic");
-          const derek = {
-            topics: "food",
-          };
-          questionTopic.textContent = anyQuestion.topics
-            ? derek.topics.split(", &nbsp;&nbsp; ").join("")
-            : "No Topic";
+          if (anyQuestion.topics && anyQuestion.topics.includes(",")) {
+            questionTopic.textContent = topics
+              .split(", &nbsp;&nbsp; ")
+              .join("");
+          } else {
+            questionTopic.textContent = anyQuestion.topics || "No Topic";
+          }
           // if (anyQuestion.topics) {
           //   const topicsArray = derek.topics.split(", ");
           //   topicsArray.forEach(function (topic) {
@@ -411,7 +410,7 @@
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
 
-    answerForm.addEventListener("submit", async function (event) {
+    answerForm.addEventListener("submit", function (event) {
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
@@ -419,7 +418,7 @@
       const itemBody = {
         answer: answer,
       };
-      const response = await fetch(
+      const response =  fetch(
         `/api/v1/questions/add_answer/${questionId}`,
         {
           method: "POST",
@@ -432,16 +431,14 @@
       );
 
       try {
-        const responseData = await response.json();
+        const responseData = response.json();
         if (response.ok) {
           window.location.reload();
-          window.location.href = window.location.href;
         } else {
           errorMessage.textContent = responseData.error;
         }
       } catch (error) {
         console.error("Error parsing response:");
-      } finally {
         window.location.reload();
       }
     });

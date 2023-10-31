@@ -269,6 +269,12 @@ endblock %} {% block content %}
                   <hr class="hr" />
                   <div class="h4 text-dark font-weight-bold mb-3">
                     <span class="text-primary mr-3 h2 font-weight-bold"
+                      >Edited Question:</span
+                    ><span id="displayValue" class="h2 font-weight-bold"></span>
+                  </div>
+                  <hr class="hr" />
+                  <div class="h4 text-dark font-weight-bold mb-3">
+                    <span class="text-primary mr-3 h2 font-weight-bold"
                       >Topic:</span
                     ><strong
                       id="questionTopic"
@@ -581,7 +587,7 @@ endblock %} {% block content %}
     }
 
     try {
-      const response = await fetch(
+      const response = fetch(
         `/api/v1/questions/question_review/${questionId2}`,
         {
           method: "PUT",
@@ -593,7 +599,7 @@ endblock %} {% block content %}
         }
       );
 
-      const responseData = await response.json();
+      const responseData = response.json();
       if (response) {
         window.location.reload();
         // window.location.href = window.location.href;
@@ -602,6 +608,8 @@ endblock %} {% block content %}
       }
     } catch (error) {
       console.error("Error parsing response:", error);
+    } finally {
+      window.location.reload();
     }
   }
 
@@ -646,7 +654,7 @@ endblock %} {% block content %}
           (question) => question.question_language === "Any Language"
         );
         const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = anyQuestion.sentence;
+        oneQuestion.textContent = anyQuestion.sentence?anyQuestion.sentence:anyQuestion.filename;
         const oneQuestion1 = document.getElementById("oneQuestion1");
         oneQuestion1.textContent = anyQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
@@ -679,21 +687,21 @@ endblock %} {% block content %}
       .catch((error) => console.error(error));
 
     function updateQuestion(questionId) {
-      const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((responseData) => {
-          if (response) {
-            window.location.reload();
-          } else {
-            console.error("Error updating question:");
-          }
-        })
-        .catch((error) => console.error("Error parsing response:", error));
+      // const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
+      //   method: "PUT",
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // })
+      //   .then((response) => response.json())
+      //   .then((responseData) => {
+      //     if (response) {
+      //       window.location.reload();
+      //     } else {
+      //       console.error("Error updating question:");
+      //     }
+      //   })
+      //   .catch((error) => console.error("Error parsing response:", error));
     }
   });
 </script>

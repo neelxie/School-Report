@@ -134,7 +134,7 @@
           <a
             type="button"
             class="btn btn-warning mb-3"
-            href="{{ url_for('web.choose') }}"
+            href="{{ url_for('web.main_answer') }}"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,16 +153,15 @@
           </a>
           <div class="col-md-12">
             <div class="main-card mb-3 card">
-              <div class="card-header">Answers Added</div>
+              <div class="card-header">Answers Provided</div>
               <div class="table-responsive">
                 <table
                   class="align-middle mb-0 table table-bordered table-striped table-hover english bg-animation h4"
                 >
                   <thead>
                     <tr>
+                      <th >Question</th>
                       <th>Answer</th>
-                      <th class="text-center">Answer ID</th>
-                      <th class="text-center">Question ID</th>
                       <th class="text-center">Date</th>
                     </tr>
                   </thead>
@@ -423,7 +422,6 @@
           tableRow.innerHTML += `
           <td class="text-center text-muted">${answer.id}</td>
          
-          <td class="text-center">${answer.question_id}</td>
           
           <td class="text-center">${answer.created_at}</td>`;
           tableBody.appendChild(tableRow);
