@@ -362,15 +362,12 @@
         body: JSON.stringify(userDetails),
       })
         .then((response) => response.json())
-        .then((randomQuestion) => {
+        .then((anyQuestion) => {
           // console.log(randomQuestion);
-          if (randomQuestion.message === "No questions available.") {
+          if (anyQuestion.message === "No questions available.") {
             let oneQuestion = document.getElementById("oneQuestion");
             oneQuestion.textContent = "No questions to answer.";
           }
-          const anyQuestion = randomQuestion.find(
-            (question) => question.question_language === "Any Language"
-          );
           console.log(anyQuestion);
           const oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = anyQuestion.sentence
