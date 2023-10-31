@@ -437,15 +437,19 @@ block content %}
       .then((response) => response.json())
       .then((randomQuestion) => {
         console.log(randomQuestion);
-        if (randomQuestion.message === "No questions available with answers.") {
+        if (randomQuestion.message === "No questions available for ranking.") {
           let oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = "No questions available.";
+          oneQuestion.textContent = "No questions available for ranking.";
         }
         let randomQuestionData = randomQuestion.random_question_data;
         const { answers } = randomQuestionData;
         qnAnswers = answers;
         let oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = randomQuestionData.sentence;
+        oneQuestion.textContent = randomQuestionData.sentence
+          ? randomQuestionData.sentence
+          : randomQuestionData.filename
+          ? randomQuestionData.filename
+          : "No Questions!";
 
         let questionTopic = document.getElementById("questionTopic");
         questionTopic.textContent = randomQuestionData.topic
@@ -466,17 +470,17 @@ block content %}
                 <td class="h3 text-justify">${answer.answer_text}</td>
                 <td class="text-center rankIncrease" id="rankIncrease">
                   <div  class="minus">-</div>
-                  <input type="text" class="showDigit text-center my-2 relevance" value=1 readonly>
+                  <input type="text" class="showDigit text-center my-2 relevance" value=0 readonly>
                   <div class="plus">+</div>
                 </td>
                 <td class="text-center rankIncrease greed" id="rankIncrease">
                   <div  class="minus">-</div>
-                  <input type="text" class="showDigit text-center my-2 coherence" value=1 readonly>
+                  <input type="text" class="showDigit text-center my-2 coherence" value=0 readonly>
                   <div class="plus">+</div>
                 </td>
                 <td class="text-center rankIncrease" id="rankIncrease">
                   <div  class="minus">-</div>
-                  <input type="text" class="showDigit text-center my-2 fluency" value=1 readonly>
+                  <input type="text" class="showDigit text-center my-2 fluency" value=0 readonly>
                   <div class="plus">+</div>
                 </td>
                 <td class="text-center radioButtn">
@@ -548,7 +552,7 @@ block content %}
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
 
-    rankForm.addEventListener("submit", async function (event) {
+    rankForm.addEventListener("submit", function (event) {
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
@@ -557,6 +561,7 @@ block content %}
       let rankings = [];
       let currentAnswer = {};
       let contextError;
+      let hasInvalidValue = false;
 
       answerElements.forEach((element, index) => {
         let answerID = element.dataset.answerId;
@@ -565,12 +570,22 @@ block content %}
           alert("Please select a context for all the answers.");
           return;
         }
+        relevance = parseInt(element.querySelector(".relevance").value);
+        coherence = parseInt(element.querySelector(".coherence").value);
+        fluency = parseInt(element.querySelector(".fluency").value);
+
+        if (relevance < 1 || coherence < 1 || fluency < 1) {
+          alert("Relevance, Coherence, and Fluency values must be at least 1.");
+          hasInvalidValue = true; // Set the flag to true
+          return;
+        }
+
         const answerObject = {
           answer_id: answerID,
           answerText: element.querySelector(".h3").textContent,
-          relevance: parseInt(element.querySelector(".relevance").value),
-          coherence: parseInt(element.querySelector(".coherence").value),
-          fluency: parseInt(element.querySelector(".fluency").value),
+          relevance: relevance,
+          coherence: coherence,
+          fluency: fluency,
           isFlagged:
             element.querySelector(".btn").textContent.trim() === "Offensive!",
           context: contextValue,
@@ -579,12 +594,17 @@ block content %}
         rankings.push(answerObject);
       });
 
+      if (hasInvalidValue) {
+        // If there are invalid values, prevent form submission
+        return;
+      }
+
       const data = {
         questionId,
         rankings,
       };
 
-      const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
+      const response = fetch(`/api/v1/questions/store_answer_ranks`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -594,7 +614,7 @@ block content %}
       });
 
       try {
-        const responseData = await response.json();
+        const responseData = response.json();
         if (response.ok) {
           window.location.reload();
           window.location.href = window.location.href;

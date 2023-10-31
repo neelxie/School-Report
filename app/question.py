@@ -986,13 +986,6 @@ def main_question_rank():
 				"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 			}
 			answer_list.append(answer_data)
-	    #     if question.rank_expert_one is None:
-        #     question.rank_expert_one = expert_id
-        #     question.ranking_count = 1
-        # else:
-        #     question.rank_expert_two = expert_id
-        #     question.ranking_count = 2
-
 
 		random_question_data["answers"] = answer_list
 
@@ -1034,17 +1027,16 @@ def store_answer_ranks():
 					answer.offensive = True
 
 		if question:
-			if question.ranking_count is None:
+			if question.rank_expert_one is None:
+				question.rank_expert_one = user_id
 				question.ranking_count = 1
 			else:
-				ranking_count = question.ranking_count
-				question.ranking_count += 1
+				question.rank_expert_two = user_id
+				question.ranking_count = 2
 
 			ranking_count += 1
 
-			question.ranked_by = user_id
-
-		if ranking_count == 3 or question.ranking_count == 3:
+		if ranking_count == 2 or question.ranking_count == 2:
 			question.finished = True
 
 		db.session.commit()
@@ -1052,7 +1044,6 @@ def store_answer_ranks():
 
 	except Exception as e:
 		db.session.rollback()
-		print("here here")
 		return jsonify({"message": "Error storing answer ranks"}), HTTP_400_BAD_REQUEST
 
 
