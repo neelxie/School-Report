@@ -569,15 +569,18 @@ endblock %} {% block content %}
     let itemBody = {};
 
     if (rephrased && commaSeparatedString) {
+      
       itemBody = {
         rephrased: rephrased.value,
         topic: commaSeparatedString,
       };
     } else if (rephrased) {
+      
       itemBody = {
         rephrased: rephrased.value,
       };
     } else if (commaSeparatedString) {
+      
       itemBody = {
         topic: commaSeparatedString,
       };
@@ -651,28 +654,7 @@ endblock %} {% block content %}
           (question) => question.question_language === "Any Language"
         );
         const oneQuestion = document.getElementById("oneQuestion");
-        // oneQuestion.textContent = anyQuestion.sentence?anyQuestion.sentence:anyQuestion.filename;
-        if (anyQuestion.sentence !== null) {
-          oneQuestion.textContent = anyQuestion.sentence;
-        } else if (anyQuestion.filename) {
-          const currentURL = window.location.href;
-          let newUrl = new URL(currentURL);
-          let requiredURL = newUrl.host;
-
-          const audioElement = document.createElement("audio");
-          audioElement.controls = true;
-
-          // Create a source element within the audio element
-          const sourceElement = document.createElement("source");
-          sourceElement.src = requiredURL + "/" + anyQuestion.filename;
-          sourceElement.type = "audio/mp3"; 
-          // Append the source element to the audio element
-          audioElement.appendChild(sourceElement);
-
-          // Append the audio element to the oneQuestion element
-          oneQuestion.appendChild(audioElement);
-          console.log(sourceElement.src);
-        }
+        oneQuestion.textContent = anyQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
         oneQuestion1.textContent = anyQuestion.sentence;
         const oneQuestion2 = document.getElementById("oneQuestion2");
