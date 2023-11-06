@@ -58,6 +58,12 @@ def jsonify_question(question):
 		"answered": question.answered
 	}
 
+def file_name(file):
+    name = file.filename
+    file_name, file_extension = os.path.splitext(name)
+    return file_name, file_extension
+
+
 @questions.route("/", methods=["POST", "GET"])
 @jwt_required()
 def handle_questions():
