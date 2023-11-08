@@ -272,10 +272,10 @@ def offline_upload():
 
 	metadata_file = request.files.get("file")
 	audio_files = request.files.getlist("files")
-	print("file")
-	print(metadata_file)
-	print("audio files")
-	print(audio_files)
+	# print("file")
+	# print(metadata_file)
+	# print("audio files")
+	# print(audio_files)
 	metadata = json.loads(metadata_file.read().decode("utf-8"))
 
 	if not audio_files:
@@ -292,10 +292,14 @@ def offline_upload():
 
 	for obj in metadata:
 		audio_filename = obj['audio_filename'].split('.')[0]
+		print(audio_filename)
 		for audio in audio_files:
 			au  =  file_name(audio)[0]
+			print(au)
 			if audio_filename == au:
 				print(obj)
+			else:
+				print("failed")
 	# for i, audio in enumerate(audio_files):
 	# 	if audio:
 	# 		print(audio.filename)
