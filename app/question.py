@@ -291,7 +291,7 @@ def offline_upload():
 	duplicates = []
 
 	for obj in metadata:
-		audio_filename = obj['audio_filePath'].split('.')[0]
+		audio_filename = obj['audio_filePath'].rsplit('.', 1)[0]
 		print(audio_filename)
 		for audio in audio_files:
 			au  =  file_name(audio)[0]
