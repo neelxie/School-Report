@@ -262,6 +262,8 @@ def upload_question():
 @questions.route("/offline_upload", methods=["POST"])
 @jwt_required()
 def offline_upload():
+	print("request")
+	print(request)
 	if "file" not in request.files:
 		return jsonify({"error": "No metadata file provided"}), HTTP_400_BAD_REQUEST
 
@@ -270,7 +272,10 @@ def offline_upload():
 
 	metadata_file = request.files.get("file")
 	audio_files = request.files.getlist("files")
-
+	print("file")
+	print(metadata_file)
+	print("audio files")
+	print(audio_files)
 	metadata = json.loads(metadata_file.read().decode("utf-8"))
 
 	if not audio_files:
