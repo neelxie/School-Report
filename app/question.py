@@ -58,6 +58,12 @@ def jsonify_question(question):
 		"answered": question.answered
 	}
 
+def file_name(file):
+    name = file.filename
+    file_name, file_extension = os.path.splitext(name)
+    return file_name, file_extension
+
+
 @questions.route("/", methods=["POST", "GET"])
 @jwt_required()
 def handle_questions():
@@ -1106,12 +1112,16 @@ def get_user_answers():
 	answers_data = []
 
 	for answer in user_answers:
+		question = answer.question
+		
 		answers_data.append(
 			{
 				"id": answer.id,
 				"answer_text": answer.answer_text,
 				"created_at": answer.created_at,
 				"question_id": answer.question_id,
+				"sentence": question.sentence,
+				"rank": question.ranking_count
 			}
 		)
 
