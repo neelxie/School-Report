@@ -292,7 +292,7 @@ def offline_upload():
 	for i, audio in enumerate(audio_files):
 		if audio:
 			print(audio.filename)
-			filename = os.path.join("static", "audio_uploads", audio.filePath)
+			filename = os.path.join("static", "audio_uploads", audio.filename)
 			print(filename)
 			if os.path.exists(filename):
 				dup_count += 1
@@ -306,7 +306,7 @@ def offline_upload():
 			# in my case am calling the metadata object attribute for the audio "audio_filename"
 			matching_metadata = None
 			for item in metadata:
-				if item.get("audio_filename") == audio.filename:
+				if item.get("filePath") == audio.filename:
 					matching_metadata = item
 					break
 
