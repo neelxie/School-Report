@@ -292,7 +292,7 @@ def offline_upload():
 	for i, audio in enumerate(audio_files):
 		if audio:
 			print(audio.filename)
-			filename = os.path.join("static", "audio_uploads", audio.filepath)
+			filename = os.path.join("static", "audio_uploads", audio.filePath)
 			print(filename)
 			if os.path.exists(filename):
 				dup_count += 1
