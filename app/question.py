@@ -298,21 +298,21 @@ def offline_upload():
 			print(au)
 			if audio_filename == au:
 				print(obj)
-			else:
-				print("failed")
+				filename = os.path.join("static", "audio_uploads", audio.audio_filename)
+				print(filename)
 	# for i, audio in enumerate(audio_files):
 	# 	if audio:
 	# 		print(audio.filename)
 	# 		filename = os.path.join("static", "audio_uploads", audio.filename)
 	# 		print(filename)
-	# 		if os.path.exists(filename):
-	# 			dup_count += 1
-	# 			duplicates.append({"filename": filename})
-	# 			return (
-	# 				jsonify({"error": "File with the same name already exists"}),
-	# 				HTTP_400_BAD_REQUEST,
-	# 			)
-	# 		audio.save(filename)
+				if os.path.exists(filename):
+					dup_count += 1
+					duplicates.append({"filename": filename})
+					return (
+						jsonify({"error": "File with the same name already exists"}),
+						HTTP_400_BAD_REQUEST,
+					)
+				audio.save(filename)
 	# 		# i am assuming the metadata has the audio file name for correlation
 	# 		# in my case am calling the metadata object attribute for the audio "audio_filename"
 	# 		matching_metadata = None
@@ -321,39 +321,39 @@ def offline_upload():
 	# 				matching_metadata = item
 	# 				break
 
-	# 		if matching_metadata:
-	# 			question_data = {
-	# 				"language": matching_metadata.get("language"),
-	# 				"topic": matching_metadata.get("topic", ""),
-	# 				"sub_topic": matching_metadata.get("sub_topics", ""),
-	# 				"category": matching_metadata.get("category", ""),
-	# 				"animal_crop": matching_metadata.get("sub_category", ""),
-	# 				"location": matching_metadata.get("location", ""),
-	# 				"user_id": current_user,
-	# 				"filename": filename,
-	# 			}
+			if obj:
+				question_data = {
+					"language": obj.get("language"),
+					"topic": obj.get("topic", ""),
+					"sub_topic": obj.get("sub_topics", ""),
+					"category": obj.get("category", ""),
+					"animal_crop": obj.get("sub_category", ""),
+					"location": obj.get("location", ""),
+					"user_id": current_user,
+					"filename": filename,
+				}
 
-	# 			question = Question(**question_data)
-	# 			questions.append(question)
-	# 		else:
-	# 			# no matching metadata is found
-	# 			return (
-	# 				jsonify(
-	# 					{"error": f"No metadata found for audio file: {audio.filename}"}
-	# 				),
-	# 				HTTP_400_BAD_REQUEST,
-	# 			)
+				question = Question(**question_data)
+				questions.append(question)
+			else:
+				# no matching metadata is found
+				return (
+					jsonify(
+						{"error": f"No metadata found for audio file: {audio.filename}"}
+					),
+					HTTP_400_BAD_REQUEST,
+				)
 
-	# db.session.add_all(questions)
-	# db.session.commit()
+	db.session.add_all(questions)
+	db.session.commit()
 
-	# num_questions = Question.query.filter_by(user_id=current_user).count()
+	num_questions = Question.query.filter_by(user_id=current_user).count()
 	return (
 		jsonify(
 			{
-				"num_questions": 1,
-				"duplicate_questions": 0,
-				"duplicates": 0,
+				"num_questions": num_questions,
+				"duplicate_questions": dup_count,
+				"duplicates": duplicates,
 			}
 		),
 		HTTP_200_OK,
