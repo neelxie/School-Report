@@ -298,7 +298,7 @@ def offline_upload():
 			print(au)
 			if audio_filename == au:
 				print(obj)
-				filename = os.path.join("static", "audio_uploads", audio.audio_filename)
+				filename = os.path.join("static", "audio_uploads", obj.audio_filename)
 				print(filename)
 	# for i, audio in enumerate(audio_files):
 	# 	if audio:
