@@ -130,27 +130,88 @@
   <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <div class="row">
-          <a
-            type="button"
-            class="btn btn-warning mb-3"
-            href="{{ url_for('web.main_answer') }}"
+        <a
+          type="button"
+          class="btn btn-warning mb-3"
+          href="{{ url_for('web.main_answer') }}"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-arrow-bar-left"
+            viewBox="0 0 16 16"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-arrow-bar-left"
-              viewBox="0 0 16 16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-              ></path>
-            </svg>
-            Back to Dashboard
-          </a>
+            <path
+              fill-rule="evenodd"
+              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
+            ></path>
+          </svg>
+          Back to Dashboard
+        </a>
+        <div class="row">
+          <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content">
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Reviewed</div>
+                    <div class="widget-subheading">
+                      Total Questions Reviewed
+                    </div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-warning"
+                      id="lugandaQuestions"
+                    >2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content">
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Answered</div>
+                    <div class="widget-subheading">
+                      Total Questions Answered
+                    </div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-danger"
+                      id="englishQuestions"
+                    >3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content">
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Ranked</div>
+                    <div class="widget-subheading">Total Questions Ranked</div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-warning"
+                      id="totalMales"
+                    >2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-12">
             <div class="main-card mb-3 card">
               <div class="card-header">Answers Provided</div>
@@ -160,8 +221,8 @@
                 >
                   <thead>
                     <tr>
-                      <th >Question</th>
                       <th>Answer</th>
+                      <th>Question</th>
                       <th class="text-center">Date</th>
                     </tr>
                   </thead>
@@ -401,7 +462,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     // Get the token from local storage
     const token = localStorage.getItem("token");
-    // Fetch top users data
+
     fetch("/api/v1/questions/user_answers", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -412,19 +473,28 @@
         const tableBody = document.querySelector(".english tbody");
         userAnswers.forEach((answer, index) => {
           const tableRow = document.createElement("tr");
-          const anchor = document.createElement("a");
-          anchor.href = `/answer_page.html?answer_id=${answer.id}`;
-          anchor.textContent = answer.answer_text;
-          const cell = document.createElement("td");
-          cell.appendChild(anchor);
-          tableRow.appendChild(cell);
-
-          tableRow.innerHTML += `
-          <td class="text-center text-muted">${answer.id}</td>
-         
+          if (answer.rank === 1 || answer.rank === 2) {
+            tableRow.innerHTML += `
+            <td class="text-muted">${answer.answer_text}</td>
+            <td class=" text-muted">${answer.sentence}</td>
           
-          <td class="text-center">${answer.created_at}</td>`;
-          tableBody.appendChild(tableRow);
+            <td class="text-center">${answer.created_at}</td>`;
+            tableBody.appendChild(tableRow);
+          } else {
+            const anchor = document.createElement("a");
+            anchor.href = `/answer_page.html?answer_id=${answer.id}`;
+            anchor.textContent = answer.answer_text;
+            const cell = document.createElement("td");
+            cell.appendChild(anchor);
+            tableRow.appendChild(cell);
+
+            tableRow.innerHTML += `
+            <td class="text-muted">${answer.sentence}</td>
+          
+            
+            <td class="text-center">${answer.created_at}</td>`;
+            tableBody.appendChild(tableRow);
+          }
         });
       })
       .catch((error) => console.error("Error fetching english data:"));

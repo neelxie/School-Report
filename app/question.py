@@ -1112,12 +1112,16 @@ def get_user_answers():
 	answers_data = []
 
 	for answer in user_answers:
+		question = answer.question
+		
 		answers_data.append(
 			{
 				"id": answer.id,
 				"answer_text": answer.answer_text,
 				"created_at": answer.created_at,
 				"question_id": answer.question_id,
+				"sentence": question.sentence,
+				"rank": question.ranking_count
 			}
 		)
 
