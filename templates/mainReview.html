@@ -266,12 +266,12 @@ endblock %} {% block content %}
                       >Question:</span
                     ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
                   </div>
-                  <hr class="hr" />
+                  <!-- <hr class="hr" />
                   <div class="h4 text-dark font-weight-bold mb-3">
                     <span class="text-primary mr-3 h2 font-weight-bold"
                       >Edited Question:</span
                     ><span id="displayValue" class="h2 font-weight-bold"></span>
-                  </div>
+                  </div> -->
                   <hr class="hr" />
                   <div class="h4 text-dark font-weight-bold mb-3">
                     <span class="text-primary mr-3 h2 font-weight-bold"
@@ -316,34 +316,6 @@ endblock %} {% block content %}
                       onchange="populateSubTopics()"
                     >
                       <option value="">Select a Topic</option>
-                      <!-- <option value="Soil Preparation">Soil Preparation</option>
-                      <option value="Planting">Planting</option>
-                      <option value="Crop Management">Crop Management</option>
-                      <option value="Harvesting">Harvesting</option>
-                      <option value="Marketing and Sales">
-                        Marketing and Sales
-                      </option>
-                      <option value="Crop Diversity">Crop Diversity</option>
-                      <option value="Genetically Modified Crops (GMOs)">
-                        Genetically Modified Crops (GMOs)
-                      </option>
-                      <option value="Integrated Pest Management (IPM)">
-                        Integrated Pest Management (IPM)
-                      </option>
-                      <option
-                        value="Climate and Weather Impacts on Crop Farming"
-                      >
-                        Climate and Weather Impacts on Crop Farming
-                      </option>
-                      <option value="Sustainable Agriculture">
-                        Sustainable Agriculture
-                      </option>
-                      <option value="Equipment and Technology">
-                        Equipment and Technology
-                      </option>
-                      <option value="Government Policies and Programs">
-                        Government Policies and Programs
-                      </option> -->
                     </select>
                   </div>
                   <div class="d-flex align-items-baseline">
@@ -438,7 +410,6 @@ endblock %} {% block content %}
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
 
-  // Retrieve data from local storage
   const storedUser = localStorage.getItem("user");
 
   if (storedUser) {
@@ -447,11 +418,9 @@ endblock %} {% block content %}
     userElement.textContent = Expert;
   }
   function logout() {
-    // Clear the user token from localStorage
     localStorage.clear();
 
-    // Redirect to the index.html page
-    window.location.href = "/"; // Redirect to the index page
+    window.location.href = "/";
   }
 
   function reload() {
@@ -514,8 +483,9 @@ endblock %} {% block content %}
   let displayValue = document.getElementById("displayValue");
   let questio = document.getElementById("oneQuestion2");
   rephrased.addEventListener("input", function () {
-    displayValue.textContent = rephrased.value;
-    // questio.textContent = ''
+    if (rephrased.value.trim() !== "") {
+      oneQuestion2.textContent = rephrased.value;
+    }
   });
 
   function toggleTopics() {
@@ -539,7 +509,7 @@ endblock %} {% block content %}
     radio.addEventListener("change", toggleTopics);
   });
 
-  async function submitForm() {
+  function submitForm() {
     event.preventDefault();
 
     var form = document.getElementById("signUpForm");
@@ -561,26 +531,21 @@ endblock %} {% block content %}
     let values = [];
 
     listItems.forEach((item) => {
-      values.push(item.textContent.replace("Remove", "").trim()); // Remove 'Remove' and trim extra whitespace.
+      values.push(item.textContent.replace("Remove", "").trim());
     });
-
     const commaSeparatedString = values.join(", ");
-
     let itemBody = {};
 
     if (rephrased && commaSeparatedString) {
-      
       itemBody = {
         rephrased: rephrased.value,
         topic: commaSeparatedString,
       };
     } else if (rephrased) {
-      
       itemBody = {
         rephrased: rephrased.value,
       };
     } else if (commaSeparatedString) {
-      
       itemBody = {
         topic: commaSeparatedString,
       };
@@ -590,7 +555,7 @@ endblock %} {% block content %}
       const response = fetch(
         `/api/v1/questions/question_review/${questionId2}`,
         {
-          method: "PUT",
+          method: "PATCH",
           headers: {
             "content-type": "application/json",
             Authorization: `Bearer ${mytoken}`,
@@ -645,7 +610,6 @@ endblock %} {% block content %}
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
-        console.log(randomQuestion);
         if (randomQuestion.message === "No questions available.") {
           let oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = "No questions available.";
@@ -737,7 +701,6 @@ endblock %} {% block content %}
 
   function populateTopics() {
     let selectedCategory = getSelectedCategory();
-    console.log(selectedCategory);
     const topicsSelect = document.getElementById("topics");
     topicsSelect.innerHTML = "";
 

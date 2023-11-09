@@ -706,7 +706,7 @@ def mark_question_as_reviewed(question_id):
 		return jsonify({"message": "Question not found"})
 
 
-@questions.route("/question_review/<int:question_id>", methods=["PUT"])
+@questions.route("/question_review/<int:question_id>", methods=["PATCH"])
 @jwt_required()
 def question_review(question_id):
 	user_id = get_jwt_identity()
@@ -729,11 +729,11 @@ def question_review(question_id):
 		)
 		if question.topic:
 			if new_topic:
-				new_topic += (
-					", " + question.topic
+				question.topic = (
+					new_topic + ", " + question.topic
 				)
 		else:
-			question.topic = new_topic  # Set new topic if no current topic exists
+			question.topic = new_topic 
 
 		db.session.commit()
 
@@ -1065,15 +1065,13 @@ def question_stats():
 
 	expert_data = []
 	for expert in experts:
-		# Count the number of reviewed questions for this expert
 		reviewed_questions_count = Question.query.filter_by(
 			reviewer_id=expert.id
 		).count()
-
-		# Get all answers provided by this expert
 		answers = Answer.query.filter_by(user_id=expert.id).count()
 
-		ranked_answers = Question.query.filter_by(ranked_by=expert.id).count()
+		ranked_answers = Question.query.filter((Question.rank_expert_one == expert.id) | (Question.rank_expert_two == expert.id)).count()
+
 
 		expert_info = {
 			"id": expert.id,
@@ -1107,6 +1105,14 @@ def question_stats():
 def get_user_answers():
 	user_id = get_jwt_identity()
 
+	reviewed_questions_count = Question.query.filter_by(
+		reviewer_id=user_id
+	).count()
+
+	answers = Answer.query.filter_by(user_id=user_id).count()
+
+	ranked_answers = Question.query.filter((Question.rank_expert_one == user_id) | (Question.rank_expert_two == user_id)).count()
+
 	user_answers = Answer.query.filter_by(user_id=user_id).all()
 	answers_data = []
 
@@ -1123,14 +1129,14 @@ def get_user_answers():
 				"rank": question.ranking_count
 			}
 		)
-
-	return jsonify(answers_data)
+	return jsonify({"all_answers":answers_data, "answers": answers,"reviewed_questions": reviewed_questions_count,"ranked": ranked_answers})
 
 
 @questions.route("/answers/<int:answer_id>", methods=["GET"])
 @jwt_required()
 def get_answer(answer_id):
 	user_id = get_jwt_identity()
+
 
 	answer = Answer.query.get(answer_id)
 	if not answer:
@@ -1147,12 +1153,13 @@ def get_answer(answer_id):
 		"answer_id": answer.id,
 		"answer_text": answer.answer_text,
 		"question_id": question.id,
-		"question_text": question.rephrased or question.sentence,
+		"question_text": question.sentence,
 		"language": question.language,
 		"animal_crop": question.animal_crop,
 		"category": question.category,
 		"topic": question.topic,
 		"sub_topic": question.sub_topic,
+	
 	}
 
 	return jsonify(response_data), HTTP_200_OK
