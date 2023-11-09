@@ -1185,88 +1185,98 @@ def update_answer_text(answer_id):
 @questions.route("/upload_json_answers/", methods=["POST"])
 @jwt_required()
 def upload_json_answers():
-	json_data = [{}]
+	uploaded_file = request.files.get('file')
+
+	if not uploaded_file:
+			return jsonify({"error": "No file uploaded"}), HTTP_400_BAD_REQUEST
+
+	try:
+			# Load JSON data from the uploaded file
+			json_data = json.load(uploaded_file)
+	except json.JSONDecodeError:
+			return jsonify({"error": "Invalid JSON file"}), HTTP_400_BAD_REQUEST
+
 
 	current_user_id = get_jwt_identity()
 	dup_count = 0
 	duplicates = []
 
-	new_category = "bard response"
-
 	# Iterate through each object in json_data
-	for obj in json_data:
-		sentence = obj.get("questions")
-
-		# Check if the question already exists and is cleaned
-		existing_question = Question.query.filter_by(
-			sentence=sentence, cleaned=True
-		).first()
-
-		if existing_question:
-			question_id = existing_question.id
-			# Add a new answer for the "new category"
-			new_response_value = obj.get(new_category)
-
-			if new_response_value is not None:
-				new_response = Answer(
-					question_id=question_id,
-					answer_text=new_response_value,
-					source=new_category,
-					user_id=current_user_id,
-				)
-
-				db.session.add(new_response)
-				db.session.commit()
-
-	# Calculate duplicates and return the response_data
-	response_data = {"duplicates_count": "done", "duplicates": "yes"}
-	return jsonify(response_data), HTTP_200_OK
-
 	# for obj in json_data:
-	#     sentence = obj.get("Prompts")
-	#     language = obj.get("Language")
-	#     topic = obj.get("Topic")
-	#     category = obj.get("Category")
-	#     animal_crop = obj.get("animal_crop")
-	#     location = obj.get("Location")
+	# 	sentence = obj.get("questions")
 
-	#     # Check if the question already exists
-	#     if Question.query.filter_by(sentence=sentence).first():
-	#         dup_count += 1
-	#         duplicates.append({"sentence": sentence})
-	#     else:
-	#         question = Question(
-	#             sentence=sentence,
-	#             language=language,
-	#             user_id=current_user_id,
-	#             topic=topic,
-	#             category=category,
-	#             animal_crop=animal_crop,
-	#             location=location,
-	#             cleaned=True,
-	#         )
-	#         db.session.add(question)
-	#         db.session.commit()
-	#         question_id = question.id
+	# 	# Check if the question already exists and is cleaned
+	# 	existing_question = Question.query.filter_by(
+	# 		sentence=sentence, cleaned=True
+	# 	).first()
 
-	#         response_categories = [
-	#             "Bing response",
-	#             "Bard Response",
-	#             "Llama -2 Response",
-	#             "GPT 3.5 response",
-	#             # "chatgpt 4 response",
-	#         ]
-	#         for category in response_categories:
-	#             response_value = obj.get(category)
-	#             if response_value is not None:
-	#                 response = Answer(
-	#                     question_id=question_id,
-	#                     answer_text=response_value,
-	#                     source=category,
-	#                     user_id=current_user_id,
-	#                 )
-	#                 db.session.add(response)
-	#                 db.session.commit()
+	# 	if existing_question:
+	# 		question_id = existing_question.id
+	# 		# Add a new answer for the "new category"
+	# 		new_response_value = obj.get(new_category)
 
-	# response_data = {"duplicates_count": dup_count, "duplicates": duplicates}
+	# 		if new_response_value is not None:
+	# 			new_response = Answer(
+	# 				question_id=question_id,
+	# 				answer_text=new_response_value,
+	# 				source=new_category,
+	# 				user_id=current_user_id,
+	# 			)
+
+	# 			db.session.add(new_response)
+	# 			db.session.commit()
+
+	# # Calculate duplicates and return the response_data
+	# response_data = {"duplicates_count": "done", "duplicates": "yes"}
 	# return jsonify(response_data), HTTP_200_OK
+
+	for obj in json_data:
+		sentence = obj.get("Question")
+		language = obj.get("Language")
+		topic = obj.get("Topics")
+		category = obj.get("Category")
+		animal_crop = obj.get("Animal_Crop")
+		location = obj.get("Location")
+
+		# Check if the question already exists
+		if Question.query.filter_by(sentence=sentence, cleaned=True, rephrased="testing").first():
+				dup_count += 1
+				duplicates.append({"sentence": sentence})
+		else:
+				question = Question(
+						sentence=sentence,
+						language=language,
+						user_id=current_user_id,
+						topic=topic,
+						category=category,
+						animal_crop=animal_crop,
+						location=location,
+						cleaned=True,
+						rephrased="testing"
+				)
+				db.session.add(question)
+				db.session.commit()
+				question_id = question.id
+
+				response_categories = [
+						"Llama2",
+						"Bard",
+						"Bing",
+						"Llama",
+						"ChatGPT 3.5",
+						"GPT 4",
+				]
+				for category in response_categories:
+						response_value = obj.get(category)
+						if response_value is not None:
+								response = Answer(
+										question_id=question_id,
+										answer_text=response_value,
+										source=category,
+										user_id=current_user_id,
+								)
+								db.session.add(response)
+								db.session.commit()
+
+	response_data = {"duplicates_count": dup_count, "duplicates": duplicates}
+	return jsonify(response_data), HTTP_200_OK
