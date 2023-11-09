@@ -1239,7 +1239,7 @@ def upload_json_answers():
 		location = obj.get("Location")
 
 		# Check if the question already exists
-		if Question.query.filter_by(sentence=sentence).first():
+		if Question.query.filter_by(sentence=sentence, cleaned=True, rephrased="testing").first():
 				dup_count += 1
 				duplicates.append({"sentence": sentence})
 		else:
@@ -1252,6 +1252,7 @@ def upload_json_answers():
 						animal_crop=animal_crop,
 						location=location,
 						cleaned=True,
+						rephrased="testing"
 				)
 				db.session.add(question)
 				db.session.commit()
@@ -1262,8 +1263,8 @@ def upload_json_answers():
 						"Bard",
 						"Bing",
 						"Llama",
-						"GPT 3.5 response",
-						# "chatgpt 4 response",
+						"ChatGPT 3.5",
+						"GPT 4",
 				]
 				for category in response_categories:
 						response_value = obj.get(category)
