@@ -333,6 +333,12 @@
     logoutButton.addEventListener("click", logout);
   }
 
+  function wordCount(text) {
+    return text.split(/\s+/).filter(function (word) {
+      return word.length > 0;
+    }).length;
+  }
+
   function showFormWithQuestionId(questionId) {
     // Display the form and set the question ID as a data attribute
     var form = document.getElementById("answerForm");
@@ -375,29 +381,19 @@
             : "--No Questions.--";
           const questionLanguage = document.getElementById("questionLanguage");
           questionLanguage.textContent = anyQuestion.location;
-          const questionTopic = document.getElementById("questionTopic");
-          if (anyQuestion.topics && anyQuestion.topics.includes(",")) {
-            questionTopic.textContent = topics
-              .split(", &nbsp;&nbsp; ")
-              .join("");
-          } else {
-            questionTopic.textContent = anyQuestion.topics || "No Topic";
-          }
-          // if (anyQuestion.topics) {
-          //   const topicsArray = derek.topics.split(", ");
-          //   topicsArray.forEach(function (topic) {
-          //     const topicElement = document.createElement("p"); // or use "br" for line break
-          //     topicElement.textContent = topic;
-          //     questionTopic.appendChild(topicElement);
-          //   });
-          // } else {
-          //   questionTopic.textContent = "No Topic";
-          // }
 
           const categor = document.getElementById("categor");
           categor.textContent = anyQuestion.category;
           const actualItem = document.getElementById("actualItem");
           actualItem.textContent = anyQuestion.animal_crop;
+          const questionTopic = document.getElementById("questionTopic");
+          if (anyQuestion.topics && anyQuestion.topics.includes(",")) {
+            questionTopic.textContent = anyQuestion.topics
+              .split(", &nbsp;&nbsp; ")
+              .join("");
+          } else {
+            questionTopic.textContent = anyQuestion.topics || "No Topic";
+          }
           var questionId = anyQuestion.id;
           showFormWithQuestionId(questionId);
         });
@@ -415,20 +411,22 @@
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
       let answer = document.getElementById("answer").value;
+
+      if (wordCount(answer) < 5) {
+        alert("Answer must be at least 5 words.");
+        return;
+      }
       const itemBody = {
         answer: answer,
       };
-      const response =  fetch(
-        `/api/v1/questions/add_answer/${questionId}`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(itemBody),
-        }
-      );
+      const response = fetch(`/api/v1/questions/add_answer/${questionId}`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(itemBody),
+      });
 
       try {
         const responseData = response.json();

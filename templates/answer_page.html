@@ -133,7 +133,7 @@
         <a
           type="button"
           class="btn btn-warning mb-3"
-          href="{{ url_for('web.choose') }}"
+          href="{{ url_for('web.main_answer') }}"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -315,7 +315,7 @@
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
 
-    answerForm.addEventListener("submit", async function (event) {
+    answerForm.addEventListener("submit", function (event) {
       event.preventDefault();
       var questionIdButton = this.getAttribute("data-question-id");
       let questionId = parseInt(questionIdButton);
@@ -323,8 +323,7 @@
       const itemBody = {
         answer_text: answer,
       };
-      console.log(answer);
-      const response = await fetch(
+      const response = fetch(
         `/api/v1/questions/update_answer_text/${questionId}`,
         {
           method: "PUT",
@@ -335,18 +334,18 @@
           body: JSON.stringify(itemBody),
         }
       );
-      console.log(itemBody)
-      console.log(questionId)
 
       try {
-        const responseData = await response.json();
+        const responseData = response.json();
         if (response.ok) {
-          window.location.href = "/choose";
+          window.location.href = "/main_answer";
         } else {
           errorMessage.textContent = responseData.error;
         }
       } catch (error) {
         console.error("Error parsing response:");
+      } finally {
+        window.location.href = "/main_answer";
       }
     });
   });

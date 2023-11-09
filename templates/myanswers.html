@@ -164,8 +164,8 @@
                   <div class="widget-content-right">
                     <div
                       class="widget-numbers text-warning"
-                      id="lugandaQuestions"
-                    >2</div>
+                      id="allQuestionsReviewed"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -184,8 +184,8 @@
                   <div class="widget-content-right">
                     <div
                       class="widget-numbers text-danger"
-                      id="englishQuestions"
-                    >3</div>
+                      id="allQuestionsAnswered"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -203,8 +203,8 @@
                   <div class="widget-content-right">
                     <div
                       class="widget-numbers text-warning"
-                      id="totalMales"
-                    >2</div>
+                      id="allQuestionsRanked"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -335,128 +335,6 @@
     // questio.textContent = ''
   });
 
-  async function submitForm() {
-    event.preventDefault();
-    var form = document.getElementById("signUpForm");
-    var formData = new FormData(form);
-
-    let questionId2 = parseInt(form.getAttribute("data-question-id"));
-    const rephrased = document.getElementById("rephrased");
-    const topic = document.getElementById("topic").value;
-    const displayValue = document.getElementById("displayValue");
-
-    let itemBody = {};
-
-    if (rephrased !== "" && topic !== "") {
-      itemBody = { rephrased: rephrased, topic: topic };
-    } else if (rephrased !== "") {
-      itemBody = { rephrased: rephrased };
-    } else if (topic !== "") {
-      itemBody = { topic: topic };
-    } else {
-      itemBody = {};
-    }
-
-    try {
-      const response = await fetch(
-        `/api/v1/questions/question_review/${questionId2}`,
-        {
-          method: "PUT",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${mytoken}`,
-          },
-          body: JSON.stringify(itemBody),
-        }
-      );
-
-      const responseData = await response.json();
-      if (response) {
-        window.location.reload();
-        // window.location.href = window.location.href;
-      } else {
-        errorMessage.textContent = responseData.error;
-      }
-    } catch (error) {
-      console.error("Error parsing response:", error);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    // Get the token from local storage
-    const token = localStorage.getItem("token");
-
-    function showFormWithQuestionId(questionId) {
-      // Display the form and set the question ID as a data attribute
-      var form = document.getElementById("signUpForm");
-      form.style.display = "block";
-      form.setAttribute("data-question-id", questionId);
-    }
-    // Current tab is set to be the first tab (0)
-    showTab(currentTab); // Display the current tab
-
-    // Fetch top users data
-    fetch("/api/v1/questions/random_question_review_crop", {
-      headers: {
-        Authorization: `Bearer ${mytoken}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((randomQuestion) => {
-        const anyQuestion = randomQuestion.find(
-          (question) => question.question_language === "Any Language"
-        );
-        const englishQuestion = randomQuestion.find(
-          (question) => question.question_language === "English"
-        );
-        const lugandaQuestion = randomQuestion.find(
-          (question) => question.question_language === "Luganda"
-        );
-        const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = anyQuestion.sentence;
-        const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = anyQuestion.sentence;
-        const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = anyQuestion.sentence;
-        const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = anyQuestion.topic
-          ? anyQuestion.topic
-          : "No Topic";
-        var questionId = anyQuestion.id;
-        // console.log(questionId);
-        showFormWithQuestionId(questionId);
-        const incorrectQuestion = document.getElementById("prevBtn");
-        if (incorrectQuestion) {
-          incorrectQuestion.addEventListener("click", async function (event) {
-            event.preventDefault();
-            let questionId1 = parseInt(questionId);
-            // console.log(questionId1);
-            if (prevBtn.innerHTML === "No") {
-              await updateQuestion(questionId1);
-            }
-          });
-        }
-      })
-      .catch((error) => console.error("Error fetching question:"));
-
-    function updateQuestion(questionId) {
-      const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${mytoken}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((responseData) => {
-          if (response) {
-            window.location.reload();
-          } else {
-            console.error("Error updating question:");
-          }
-        })
-        .catch((error) => console.error("Error parsing response:", error));
-    }
-  });
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -471,7 +349,7 @@
       .then((response) => response.json())
       .then((userAnswers) => {
         const tableBody = document.querySelector(".english tbody");
-        userAnswers.forEach((answer, index) => {
+        userAnswers.all_answers.forEach((answer, index) => {
           const tableRow = document.createElement("tr");
           if (answer.rank === 1 || answer.rank === 2) {
             tableRow.innerHTML += `
@@ -495,7 +373,14 @@
             <td class="text-center">${answer.created_at}</td>`;
             tableBody.appendChild(tableRow);
           }
+        
         });
+        const reviewd = document.getElementById("allQuestionsReviewed");
+        reviewd.textContent = userAnswers.reviewed_questions;
+        const answered = document.getElementById("allQuestionsAnswered");
+        answered.textContent = userAnswers.answers;
+        const ranked = document.getElementById("allQuestionsRanked");
+        ranked.textContent = userAnswers.ranked;
       })
       .catch((error) => console.error("Error fetching english data:"));
   });

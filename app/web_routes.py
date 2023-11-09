@@ -122,12 +122,18 @@ def answer_page():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
 
     return render_template(
         "answer_page.html",
-        token=access_token,
+                token=access_token,
         role=role,
         user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
     )
 
 
