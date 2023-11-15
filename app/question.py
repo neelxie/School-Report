@@ -424,7 +424,8 @@ def get_question(id):
 @questions.get("/all")
 def get_questions():
 	questions = Question.query.filter(
-		(Question.cleaned.is_(None) | (Question.cleaned != True))
+		(Question.cleaned.is_(None) | (Question.cleaned != True)),
+		(~Question.rephrased == "actual")
 	).all()
 
 	if not questions:
@@ -492,13 +493,14 @@ def list_questions():
 	total_questions = len(all_questions)
 	questions_per_language = (
 		db.session.query(Question.language, func.count(Question.id))
-		.filter(Question.cleaned.is_(None) | (Question.cleaned != True))
+		.filter((~Question.rephrased == "actual"), (Question.cleaned.is_(None) | (Question.cleaned != True)))
 		.group_by(Question.language)
 		.all()
 	)
 
 	average_daily_questions = total_questions / (
 		Question.query.filter(
+			(~Question.rephrased == "actual"),
 			(Question.cleaned.is_(None) | (Question.cleaned != True))
 			& (Question.created_at >= datetime.date.today())
 		).count()
@@ -508,6 +510,7 @@ def list_questions():
 	one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
 	average_weekly_questions = total_questions / (
 		Question.query.filter(
+			(~Question.rephrased == "actual"),
 			(Question.cleaned.is_(None) | (Question.cleaned != True))
 			& (Question.created_at >= one_week_ago)
 		).count()
@@ -519,11 +522,13 @@ def list_questions():
 	average_questions_per_user = total_questions / (total_users or 1)
 
 	plant_question_count = Question.query.filter(
+		(~Question.rephrased == "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != True))
 		& (func.lower(Question.category) == "crop")
 	).count()
 
 	animal_question_count = Question.query.filter(
+		(~Question.rephrased == "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != True))
 		& (func.lower(Question.category) == "animal")
 	).count()
@@ -780,6 +785,7 @@ def get_random_unanswered_question(user_id):
 @jwt_required()
 def get_luganda_questions():
 	luganda_questions = Question.query.filter(
+		(~Question.rephrased == "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
 		& (func.lower(Question.language) == "luganda")
 	).all()
@@ -810,6 +816,7 @@ def get_luganda_questions():
 @jwt_required()
 def get_english_questions():
 	english_questions = Question.query.filter(
+		(~Question.rephrased == "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
 		& (func.lower(Question.language) == "english")
 	).all()
@@ -837,31 +844,6 @@ def get_english_questions():
 
 
 # DO NOT USE
-@questions.route("/add_question_location", methods=["PUT"])
-@jwt_required()
-def update_question_locations():
-	try:
-		users = User.query.filter(func.lower(User.role) == "farmer").all()
-
-		for user in users:
-			user_questions = Question.query.filter_by(user_id=user.id).all()
-
-			user_location = user.location
-
-			for question in user_questions:
-				question.location = user_location
-
-		db.session.commit()
-
-		return (
-			jsonify({"message": "Question locations updated successfully"}),
-			HTTP_200_OK,
-		)
-
-	except Exception as e:
-		db.session.rollback()
-		return jsonify({"error": "An error occurred while updating question locations"})
-
 
 @questions.route("/dataset_upload/", methods=["POST"])
 @jwt_required()
@@ -1059,12 +1041,12 @@ def store_answer_ranks():
 @questions.route("/expert-stats", methods=["GET"])
 @jwt_required()
 def question_stats():
-	total_cleaned = Question.query.filter_by(cleaned=True).count()
-	cleaned_and_reviewed = Question.query.filter_by(cleaned=True, reviewed=True).count()
+	total_cleaned = Question.query.filter_by(cleaned=True, rephrased="actual").count()
+	cleaned_and_reviewed = Question.query.filter_by(cleaned=True, reviewed=True, rephrased="actual").count()
 	cleaned_reviewed_and_answered = Question.query.filter_by(
-		cleaned=True, answered=True
+		cleaned=True, answered=True, rephrased="actual"
 	).count()
-	all_fields_true = Question.query.filter_by(cleaned=True, finished=True).count()
+	all_fields_true = Question.query.filter_by(cleaned=True, finished=True, rephrased="actual").count()
 	experts = User.query.filter_by(role="expert").all()
 
 	expert_data = []
