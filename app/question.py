@@ -23,6 +23,7 @@ from sqlalchemy import func, or_, and_, not_
 from app.helper import admin_required
 
 UPLOADS_PATH = join(dirname(realpath(__file__)), "static/audio_uploads")
+DATASET_PATH = join(dirname(realpath(__file__)), "static/dataset")
 
 questions = Blueprint("questions", __name__, url_prefix="/api/v1/questions")
 
@@ -609,7 +610,7 @@ def main_question_review():
 		filters.append(sub_category_filter)
 
 	matching_questions = (
-		Question.query.filter(category_filter, reviewed_filter, *filters)
+		Question.query.filter(Question.rephrased == "actual", category_filter, reviewed_filter, *filters)
 		.order_by(func.random())
 		.first()
 	)
@@ -649,8 +650,9 @@ def main_question_answer():
 
 	matching_questions = Question.query.filter(
 		Question.category.ilike(category),
-    	Question.reviewed == True,
-    	Question.answered.is_not(True),
+		Question.rephrased == "actual",
+    Question.reviewed == True,
+    Question.answered.is_not(True),
 		*filters
 		).order_by(db.func.random()).first()
 
@@ -954,8 +956,9 @@ def main_question_rank():
 	matching_questions = (
 		Question.query.filter(
 			Question.category.ilike(category),
-    		Question.answered == True,
-    		Question.finished.is_not(True),
+			Question.rephrased == "actual",
+    	Question.answered == True,
+    	Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
 			(Question.rank_expert_one == None) | (Question.rank_expert_one == None),
 			*filters)
@@ -1185,14 +1188,16 @@ def update_answer_text(answer_id):
 @questions.route("/upload_json_answers/", methods=["POST"])
 @jwt_required()
 def upload_json_answers():
-	uploaded_file = request.files.get('file')
-
-	if not uploaded_file:
-			return jsonify({"error": "No file uploaded"}), HTTP_400_BAD_REQUEST
-
 	try:
-			# Load JSON data from the uploaded file
-			json_data = json.load(uploaded_file)
+		# Specify the name of the JSON file in the root directory
+		file_name = join(DATASET_PATH, 'result.json')
+
+		# Open and read the JSON file from the root directory
+		with open(file_name, 'r') as file:
+			json_data = json.load(file)
+
+	except FileNotFoundError:
+			return jsonify({"error": f"File {file_name} not found"}), HTTP_404_NOT_FOUND
 	except json.JSONDecodeError:
 			return jsonify({"error": "Invalid JSON file"}), HTTP_400_BAD_REQUEST
 
