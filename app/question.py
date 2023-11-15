@@ -1239,7 +1239,7 @@ def upload_json_answers():
 		location = obj.get("Location")
 
 		# Check if the question already exists
-		if Question.query.filter_by(sentence=sentence, cleaned=True, rephrased="testing").first():
+		if Question.query.filter_by(sentence=sentence, cleaned=True, rephrased="actual").first():
 				dup_count += 1
 				duplicates.append({"sentence": sentence})
 		else:
@@ -1252,7 +1252,7 @@ def upload_json_answers():
 						animal_crop=animal_crop,
 						location=location,
 						cleaned=True,
-						rephrased="testing"
+						rephrased="actual"
 				)
 				db.session.add(question)
 				db.session.commit()
