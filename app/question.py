@@ -637,14 +637,12 @@ def main_question_review():
 	category_filter = func.lower(Question.category) == category
 	reviewed_filter = Question.reviewed == False
 
-	# filters = [Question.category == category, Question.reviewed == False]
-
 	if language:
 		languages = [lang.strip().lower() for lang in language.split(",")]
 		language_filter = func.lower(Question.language).in_(languages)
 		filters.append(language_filter)
 
-	if sub_category and sub_category == "Vegetables":
+	if sub_category:
 		sub_category = sub_category.lower()
 
 		vegetable_sub_categories = [
@@ -652,7 +650,9 @@ def main_question_review():
 				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
 				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper"
 		]
-		sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+		# sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+		sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
+
 		sub_category_filter = Question.animal_crop.in_(
 				[sub_cat for sub_cat in sub_categories if sub_cat in vegetable_sub_categories]
 		)
@@ -660,7 +660,6 @@ def main_question_review():
 	elif sub_category:
 		sub_category = sub_category.lower()
 
-		# sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
 		sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
 		sub_category_filter = Question.animal_crop.in_(sub_categories)
 		filters.append(sub_category_filter)
