@@ -648,7 +648,7 @@ def main_question_review():
 	# 	sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
 	# 	sub_category_filter = Question.animal_crop.in_(sub_categories)
 	# 	filters.append(sub_category_filter)
-	if sub_category and category == "vegetable":
+	if sub_category and category == "vegetables":
 		sub_category = sub_category.lower()
 
 		vegetable_sub_categories = [
@@ -704,7 +704,7 @@ def main_question_answer():
 	
 	if sub_category:
 		sub_category = sub_category.lower()
-		if sub_category.lower() == "vegetable":
+		if sub_category.lower() == "vegetables":
 			
 	
 			allowed_vegetables = [
@@ -1010,7 +1010,7 @@ def main_question_rank():
 	# 	filters.append(sub_category_filter)
 	if sub_category:
 		sub_category = sub_category.lower()
-		if sub_category.lower() == "vegetable":
+		if sub_category.lower() == "vegetables":
 			allowed_vegetables = [
 				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", 
         "beetroot", "doodoo", "spinach", "cucumbers", "avocado", 
