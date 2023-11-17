@@ -644,7 +644,7 @@ def main_question_review():
 		language_filter = func.lower(Question.language).in_(languages)
 		filters.append(language_filter)
 
-	if sub_category and category == "Vegetables":
+	if sub_category and sub_category == "Vegetables":
 		sub_category = sub_category.lower()
 
 		vegetable_sub_categories = [
