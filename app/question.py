@@ -425,7 +425,7 @@ def get_question(id):
 def get_questions():
 	questions = Question.query.filter(
 		(Question.cleaned.is_(None) | (Question.cleaned != True)),
-		(~Question.rephrased == "actual")
+		(Question.rephrased != "actual")
 	).all()
 
 	if not questions:
@@ -493,14 +493,14 @@ def list_questions():
 	total_questions = len(all_questions)
 	questions_per_language = (
 		db.session.query(Question.language, func.count(Question.id))
-		.filter((~Question.rephrased == "actual"), (Question.cleaned.is_(None) | (Question.cleaned != True)))
+		.filter((Question.rephrased != "actual"), (Question.cleaned.is_(None) | (Question.cleaned != True)))
 		.group_by(Question.language)
 		.all()
 	)
 
 	average_daily_questions = total_questions / (
 		Question.query.filter(
-			(~Question.rephrased == "actual"),
+			(Question.rephrased != "actual"),
 			(Question.cleaned.is_(None) | (Question.cleaned != True))
 			& (Question.created_at >= datetime.date.today())
 		).count()
@@ -510,7 +510,7 @@ def list_questions():
 	one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
 	average_weekly_questions = total_questions / (
 		Question.query.filter(
-			(~Question.rephrased == "actual"),
+			(Question.rephrased != "actual"),
 			(Question.cleaned.is_(None) | (Question.cleaned != True))
 			& (Question.created_at >= one_week_ago)
 		).count()
@@ -522,13 +522,13 @@ def list_questions():
 	average_questions_per_user = total_questions / (total_users or 1)
 
 	plant_question_count = Question.query.filter(
-		(~Question.rephrased == "actual"),
+		(Question.rephrased != "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != True))
 		& (func.lower(Question.category) == "crop")
 	).count()
 
 	animal_question_count = Question.query.filter(
-		(~Question.rephrased == "actual"),
+		(Question.rephrased != "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != True))
 		& (func.lower(Question.category) == "animal")
 	).count()
@@ -823,7 +823,7 @@ def get_random_unanswered_question(user_id):
 @jwt_required()
 def get_luganda_questions():
 	luganda_questions = Question.query.filter(
-		(~Question.rephrased == "actual"),
+		(Question.rephrased != "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
 		& (func.lower(Question.language) == "luganda")
 	).all()
@@ -854,7 +854,7 @@ def get_luganda_questions():
 @jwt_required()
 def get_english_questions():
 	english_questions = Question.query.filter(
-		(~Question.rephrased == "actual"),
+		(Question.rephrased != "actual"),
 		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
 		& (func.lower(Question.language) == "english")
 	).all()
