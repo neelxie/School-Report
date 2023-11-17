@@ -424,7 +424,6 @@ def get_question(id):
 @questions.get("/all")
 def get_questions():
 	questions = Question.query.filter(
-		(Question.cleaned.is_(None) | (Question.cleaned != True)),
 		(Question.rephrased != "actual")
 	).all()
 
@@ -455,6 +454,41 @@ def get_questions():
 
 	return jsonify(returned_data), HTTP_200_OK
 
+@jwt_required()
+@questions.get("/myqns")
+def get_my_questions():
+	questions = Question.query.filter(
+		(Question.rephrased == "actual")
+	).all()
+
+	if not questions:
+		return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
+
+	returned_data = []
+
+	for question in questions:
+		user = User.query.get(question.user_id)  # Get the user who asked the question
+		if user:
+			user_name = f"{user.firstname} {user.lastname}"
+
+		returned_data.append(
+			{
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+				"user_name": user_name,
+				"reviewed":question.reviewed,
+				"rephrased": question.rephrased
+			}
+		)
+
+	return jsonify(returned_data), HTTP_200_OK
 
 @jwt_required()
 @questions.get("/top_users")
