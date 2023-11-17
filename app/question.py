@@ -649,6 +649,8 @@ def main_question_review():
 	# 	sub_category_filter = Question.animal_crop.in_(sub_categories)
 	# 	filters.append(sub_category_filter)
 	if sub_category and category == "vegetable":
+		sub_category = sub_category.lower()
+
 		vegetable_sub_categories = [
 				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
 				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
@@ -660,7 +662,10 @@ def main_question_review():
 		)
 		filters.append(sub_category_filter)
 	elif sub_category:
-		sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+		sub_category = sub_category.lower()
+
+		# sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+		sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
 		sub_category_filter = Question.animal_crop.in_(sub_categories)
 		filters.append(sub_category_filter)
 
@@ -696,15 +701,12 @@ def main_question_answer():
 		else:
 			language_filter = func.lower(Question.language) == language.strip().lower()
 		filters.append(language_filter)
-	# if sub_category:
-	# 	if ',' in sub_category:
-	# 		sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
-	# 		sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
-	# 	else:
-	# 		sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
-	# 	filters.append(sub_category_filter)
+	
 	if sub_category:
+		sub_category = sub_category.lower()
 		if sub_category.lower() == "vegetable":
+			
+	
 			allowed_vegetables = [
 				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", 
         "beetroot", "doodoo", "spinach", "cucumbers", "avocado", 
@@ -1007,6 +1009,7 @@ def main_question_rank():
 	# 		sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
 	# 	filters.append(sub_category_filter)
 	if sub_category:
+		sub_category = sub_category.lower()
 		if sub_category.lower() == "vegetable":
 			allowed_vegetables = [
 				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", 
