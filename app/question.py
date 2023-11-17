@@ -657,16 +657,10 @@ def main_question_review():
 				[sub_cat for sub_cat in sub_categories if sub_cat in vegetable_sub_categories]
 		)
 		filters.append(sub_category_filter)
-	elif sub_category:
-		sub_category = sub_category.lower()
-
-		sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
-		sub_category_filter = Question.animal_crop.in_(sub_categories)
-		filters.append(sub_category_filter)
 
 
 	matching_questions = (
-		Question.query.filter(Question.rephrased == "actual", category_filter, reviewed_filter, *filters)
+		Question.query.filter(Question.rephrased == "actual", reviewed_filter, *filters)
 		.order_by(func.random())
 		.first()
 	)
