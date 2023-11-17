@@ -610,10 +610,26 @@ def main_question_review():
 		language_filter = func.lower(Question.language).in_(languages)
 		filters.append(language_filter)
 
-	if sub_category:
+	# if sub_category:
+	# 	sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+	# 	sub_category_filter = Question.animal_crop.in_(sub_categories)
+	# 	filters.append(sub_category_filter)
+	if sub_category and category == "vegetable":
+		vegetable_sub_categories = [
+				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
+				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
+				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper"
+		]
+		sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
+		sub_category_filter = Question.animal_crop.in_(
+				[sub_cat for sub_cat in sub_categories if sub_cat in vegetable_sub_categories]
+		)
+		filters.append(sub_category_filter)
+	elif sub_category:
 		sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
 		sub_category_filter = Question.animal_crop.in_(sub_categories)
 		filters.append(sub_category_filter)
+
 
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", category_filter, reviewed_filter, *filters)
@@ -646,13 +662,35 @@ def main_question_answer():
 		else:
 			language_filter = func.lower(Question.language) == language.strip().lower()
 		filters.append(language_filter)
+	# if sub_category:
+	# 	if ',' in sub_category:
+	# 		sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+	# 		sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+	# 	else:
+	# 		sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
+	# 	filters.append(sub_category_filter)
 	if sub_category:
-		if ',' in sub_category:
-			sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
-			sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+		if sub_category.lower() == "vegetable":
+			allowed_vegetables = [
+				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", 
+        "beetroot", "doodoo", "spinach", "cucumbers", "avocado", 
+        "cabbage", "nakati", "ginger", "green pepper", "garlic", 
+        "okra", "lettuce", "malakwang", "pepper"
+				]
+			if ',' in sub_category:
+				sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+				sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+				sub_category_filter = and_(sub_category_filter, func.lower(Question.animal_crop).in_(allowed_vegetables))
+			else:
+				sub_category_filter = func.lower(Question.animal_crop).in_(allowed_vegetables)
 		else:
-			sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
+			if ',' in sub_category:
+				sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+				sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+			else:
+				sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
 		filters.append(sub_category_filter)
+
 
 	matching_questions = Question.query.filter(
 		Question.category.ilike(category),
@@ -927,12 +965,33 @@ def main_question_rank():
 		else:
 			language_filter = func.lower(Question.language) == language.strip().lower()
 		filters.append(language_filter)
+	# if sub_category:
+	# 	if ',' in sub_category:
+	# 		sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+	# 		sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+	# 	else:
+	# 		sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
+	# 	filters.append(sub_category_filter)
 	if sub_category:
-		if ',' in sub_category:
-			sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
-			sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+		if sub_category.lower() == "vegetable":
+			allowed_vegetables = [
+				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", 
+        "beetroot", "doodoo", "spinach", "cucumbers", "avocado", 
+        "cabbage", "nakati", "ginger", "green pepper", "garlic", 
+        "okra", "lettuce", "malakwang", "pepper"
+				]
+			if ',' in sub_category:
+				sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+				sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+				sub_category_filter = and_(sub_category_filter, func.lower(Question.animal_crop).in_(allowed_vegetables))
+			else:
+				sub_category_filter = func.lower(Question.animal_crop).in_(allowed_vegetables)
 		else:
-			sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
+			if ',' in sub_category:
+				sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
+				sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
+			else:
+				sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
 		filters.append(sub_category_filter)
 
 	random_question_data = None
