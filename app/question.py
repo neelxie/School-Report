@@ -20,7 +20,7 @@ import os
 from os.path import join, dirname, realpath
 
 
-from sqlalchemy import func, or_, and_, not_
+from sqlalchemy import func, or_, and_, not_, text
 from app.helper import admin_required
 
 UPLOADS_PATH = join(dirname(realpath(__file__)), "static/audio_uploads")
@@ -650,15 +650,17 @@ def main_question_review():
 				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
 				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper"
 		]
-		# sub_categories = [sub_cat.strip() for sub_cat in sub_category.split(",")]
-		sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
+		sub_categories = []
 
-		sub_category_filter = Question.animal_crop.in_(
-				[sub_cat for sub_cat in sub_categories if sub_cat in vegetable_sub_categories]
-		)
+		if sub_category == "vegetables":
+			sub_categories = vegetable_sub_categories
+		else:
+			sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
+		
+		sub_category_filter = Question.animal_crop.in_(sub_categories)
+
 		filters.append(sub_category_filter)
-
-
+	
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", reviewed_filter, *filters)
 		.order_by(func.random())
