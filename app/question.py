@@ -1,4 +1,4 @@
-embedded_json = [{}]
+embedded_json = []
 import json
 
 from app.status import (
