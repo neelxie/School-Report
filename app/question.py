@@ -1295,7 +1295,6 @@ def upload_json_answers():
 						"Llama2",
 						"Bard",
 						"Bing",
-						"Llama",
 						"ChatGPT 3.5",
 						"GPT 4",
 				]
@@ -1313,3 +1312,5 @@ def upload_json_answers():
 
 	response_data = {"duplicates_count": dup_count, "duplicates": duplicates}
 	return jsonify(response_data), HTTP_200_OK
+
+
