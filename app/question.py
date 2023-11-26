@@ -655,10 +655,13 @@ def main_question_review():
 		if sub_category == "vegetables":
 			sub_categories = vegetable_sub_categories
 		else:
+			
 			sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
 		
-		sub_category_filter = Question.animal_crop.in_(sub_categories)
+		# sub_category_filter = Question.animal_crop.in_(justa)
+		sub_category_filter = func.lower(Question.animal_crop).in_([sc.lower() for sc in sub_categories])
 
+		
 		filters.append(sub_category_filter)
 	
 	matching_questions = (
@@ -1295,7 +1298,6 @@ def upload_json_answers():
 						"Llama2",
 						"Bard",
 						"Bing",
-						"Llama",
 						"ChatGPT 3.5",
 						"GPT 4",
 				]
@@ -1313,3 +1315,5 @@ def upload_json_answers():
 
 	response_data = {"duplicates_count": dup_count, "duplicates": duplicates}
 	return jsonify(response_data), HTTP_200_OK
+
+
