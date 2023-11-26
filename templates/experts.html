@@ -781,35 +781,27 @@ content %}
         allQuestions.textContent = topUsersData.total_cleaned;
         const finalizedQuestions =
           document.getElementById("finalizedQuestions");
-        finalizedQuestions.textContent =
-          (topUsersData.all_fields_true / topUsersData.total_cleaned) * 100 +
-          "%";
+        finalizedQuestions.textContent = topUsersData.all_fields_true;
         // const rankee = document.getElementById("rankee")
-        let answeredqn =
-          (topUsersData.cleaned_reviewed_and_answered /
-            topUsersData.total_cleaned) *
-          100;
-        document.getElementById("answeredqn").style.width = answeredqn + "%";
+        let answeredqn = topUsersData.cleaned_reviewed_and_answered;
+        document.getElementById("answeredqn").style.width = answeredqn;
         document
           .getElementById("answeredqn")
           .setAttribute("aria-valuenow", answeredqn);
-        let reviewedqn =
-          (topUsersData.cleaned_and_reviewed / topUsersData.total_cleaned) *
-          100;
-        document.getElementById("reviewedqn").style.width = reviewedqn + "%";
+        let reviewedqn = topUsersData.cleaned_and_reviewed;
+        document.getElementById("reviewedqn").style.width = reviewedqn;
         document
           .getElementById("reviewedqn")
           .setAttribute("aria-valuenow", reviewedqn);
-        let rankedqn =
-          (topUsersData.all_fields_true / topUsersData.total_cleaned) * 100;
-        document.getElementById("rankee").style.width = rankedqn + "%";
+        let rankedqn = topUsersData.all_fields_true;
+        document.getElementById("rankee").style.width = rankedqn;
         document
           .getElementById("rankee")
           .setAttribute("aria-valuenow", rankedqn);
         const reviewedQuestions = document.getElementById("reviewedQuestions");
-        reviewedQuestions.textContent = reviewedqn + "%";
+        reviewedQuestions.textContent = reviewedqn;
         const answeredQuestions = document.getElementById("answeredQuestions");
-        answeredQuestions.textContent = answeredqn + "%";
+        answeredQuestions.textContent = answeredqn;
         topUsersData.experts.forEach((user) => {
           user.created_at = new Date(user.created_at);
         });
@@ -824,16 +816,26 @@ content %}
                   <div class="widget-content p-0">
                     <div class="widget-content-wrapper">
                       <div class="widget-content-left flex2">
-                        <div class="widget-heading">${user.firstname} ${user.lastname}</div>
-                        <div class="widget-subheading opacity-7">${user.phone_number}</div>
+                        <div class="widget-heading">${user.firstname} ${
+            user.lastname
+          }</div>
+                        <div class="widget-subheading opacity-7">${
+                          user.phone_number
+                        }</div>
                       </div>
                     </div>
                   </div>
                 </td>
     
-                <td class="text-center">${user.language ? user.language : 'None'}</td>
-                <td class="text-center">${user.expertise ? user.expertise : 'None'}</td>
-                <td class="text-center">${user.sub_category ? user.sub_category : 'None'}</td>
+                <td class="text-center">${
+                  user.language ? user.language : "None"
+                }</td>
+                <td class="text-center">${
+                  user.expertise ? user.expertise : "None"
+                }</td>
+                <td class="text-center">${
+                  user.sub_category ? user.sub_category : "None"
+                }</td>
                 <td class="text-center">${user.reviewed_questions_count}</td>
                 <td class="text-center">${user.answers_count}</td>
                 <td class="text-center">${user.ranked_answers}</td>`;
