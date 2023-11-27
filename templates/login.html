@@ -4,7 +4,6 @@ content %}
   <div class="row">
     <div class="col-lg-6 border h-100 bg-light">
       <div class="justify-content-center align-items-center">
-        <!-- SVG Image -->
         <img
           src="{{ url_for('static', filename='img/Experts.svg') }}"
           alt="SVG Image"
@@ -12,12 +11,23 @@ content %}
           height="100%"
         />
 
-        <!-- Div with Sentences -->
         <div class="ml-3 text-success">
-          <h1>Welcome to the Experts' Human Evaluation Tool</h1>
-          <h2 class="text-left text-dark mt-3">
-            Log in to start.
-          </h2>
+          <h2>Welcome to the Adsurv Expert System</h2>
+          <!-- <h3 class="text-left text-dark mt-3">Log in to start.</h3> -->
+          <div class="Logos d-flex">
+            <img
+              src="{{ url_for('static', filename='img/naro.JPG') }}"
+              alt="NARO Image"
+              width="100%"
+              height="100%"
+              class="logo-img mr-5"
+            /><img
+              src="{{ url_for('static', filename='img/marconi_mak.png') }}"
+              alt="Marconi Image"
+              style="width: 250px; height: auto"
+              class="ml-5 logo-img"
+            />
+          </div>
         </div>
       </div>
     </div>

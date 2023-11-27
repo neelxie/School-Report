@@ -995,13 +995,7 @@ def main_question_rank():
 		else:
 			language_filter = func.lower(Question.language) == language.strip().lower()
 		filters.append(language_filter)
-	# if sub_category:
-	# 	if ',' in sub_category:
-	# 		sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
-	# 		sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
-	# 	else:
-	# 		sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
-	# 	filters.append(sub_category_filter)
+	
 	if sub_category:
 		sub_category = sub_category.lower()
 		if sub_category.lower() == "vegetables":
@@ -1147,7 +1141,6 @@ def question_stats():
 		answers = Answer.query.filter_by(user_id=expert.id).count()
 
 		ranked_answers = Question.query.filter((Question.rank_expert_one == expert.id) | (Question.rank_expert_two == expert.id)).count()
-
 
 		expert_info = {
 			"id": expert.id,

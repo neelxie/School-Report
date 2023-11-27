@@ -199,7 +199,7 @@ def my_answers():
     )
 
 
-@web_bp.route("/upload_dataset")
+@web_bp.route("/dataset")
 def upload_dataset():
     access_token = session.get("token")
     role = session.get("role")
