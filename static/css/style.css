@@ -19,6 +19,17 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
+.Logos {
+  width: 200px; 
+}
+
+.logo-img {
+  width: 100px; 
+  height: auto; 
+  margin: 5px;
+}
+
+
 .organize {
   display: flex !important;
   flex-wrap: wrap;
