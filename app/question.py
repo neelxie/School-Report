@@ -911,8 +911,59 @@ def get_english_questions():
 		return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
 
 
-# DO NOT USE
+@questions.route("/evaluated", methods=["GET"])
+@jwt_required()
+def get_evaluated_questions():
+	
+	matching_questions = (
+		Question.query.filter(
+			Question.rephrased == "actual",
+    	Question.answered == True,
+    	Question.finished == True)
+		.all()
+	)
+	total_questions = len(matching_questions)
 
+	if matching_questions:
+		questions_data = []
+		for question in matching_questions:
+			question_data = {
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topic": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+				"answers": []
+			}
+
+			for answer in question.answers:
+				answer_data = {
+					"id": answer.id,
+					"answer_text": answer.answer_text,
+					"source": answer.source,
+					"relevance": answer.relevance,
+					"coherence": answer.coherence,
+					"fluency": answer.fluency,
+					"rank": answer.rank,
+					"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				}
+				question_data["answers"].append(answer_data)
+
+			questions_data.append(question_data)
+
+		result_object = {
+				"questions": questions_data,
+				"total_questions": total_questions
+		}
+		return jsonify(result_object), HTTP_200_OK
+	else:
+		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
+
+	
 @questions.route("/dataset_upload/", methods=["POST"])
 @jwt_required()
 def upload_excel_file():
