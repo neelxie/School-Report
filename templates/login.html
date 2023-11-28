@@ -4,29 +4,15 @@ content %}
   <div class="row">
     <div class="col-lg-6 border h-100 bg-light">
       <div class="justify-content-center align-items-center">
-        <img
-          src="{{ url_for('static', filename='img/Experts.svg') }}"
-          alt="SVG Image"
-          width="100%"
-          height="100%"
-        />
+        <img src="{{ url_for('static', filename='img/Experts.svg') }}" alt="SVG Image" width="100%" height="100%" />
 
         <div class="ml-3 text-success">
           <h2>Welcome to the Adsurv Expert System</h2>
           <!-- <h3 class="text-left text-dark mt-3">Log in to start.</h3> -->
           <div class="Logos d-flex">
-            <img
-              src="{{ url_for('static', filename='img/naro.JPG') }}"
-              alt="NARO Image"
-              width="100%"
-              height="100%"
-              class="logo-img mr-5"
-            /><img
-              src="{{ url_for('static', filename='img/marconi_mak.png') }}"
-              alt="Marconi Image"
-              style="width: 250px; height: auto"
-              class="ml-5 logo-img"
-            />
+            <img src="{{ url_for('static', filename='img/naro.JPG') }}" alt="NARO Image" width="100%" height="100%"
+              class="logo-img mr-5" /><img src="{{ url_for('static', filename='img/marconi_mak.png') }}"
+              alt="Marconi Image" style="width: 300px; height: auto" class="ml-5 logo-img" />
           </div>
         </div>
       </div>
@@ -38,30 +24,18 @@ content %}
           <form method="POST" action="{{ url_for('web.index') }}">
             <div class="form-group m-3">
               <label for="username" class="font-weight-bold h3">Username</label>
-              <input
-                type="text"
-                class="form-control border border-success h4"
-                id="username"
-                name="username"
-                placeholder="Enter username"
-              />
+              <input type="text" class="form-control border border-success h4" id="username" name="username"
+                placeholder="Enter username" />
             </div>
             <div class="form-group m-3">
               <label for="password" class="font-weight-bold h3">Password</label>
-              <input
-                type="password"
-                class="form-control border border-success h4"
-                id="password"
-                name="password"
-                placeholder="Password"
-              />
+              <input type="password" class="form-control border border-success h4" id="password" name="password"
+                placeholder="Password" />
             </div>
             <button type="submit" class="btn btn-primary h2 m-3">Login</button>
           </form>
           {% if error_message %}
-          <div
-            class="p-2 mt-3 d-flex justify-content-center badge badge-danger"
-          >
+          <div class="p-2 mt-3 d-flex justify-content-center badge badge-danger">
             {{ error_message }}
           </div>
           {% endif %}

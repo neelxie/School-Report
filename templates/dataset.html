@@ -135,7 +135,7 @@ content %}
             </a>
           </div>
         </div>
-        
+
         <div class="row">
           <div class="col-md-6 col-xl-3">
             <div class="card mb-3 widget-content">
@@ -224,23 +224,15 @@ content %}
           <div class="col-md-12">
             <div class="main-card mb-3 card">
               <div class="card-header">Experts</div>
-              <div class="table-responsive">
-                <table class="align-middle mb-0 table table-bordered table-striped table-hover experts">
-                  <thead>
-                    <tr>
-                      <th class="text-center">#</th>
-                      <th>Name</th>
-                      <th class="text-center">Language</th>
-                      <th class="text-center">Expertise</th>
-                      <th class="text-center">Subcategory</th>
-                      <th class="text-center">Reviewed</th>
-                      <th class="text-center">Answered</th>
-                      <th class="text-center">Ranked</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+              <button type="button" class="btn btn-primary" id="downloadButton">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-arrow-down-short" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                    d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z">
+                  </path>
+                </svg>
+                Download Evaluated Dataset
+              </button>
             </div>
           </div>
         </div>
@@ -263,98 +255,30 @@ content %}
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // document.getElementById('output').innerHTML = location.search;
-    // document.getElementByClassName("chosen-select").chosen();
-    const form = document.getElementById("apiForm");
-    const errorMessage = document.getElementById("errorMessage");
+    const downloadButton = document.getElementById("downloadButton");
     const token = localStorage.getItem("token");
-    const selectedItems = new Set();
 
-    const selectBtn = document.querySelector(".select-btn"),
-      items = document.querySelectorAll(".item");
-
-    selectBtn.addEventListener("click", () => {
-      selectBtn.classList.toggle("open");
-    });
-
-    items.forEach((item) => {
-      item.addEventListener("click", () => {
-        item.classList.toggle("checked");
-        if (item.classList.contains("checked")) {
-          selectedItems.add(item.textContent); // Add selected item to the Set
-        } else {
-          selectedItems.delete(item.textContent); // Remove deselected item from the Set
-        }
-      });
-    });
-
-    // items.forEach((item) => {
-    //   item.addEventListener("click", () => {
-    //     item.classList.toggle("checked");
-
-    //     let checked = document.querySelectorAll(".checked"),
-    //       btnText = document.querySelector(".btn-text");
-
-    //     if (checked && checked.length > 0) {
-    //       btnText.innerText = `${checked.length} Selected`;
-    //     } else {
-    //       btnText.innerText = "Select Language";
-    //     }
-    //   });
-    // });
-
-    apiForm.addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      const firstname = document.getElementById("firstname").value;
-      const lastname = document.getElementById("lastname").value;
-      const gender = document.getElementById("gender").value;
-      const phone = document.getElementById("phone").value;
-      const organisation = document.getElementById("organisation").value;
-      const email = document.getElementById("email").value;
-      const category = document.getElementById("expertise").value;
-      const sub_category = document.getElementById("subcategory");
-      const selectedSubcategories = Array.from(
-        subcategorySelect.selectedOptions
-      ).map((option) => option.value);
-      const selectedArray = Array.from(selectedItems)
-        .map((item) => item.trim())
-        .join(", ");
-      const commaSeparatedString = selectedSubcategories.join(", ");
-
-      const itemBody = {
-        phone_number: phone,
-        lastname: lastname,
-        firstname: firstname,
-        organisation: organisation,
-        gender: gender,
-        email: email,
-        language: selectedArray,
-        category: category,
-        sub_category: commaSeparatedString,
-      };
-
-      const response = await fetch("/api/v1/auth/register_expert", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(itemBody),
-      });
-
+    downloadButton.addEventListener("click", async function () {
       try {
-        const responseData = await response.json();
-        if (response.ok) {
-          window.location.reload();
-          window.location.href = window.location.href;
-        } else {
-          errorMessage.textContent = responseData.error;
-        }
+        const response = await fetch("/api/v1/questions/evaluated", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        // const jsonData = await response.json();
+        console.log(response);
+
+        const blob = new Blob([JSON.stringify(response)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "data.json";
+        a.click();
+
+        URL.revokeObjectURL(url);
       } catch (error) {
-        console.error("Error parsing response:");
-      } finally {
-        window.location.reload();
+        console.error("Error downloading JSON:", error);
       }
     });
   });
@@ -476,52 +400,7 @@ content %}
     transform: scale(1);
   }
 </style>
-<script>
-  const expertiseSelect = document.getElementById("expertise");
-  const subcategorySelect = document.getElementById("subcategory");
 
-  const subcategoryOptions = {
-    animal: [
-      "Cattle",
-      "Goats",
-      "Bees",
-      "Rabbits",
-      "Piggery",
-      "Poultry",
-      "Fish",
-    ],
-    crop: [
-      "Bananas",
-      "Cereals",
-      "Soybean",
-      "Cassava",
-      "Cocoa",
-      "Beans",
-      "Groundnuts",
-      "Sweetpotatoes",
-      "Vegetables",
-      "Coffee",
-    ],
-  };
-
-  function updateSubcategoryOptions() {
-    const selectedExpertise = expertiseSelect.value;
-    const options = subcategoryOptions[selectedExpertise] || [];
-
-    subcategorySelect.innerHTML = "";
-
-    options.forEach((optionText) => {
-      const option = document.createElement("option");
-      option.value = optionText;
-      option.text = optionText;
-      subcategorySelect.appendChild(option);
-    });
-  }
-
-  expertiseSelect.addEventListener("change", updateSubcategoryOptions);
-
-  updateSubcategoryOptions();
-</script>
 <script>
   // const token = "{{ token }}";
   const user = "{{ user }}";
@@ -553,9 +432,7 @@ content %}
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    const token = localStorage.getItem("token"); // Get the token from local storage
-
-    // Fetch top users data
+    const token = localStorage.getItem("token");
     fetch("/api/v1/questions/expert-stats", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -563,6 +440,7 @@ content %}
     })
       .then((response) => response.json())
       .then((topUsersData) => {
+        console.log(topUsersData);
         const allQuestions = document.getElementById("allQuestions");
         allQuestions.textContent = topUsersData.total_cleaned;
         const finalizedQuestions =
@@ -592,37 +470,7 @@ content %}
           user.created_at = new Date(user.created_at);
         });
 
-        topUsersData.experts.sort((a, b) => b.created_at - a.created_at);
-        const tableBody = document.querySelector(".experts tbody");
-        topUsersData.experts.forEach((user, index) => {
-          const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                  <td class="text-center text-muted">${user.id}</td>
-                  <td>
-                    <div class="widget-content p-0">
-                      <div class="widget-content-wrapper">
-                        <div class="widget-content-left flex2">
-                          <div class="widget-heading">${user.firstname} ${user.lastname
-            }</div>
-                          <div class="widget-subheading opacity-7">${user.phone_number
-            }</div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-      
-                  <td class="text-center">${user.language ? user.language : "None"
-            }</td>
-                  <td class="text-center">${user.expertise ? user.expertise : "None"
-            }</td>
-                  <td class="text-center">${user.sub_category ? user.sub_category : "None"
-            }</td>
-                  <td class="text-center">${user.reviewed_questions_count}</td>
-                  <td class="text-center">${user.answers_count}</td>
-                  <td class="text-center">${user.ranked_answers}</td>`;
 
-          tableBody.appendChild(tableRow);
-        });
       })
       .catch((error) => console.error("Error fetching top users data:", error));
   });
