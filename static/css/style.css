@@ -1,7 +1,6 @@
 @font-face {
-  font-family: 'Lato';
-  src: url('/static/fonts/Lato-Reg.ttf') format('truetype');
-       /* url('/static/fonts/Lato-Bol.ttf') format('truetype'); */
+  font-family: "Lato";
+  src: url("/static/fonts/Lato-Reg.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -16,19 +15,43 @@ body {
   background: #ccc3;
   /* font-size: 0.5vw; */
   line-height: 2rem;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
+}
+
+.padii {
+  padding-top: 8rem !important;
 }
 
 .Logos {
-  width: 200px; 
+  /* width: 200px; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+}
+
+.box {
+  display: flex;
+  flex-direction: row;
 }
 
 .logo-img {
-  width: 100px; 
-  height: auto; 
+  width: 100px;
+  height: auto;
   margin: 5px;
 }
 
+.logo-imx {
+  width: 200px;
+  height: auto;
+  margin: 5px;
+}
+
+.logo-imy {
+  width: 50px;
+  height: 50px;
+  margin: 15px;
+}
 
 .organize {
   display: flex !important;
@@ -41,22 +64,22 @@ body {
   font-weight: 600;
 }
 
-
 .btn {
   font-size: 1rem;
 }
 
-.remove-button-class{
+.remove-button-class {
   display: inline-block;
   font-weight: 400;
   text-align: center;
   vertical-align: middle;
   user-select: none;
   border: 1px solid transparent;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   line-height: 1.5;
-  border-radius: .25rem;
-  transition: color .15s,background-color .15s,border-color .15s,box-shadow .15s;
+  border-radius: 0.25rem;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s,
+    box-shadow 0.15s;
   font-size: 1rem;
   color: #fff;
   background-color: #b81f44;
@@ -71,12 +94,12 @@ body {
   overflow: hidden;
 }
 
-.hait{
+.hait {
   min-height: 60vh;
 }
 
-.customPadding{
-  padding-top: 6rem!important;
+.customPadding {
+  padding-top: 6rem !important;
 }
 .fullscreen-bg img {
   position: absolute;
@@ -211,7 +234,8 @@ body {
   color: #3ac47d;
 }
 
-.minus,.plus {
+.minus,
+.plus {
   width: 30px;
   height: 30px;
   background-color: #6bc46d;
@@ -225,15 +249,15 @@ body {
   margin-left: 1.5rem;
 }
 
-.fitting{
+.fitting {
   width: max-content;
 }
 
-.showDigit{
+.showDigit {
   display: block;
   width: 5rem;
-  height: calc(1.5em + .75rem + 2px);
-  padding: .375rem .75rem;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -241,8 +265,8 @@ body {
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid #ced4da;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media only screen and (max-width: 1320px) {
   .header-user-info {
