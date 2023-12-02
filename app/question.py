@@ -910,6 +910,89 @@ def get_english_questions():
 	else:
 		return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
 
+@questions.route("/expertluganda", methods=["GET"])
+@jwt_required()
+def get_expert_luganda_questions():
+	luganda_questions = Question.query.filter(
+		(Question.rephrased == "actual")
+		& (func.lower(Question.language) == "luganda")
+	).all()
+
+	if luganda_questions:
+		questions_data = []
+		for question in luganda_questions:
+			question_data = {
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+			}
+			questions_data.append(question_data)
+
+		return jsonify(questions_data), HTTP_200_OK
+	else:
+		return jsonify({"message": "No Luganda expert questions found"}), HTTP_404_NOT_FOUND
+	
+@questions.route("/expertenglish", methods=["GET"])
+@jwt_required()
+def get_expert_english_questions():
+	luganda_questions = Question.query.filter(
+		(Question.rephrased == "actual")
+		& (func.lower(Question.language) == "english")
+	).all()
+
+	if luganda_questions:
+		questions_data = []
+		for question in luganda_questions:
+			question_data = {
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+			}
+			questions_data.append(question_data)
+
+		return jsonify(questions_data), HTTP_200_OK
+	else:
+		return jsonify({"message": "No English expert questions found"}), HTTP_404_NOT_FOUND
+	
+@questions.route("/expertrunyankole", methods=["GET"])
+@jwt_required()
+def get_expert_runyankole_questions():
+	luganda_questions = Question.query.filter(
+		(Question.rephrased == "actual")
+		& (func.lower(Question.language) == "runyankole")
+	).all()
+
+	if luganda_questions:
+		questions_data = []
+		for question in luganda_questions:
+			question_data = {
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+			}
+			questions_data.append(question_data)
+
+		return jsonify(questions_data), HTTP_200_OK
+	else:
+		return jsonify({"message": "No Runyankole expert questions found"}), HTTP_404_NOT_FOUND
 
 @questions.route("/evaluated", methods=["GET"])
 @jwt_required()
@@ -1183,6 +1266,18 @@ def question_stats():
 	).count()
 	all_fields_true = Question.query.filter_by(cleaned=True, finished=True, rephrased="actual").count()
 	experts = User.query.filter_by(role="expert").all()
+	english_questions = Question.query.filter(
+		Question.rephrased == "actual",
+		Question.language.ilike("english")
+	).count()
+	luganda_questions = Question.query.filter(
+		Question.rephrased == "actual",
+		Question.language.ilike("luganda")
+	).count()
+	runyankole_questions = Question.query.filter(
+		Question.rephrased == "actual",
+		Question.language.ilike("runyankole")
+	).count()
 
 	expert_data = []
 	for expert in experts:
@@ -1216,6 +1311,9 @@ def question_stats():
 			"cleaned_reviewed_and_answered": cleaned_reviewed_and_answered,
 			"all_fields_true": all_fields_true,
 			"experts": expert_data,
+			"english_questions": english_questions,
+			"luganda_questions": luganda_questions,
+			"runyankole_questions": runyankole_questions
 		}
 	)
 

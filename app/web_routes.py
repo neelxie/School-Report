@@ -116,6 +116,72 @@ def main_rank():
         sub_category=sub_category,
     )
 
+@web_bp.route("/expert_english")
+def expert_english():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    return render_template(
+        "expertEnglish.html",
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+    )
+
+@web_bp.route("/expert_answers")
+def expert_answers():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "expert_answers.html",
+        token=access_token,
+        role=role,
+        user=username
+    )
+
+@web_bp.route("/expert_luganda")
+def expert_luganda():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    return render_template(
+        "expertLuganda.html",
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+    )
+
+@web_bp.route("/expert_runyankole")
+def expert_runyankole():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    return render_template(
+        "expertRunyankole.html",
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+    )
+
 
 @web_bp.route("/answer_page.html")
 def answer_page():
