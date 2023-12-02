@@ -768,8 +768,13 @@ content %}
         const tableBody = document.querySelector(".experts tbody");
         topUsersData.experts.forEach((user, index) => {
           const tableRow = document.createElement("tr");
-          tableRow.innerHTML = `
-                <td class="text-center text-muted">${user.id}</td>
+          const anchor = document.createElement("a");
+          anchor.href = `/expertAnswes.html?user_id=${user.id}`;
+          anchor.textContent = answer.answer_text;
+          const cell = document.createElement("td");
+          cell.appendChild(anchor);
+          tableRow.appendChild(cell);
+          tableRow.innerHTML += `
                 <td>
                   <div class="widget-content p-0">
                     <div class="widget-content-wrapper">

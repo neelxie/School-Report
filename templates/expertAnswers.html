@@ -1,0 +1,299 @@
+{% extends "base.html" %} {% block title %}Experts Animal Dash Page{% endblock
+%} {% block content %}
+
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+  <div class="app-header header-shadow">
+    <div class="app-header__logo">
+      <div class="" id=""></div>
+      <div class="header__pane ml-auto"></div>
+    </div>
+    <div class="app-header__mobile-menu"></div>
+    <div class="app-header__menu"></div>
+    <div class="app-header__content">
+      <div class="app-header-right">
+        <div class="header-btn-lg pr-0">
+          <div class="widget-content p-0">
+            <div class="widget-content-wrapper">
+              <div class="widget-content-left ml-3 header-user-info">
+                <div class="widget-heading" id="user-info"></div>
+                <div class="widget-subheading">Expert</div>
+              </div>
+              <div class="widget-content-right header-user-info ml-3">
+                <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm" id="logoutButton">
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-theme-settings">
+    <div class="theme-settings__inner">
+      <div class="scrollbar-container">
+        <div class="theme-settings__options-wrapper">
+          <h3 class="themeoptions-heading">Layout Options</h3>
+          <div class="p-3">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div class="widget-content p-0">
+                  <div class="widget-content-wrapper">
+                    <div class="widget-content-left mr-3">
+                      <div class="switch has-switch switch-container-class" data-class="fixed-header">
+                        <div class="switch-animate switch-on">
+                          <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left">
+                      <div class="widget-heading">Fixed Header</div>
+                      <div class="widget-subheading">
+                        Makes the header top fixed, always visible!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item">
+                <div class="widget-content p-0">
+                  <div class="widget-content-wrapper">
+                    <div class="widget-content-left mr-3">
+                      <div class="switch has-switch switch-container-class" data-class="fixed-footer">
+                        <div class="switch-animate switch-off">
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left">
+                      <div class="widget-heading">Fixed Footer</div>
+                      <div class="widget-subheading">
+                        Makes the app footer bottom fixed, always visible!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="p-3">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <h5 class="pb-2">Page Section Tabs</h5>
+                <div class="theme-settings-swatches">
+                  <div role="group" class="mt-2 btn-group">
+                    <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-line">
+                      Line
+                    </button>
+                    <button type="button"
+                      class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-shadow">
+                      Shadow
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-main text-responsive">
+    <div class="app-main__outer">
+      <div class="app-main__inner">
+        <a type="button" class="btn btn-warning mb-3" href="{{ url_for('web.main_answer') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z">
+            </path>
+          </svg>
+          Back to Dashboard
+        </a>
+        <div class="row">
+          <div class="col-12">
+            <div class="main-card mb-3 card pt-3 pb-5">
+              <div class="card col-11 mx-auto my-3 border border-success">
+                <form id="answerForm">
+                  <div class="card mb-3 col-12 text-left font-weight-bold text-dark mx-1 my-4 border bg-success">
+                    <p class="text-center text-white h2 font-weight-bold">
+                      Instructions:
+                    </p>
+
+                    <p class="h3">
+                      To edit your answer, please enter it in the input field
+                      provided below.
+                    </p>
+                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Language:
+                        </th>
+                        <td id="questionLanguage" class="font-weight-bold h2"></td>
+                      </tr>
+                      <tr>
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Topic:
+                        </th>
+                        <td id="questionTopic" class="font-weight-bold h2"></td>
+                      </tr>
+                      <tr class="border">
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Question:
+                        </th>
+                        <td id="oneQuestion" class="font-weight-bold h2"></td>
+                      </tr>
+                      <tr class="border">
+                        <th class="text-primary pr-3 h3 font-weight-bold">
+                          Answer:
+                        </th>
+                        <td id="answer" class="font-weight-bold h2"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <label style="font-size: 1.3rem" class="font-weight-bold mt-3">Edit or type in new answer</label>
+                  <input type="text" name="newAnswer" id="newAnswer" placeholder="Edit answer" style="font-size: 1.3rem"
+                    class="form-control my-1 border border-success h3" />
+                  <div class="d-flex justify-content-between">
+                    &nbsp;
+                    <button style="font-size: 1.5rem" name="next" class="btn btn-primary my-3" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const token = "{{ token }}";
+  const user = "{{ user }}";
+  const role = "{{ role }}";
+
+  // Check if the token is not empty and store it in local storage
+  if (token) {
+    localStorage.setItem("token", token);
+  }
+  if (user) {
+    localStorage.setItem("user", user);
+  }
+  if (role) {
+    localStorage.setItem("role", role);
+  }
+
+  const userElement = document.getElementById("user-info");
+  var currentTab = 0;
+
+  // Retrieve data from local storage
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
+    userElement.textContent = storedUser;
+  } else {
+    userElement.textContent = Expert;
+  }
+  function logout() {
+    // Clear the user token from localStorage
+    localStorage.clear();
+
+    // Redirect to the index.html page
+    window.location.href = "/"; // Redirect to the index page
+  }
+
+  function reload() {
+    window.location.reload();
+  }
+
+  // Attach the logout function to the logout button/link
+  const logoutButton = document.getElementById("logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logout);
+  }
+</script>
+<script>
+  function showFormWithQuestionId(questionId) {
+    // Display the form and set the question ID as a data attribute
+    var form = document.getElementById("answerForm");
+    form.style.display = "block";
+    form.setAttribute("data-question-id", questionId);
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the token from local storage
+    const token = localStorage.getItem("token");
+    const urlParams = new URLSearchParams(window.location.search);
+    const answerId = urlParams.get("answer_id");
+
+    fetch(`/api/v1/questions/answers/${answerId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const oneQuestion = document.getElementById("oneQuestion");
+        oneQuestion.textContent = data.question_text;
+        const questionLanguage = document.getElementById("questionLanguage");
+        questionLanguage.textContent = data.language;
+        const questionTopic = document.getElementById("questionTopic");
+        questionTopic.textContent = data.topic;
+        const answer = document.getElementById("answer");
+        answer.textContent = data.answer_text;
+        var questionId = data.answer_id;
+        showFormWithQuestionId(questionId);
+        const answerDetails = document.getElementById("answer-details");
+      })
+      .catch((error) => console.error("Error fetching answer data: ", error));
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("answerForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const token = localStorage.getItem("token");
+
+    answerForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var questionIdButton = this.getAttribute("data-question-id");
+      let questionId = parseInt(questionIdButton);
+      let answer = document.getElementById("newAnswer").value;
+      const itemBody = {
+        answer_text: answer,
+      };
+      const response = fetch(
+        `/api/v1/questions/update_answer_text/${questionId}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(itemBody),
+        }
+      );
+
+      try {
+        const responseData = response.json();
+        if (response.ok) {
+          window.location.href = "/main_answer";
+        } else {
+          errorMessage.textContent = responseData.error;
+        }
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.href = "/main_answer";
+      }
+    });
+  });
+</script>
+
+{% endblock %}
