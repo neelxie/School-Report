@@ -770,7 +770,7 @@ content %}
           const tableRow = document.createElement("tr");
           const anchor = document.createElement("a");
           anchor.href = `/expertAnswes.html?user_id=${user.id}`;
-          anchor.textContent = answer.answer_text;
+          anchor.textContent = user.id;
           const cell = document.createElement("td");
           cell.appendChild(anchor);
           tableRow.appendChild(cell);

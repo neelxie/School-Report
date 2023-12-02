@@ -230,9 +230,9 @@
     // Get the token from local storage
     const token = localStorage.getItem("token");
     const urlParams = new URLSearchParams(window.location.search);
-    const answerId = urlParams.get("answer_id");
+    const answerId = urlParams.get("user_id");
 
-    fetch(`/api/v1/questions/answers/${answerId}`, {
+    fetch(`/api/v1/questions/experts/${user_id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
