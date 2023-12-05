@@ -104,7 +104,7 @@
   <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a type="button" class="btn btn-warning mb-3" href="{{ url_for('web.main_answer') }}">
+        <a type="button" class="btn btn-warning mb-3" href="{{ url_for('web.experts') }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd"
@@ -220,12 +220,7 @@
   }
 </script>
 <script>
-  function showFormWithQuestionId(questionId) {
-    // Display the form and set the question ID as a data attribute
-    var form = document.getElementById("answerForm");
-    form.style.display = "block";
-    form.setAttribute("data-question-id", questionId);
-  }
+
   document.addEventListener("DOMContentLoaded", function () {
     // Get the token from local storage
     const token = localStorage.getItem("token");
@@ -252,47 +247,6 @@
         const answerDetails = document.getElementById("answer-details");
       })
       .catch((error) => console.error("Error fetching answer data: ", error));
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("answerForm");
-    const errorMessage = document.getElementById("errorMessage");
-    const token = localStorage.getItem("token");
-
-    answerForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      var questionIdButton = this.getAttribute("data-question-id");
-      let questionId = parseInt(questionIdButton);
-      let answer = document.getElementById("newAnswer").value;
-      const itemBody = {
-        answer_text: answer,
-      };
-      const response = fetch(
-        `/api/v1/questions/update_answer_text/${questionId}`,
-        {
-          method: "PUT",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(itemBody),
-        }
-      );
-
-      try {
-        const responseData = response.json();
-        if (response.ok) {
-          window.location.href = "/main_answer";
-        } else {
-          errorMessage.textContent = responseData.error;
-        }
-      } catch (error) {
-        console.error("Error parsing response:");
-      } finally {
-        window.location.href = "/main_answer";
-      }
-    });
   });
 </script>
 

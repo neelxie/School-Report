@@ -1383,6 +1383,48 @@ def get_answer(answer_id):
 	return jsonify(response_data), HTTP_200_OK
 
 
+@questions.route("/experts/<int:user_id>", methods=["GET"])
+@jwt_required()
+def get_expert_stats(user_id):
+	answers = Answer.query.filter_by(user_id=user_id).all()
+	if not answers:
+		return jsonify({"error": "Answers not found"}), HTTP_404_NOT_FOUND
+
+	answers_data = []
+
+	for answer in answers:
+		question = answer.question
+		
+		answers_data.append(
+			{
+				"id": answer.id,
+				"answer_text": answer.answer_text,
+				"created_at": answer.created_at,
+				"question_id": answer.question_id,
+				"sentence": question.sentence,
+				"rank": question.ranking_count
+			}
+		)
+
+	question = Question.query.get(answer.question_id)
+	if not question:
+		return jsonify({"error": "Question not found"}), HTTP_404_NOT_FOUND
+
+	response_data = {
+		"answer_id": answer.id,
+		"answer_text": answer.answer_text,
+		"question_id": question.id,
+		"question_text": question.sentence,
+		"language": question.language,
+		"animal_crop": question.animal_crop,
+		"category": question.category,
+		"topic": question.topic,
+		"sub_topic": question.sub_topic,
+	
+	}
+
+	return jsonify(response_data), HTTP_200_OK
+
 @questions.route("/update_answer_text/<int:answer_id>", methods=["PUT"])
 @jwt_required()
 def update_answer_text(answer_id):
