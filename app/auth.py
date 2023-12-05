@@ -158,6 +158,24 @@ def register_expert():
 
     return jsonify({"message": "Expert registered successfully"}), HTTP_201_CREATED
 
+@jwt_required()
+@auth.put("/update_expert/<int:expert_id>")
+def update_expert(expert_id):
+    expert = User.query.get(expert_id)
+
+    if not expert:
+        return jsonify({"error": "Expert not found"}), HTTP_404_NOT_FOUND
+
+    data = request.get_json()
+
+    # Update fields based on available data in the request
+    for key, value in data.items():
+        if hasattr(expert, key):
+            setattr(expert, key, value)
+
+    db.session.commit()
+
+    return jsonify({"message": "Expert details updated successfully"}), HTTP_200_OK
 
 @auth.post("/login")
 def login():
