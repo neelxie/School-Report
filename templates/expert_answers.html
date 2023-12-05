@@ -104,7 +104,7 @@
   <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a type="button" class="btn btn-warning mb-3" href="{{ url_for('web.main_answer') }}">
+        <a type="button" class="btn btn-warning mb-3" href="{{ url_for('web.experts') }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd"
@@ -114,58 +114,20 @@
           Back to Dashboard
         </a>
         <div class="row">
-          <div class="col-12">
-            <div class="main-card mb-3 card pt-3 pb-5">
-              <div class="card col-11 mx-auto my-3 border border-success">
-                <form id="answerForm">
-                  <div class="card mb-3 col-12 text-left font-weight-bold text-dark mx-1 my-4 border bg-success">
-                    <p class="text-center text-white h2 font-weight-bold">
-                      Instructions:
-                    </p>
-
-                    <p class="h3">
-                      To edit your answer, please enter it in the input field
-                      provided below.
-                    </p>
-                  </div>
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th class="text-primary pr-3 h3 font-weight-bold">
-                          Language:
-                        </th>
-                        <td id="questionLanguage" class="font-weight-bold h2"></td>
-                      </tr>
-                      <tr>
-                        <th class="text-primary pr-3 h3 font-weight-bold">
-                          Topic:
-                        </th>
-                        <td id="questionTopic" class="font-weight-bold h2"></td>
-                      </tr>
-                      <tr class="border">
-                        <th class="text-primary pr-3 h3 font-weight-bold">
-                          Question:
-                        </th>
-                        <td id="oneQuestion" class="font-weight-bold h2"></td>
-                      </tr>
-                      <tr class="border">
-                        <th class="text-primary pr-3 h3 font-weight-bold">
-                          Answer:
-                        </th>
-                        <td id="answer" class="font-weight-bold h2"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <label style="font-size: 1.3rem" class="font-weight-bold mt-3">Edit or type in new answer</label>
-                  <input type="text" name="newAnswer" id="newAnswer" placeholder="Edit answer" style="font-size: 1.3rem"
-                    class="form-control my-1 border border-success h3" />
-                  <div class="d-flex justify-content-between">
-                    &nbsp;
-                    <button style="font-size: 1.5rem" name="next" class="btn btn-primary my-3" type="submit">
-                      Submit
-                    </button>
-                  </div>
-                </form>
+          <div class="col-md-12">
+            <div class="main-card mb-3 card">
+              <div class="card-header">Answers Provided</div>
+              <div class="table-responsive">
+                <table class="align-middle mb-0 table table-bordered table-striped table-hover english bg-animation h4">
+                  <thead>
+                    <tr>
+                      <th>Answer</th>
+                      <th>Question</th>
+                      <th class="text-center">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody class="font-weight-bold english"></tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -220,17 +182,12 @@
   }
 </script>
 <script>
-  function showFormWithQuestionId(questionId) {
-    // Display the form and set the question ID as a data attribute
-    var form = document.getElementById("answerForm");
-    form.style.display = "block";
-    form.setAttribute("data-question-id", questionId);
-  }
+
   document.addEventListener("DOMContentLoaded", function () {
     // Get the token from local storage
     const token = localStorage.getItem("token");
     const urlParams = new URLSearchParams(window.location.search);
-    const answerId = urlParams.get("user_id");
+    const user_id = urlParams.get("user_id");
 
     fetch(`/api/v1/questions/experts/${user_id}`, {
       headers: {
@@ -239,60 +196,22 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = data.question_text;
-        const questionLanguage = document.getElementById("questionLanguage");
-        questionLanguage.textContent = data.language;
-        const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = data.topic;
-        const answer = document.getElementById("answer");
-        answer.textContent = data.answer_text;
-        var questionId = data.answer_id;
-        showFormWithQuestionId(questionId);
-        const answerDetails = document.getElementById("answer-details");
+        console.log(data);
+        let foreda = Array.from(data)
+        console.log(foreda);
+        let tableBody = document.querySelector(".english tbody");
+        data.forEach((answer, index) => {
+          const tableRow = document.createElement("tr");
+          tableRow.innerHTML = `
+          <td class="text-muted">${answer.answer_text}</td>
+          <td class="text-muted">${answer.question_text}</td>
+        
+          
+          <td class="text-center">${answer.date}</td>`;
+          tableBody.appendChild(tableRow);
+        })
       })
       .catch((error) => console.error("Error fetching answer data: ", error));
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("answerForm");
-    const errorMessage = document.getElementById("errorMessage");
-    const token = localStorage.getItem("token");
-
-    answerForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      var questionIdButton = this.getAttribute("data-question-id");
-      let questionId = parseInt(questionIdButton);
-      let answer = document.getElementById("newAnswer").value;
-      const itemBody = {
-        answer_text: answer,
-      };
-      const response = fetch(
-        `/api/v1/questions/update_answer_text/${questionId}`,
-        {
-          method: "PUT",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(itemBody),
-        }
-      );
-
-      try {
-        const responseData = response.json();
-        if (response.ok) {
-          window.location.href = "/main_answer";
-        } else {
-          errorMessage.textContent = responseData.error;
-        }
-      } catch (error) {
-        console.error("Error parsing response:");
-      } finally {
-        window.location.href = "/main_answer";
-      }
-    });
   });
 </script>
 

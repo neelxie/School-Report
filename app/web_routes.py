@@ -134,18 +134,6 @@ def expert_english():
         sub_category=sub_category,
     )
 
-@web_bp.route("/expert_answers")
-def expert_answers():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template(
-        "expert_answers.html",
-        token=access_token,
-        role=role,
-        user=username
-    )
-
 @web_bp.route("/expert_luganda")
 def expert_luganda():
     access_token = session.get("token")
@@ -200,6 +188,18 @@ def answer_page():
         language=language,
         category=category,
         sub_category=sub_category,
+    )
+
+@web_bp.route("/expert_answers.html")
+def expert_answers():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "expert_answers.html",
+        token=access_token,
+        role=role,
+        user=username
     )
 
 
