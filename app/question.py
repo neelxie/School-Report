@@ -1204,6 +1204,49 @@ def main_question_rank():
 	else:
 		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
 	
+@questions.route("/fetch_questions", methods=["GET"])
+@jwt_required()
+def fetch_questions():
+	matching_questions = (
+		Question.query.filter(
+			Question.rephrased == "actual",
+    	Question.reviewed == False
+			)
+		.all()
+	)
+	all = []
+	random_question_data = None
+	if matching_questions:
+		print(len(matching_questions))
+		for question in matching_questions:
+			random_question_data = {
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"topic": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+			}
+
+			answer_list = []
+			for answer in question.answers:
+				answer_data = {
+					"answer_text": answer.answer_text,
+					"source": answer.source
+				}
+				answer_list.append(answer_data)
+
+			random_question_data["answers"] = answer_list
+			all.append(random_question_data)
+
+	if all:
+		result_object = {"random_question_data": all}
+		return jsonify(result_object), HTTP_200_OK
+	else:
+		return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
+
 
 @questions.route("/store_answer_ranks", methods=["POST"])
 @jwt_required()
