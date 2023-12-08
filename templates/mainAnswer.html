@@ -313,10 +313,33 @@
   </div>
 </div>
 <script>
+  function getValueFromLocalStorage(key, defaultValue) {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? storedValue : defaultValue;
+  }
+
+  // Retrieve values from localStorage or use default values
+  const token = getValueFromLocalStorage("token", "{{ token }}");
+  const user = getValueFromLocalStorage("user", "{{ user }}");
+  const role = getValueFromLocalStorage("role", "{{ role }}");
+  const language = getValueFromLocalStorage("language", "{{ language }}");
+  const category = getValueFromLocalStorage("category", "{{ category }}");
+  const sub_category = getValueFromLocalStorage(
+    "sub_category",
+    "{{ sub_category }}"
+  );
+
+  // Update localStorage with the current values
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", user);
+  localStorage.setItem("role", role);
+  localStorage.setItem("language", language);
+  localStorage.setItem("category", category);
+  localStorage.setItem("sub_category", sub_category);
+
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
 
-  // Retrieve data from local storage
   const storedUser = localStorage.getItem("user");
 
   if (storedUser) {
@@ -325,11 +348,9 @@
     userElement.textContent = Expert;
   }
   function logout() {
-    // Clear the user token from localStorage
     localStorage.clear();
 
-    // Redirect to the index.html page
-    window.location.href = "/"; // Redirect to the index page
+    window.location.href = "/";
   }
 
   function reload() {
