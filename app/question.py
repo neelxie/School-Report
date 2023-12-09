@@ -9,7 +9,7 @@ from app.status import (
 	HTTP_404_NOT_FOUND,
 	HTTP_409_CONFLICT,
 )
-from flask import Blueprint, request
+from flask import Blueprint, request, send_file
 from flask.json import jsonify
 import pandas as pd
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -18,7 +18,8 @@ import datetime
 import random
 import os
 from os.path import join, dirname, realpath
-
+from io import StringIO
+from google.cloud import storage
 
 from sqlalchemy import func, or_, and_, not_, text
 from app.helper import admin_required
@@ -1204,21 +1205,35 @@ def main_question_rank():
 	else:
 		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
 	
+def upload_to_bucket(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to a GCP storage bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file_name)
+    print(f"File {source_file_name} uploaded to {destination_blob_name} in bucket {bucket_name}.")
+
+	
 @questions.route("/fetch_questions", methods=["GET"])
 @jwt_required()
 def fetch_questions():
+	page = request.args.get('page', 1, type=int)
+	per_page = request.args.get('per_page', 50, type=int)
+
 	matching_questions = (
 		Question.query.filter(
 			Question.rephrased == "actual",
     	Question.reviewed == False
 			)
-		.all()
+		.paginate(page=page, per_page=per_page, error_out=False)
 	)
 	all = []
 	random_question_data = None
 	if matching_questions:
-		print(len(matching_questions))
+		# print(len(matching_questions))
 		for question in matching_questions:
+			answers = [{'text': answer.answer_text, 'source': answer.source} for answer in question.answers]
+
 			random_question_data = {
 				"id": question.id,
 				"sentence": question.sentence,
@@ -1228,22 +1243,26 @@ def fetch_questions():
 				"category": question.category,
 				"animal_crop": question.animal_crop,
 				"location": question.location,
+				"answers": answers
 			}
-
-			answer_list = []
-			for answer in question.answers:
-				answer_data = {
-					"answer_text": answer.answer_text,
-					"source": answer.source
-				}
-				answer_list.append(answer_data)
-
-			random_question_data["answers"] = answer_list
 			all.append(random_question_data)
 
 	if all:
-		result_object = {"random_question_data": all}
-		return jsonify(result_object), HTTP_200_OK
+		pagination_details = {
+			'total_pages': matching_questions.pages,
+			'current_page': matching_questions.page,
+			'per_page': per_page,
+			'total_questions': matching_questions.total
+    }
+
+		# result_object = {"random_question_data": all}
+		# file_path = "unreview.json"
+		# with open(file_path, "w") as json_file:
+		# 		json.dump(result_object, json_file)
+
+		# upload_to_bucket("your_bucket_name", file_path, "unreview.json")
+
+		return jsonify({'questions': all, 'pagination': pagination_details}), HTTP_200_OK
 	else:
 		return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
