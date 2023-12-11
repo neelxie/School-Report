@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Home Page{% endblock %} {% block
 content %}
 <div class="container-fluid">
-  <div class="row">
+  <div class="row h-100">
     <div class="col-lg-6 border bg-light">
       <div class="justify-content-center align-items-center">
         <img src="{{ url_for('static', filename='img/Experts.svg') }}" alt="SVG Image" width="100%" height="100%" />
@@ -10,16 +10,16 @@ content %}
           <h2>Welcome to the Adsurv Expert System</h2>
           <!-- <h3 class="text-left text-dark mt-3">Log in to start.</h3> -->
           <div class="Logos">
-            <img src="{{ url_for('static', filename='img/naro.JPG') }}" alt="NARO Image" width="100%" height="100%"
-              class="logo-img mr-0" /><img src="{{ url_for('static', filename='img/gudie.JPG') }}" alt="NARO Image"
-              width="100%" height="" class="logo-imx" /><img
-              src="{{ url_for('static', filename='img/marconi_mak.png') }}" alt="Marconi Image" style="width: 250px;"
-              class="ml-0 logo-img" />
-            <div class="navbar-brand" style="margin-left: 20px; margin-top: 10%;">
+            <div class="navbar-brand" style="margin: auto; margin-left: 0;">
               <img src="{{ url_for('static', filename='img/stilogo.png') }}" alt="" width="35" height="25"
                 class="d-inline-block align-text-top">
               <span class="logo-head text-dark">Makerere AI Lab</span>
-            </div>
+            </div><img src="{{ url_for('static', filename='img/marconi_mak.png') }}" alt="Marconi Image"
+              style="width: 250px;" class="ml-0 logo-img" />
+            <img src="{{ url_for('static', filename='img/naro.JPG') }}" alt="NARO Image" width="100%" height="100%"
+              class="logo-img mr-0" /><img src="{{ url_for('static', filename='img/gudie.JPG') }}" alt="NARO Image"
+              width="100%" height="" class="logo-imx" />
+
           </div>
         </div>
       </div>
