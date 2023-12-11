@@ -220,6 +220,15 @@ def questions():
         "questions.html", token=access_token, role=role, user=username
     )
 
+@web_bp.route("/download")
+def download():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "download.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/experts")
 def experts():

@@ -12,7 +12,7 @@ from app.status import (
 from flask import Blueprint, request, send_file
 from flask.json import jsonify
 import pandas as pd
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required, verify_jwt_in_request
 from app.models import Question, db, User, Answer
 import datetime
 import random
@@ -422,11 +422,16 @@ def get_question(id):
 
 
 @jwt_required()
-@questions.get("/all")
-def get_questions():
+@questions.get("/displayall")
+def display_questions():
+	verify_jwt_in_request()
+	curre = get_jwt_identity()
+	isadmin = User.query.get(curre)
+	page = request.args.get('page', 1, type=int)
+	per_page = request.args.get('per_page', 100, type=int)
 	questions = Question.query.filter(
-		(Question.rephrased != "actual")
-	).all()
+		(Question.user_id != isadmin.id)
+	).paginate(page=page, per_page=per_page, error_out=False)
 
 	if not questions:
 		return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
@@ -449,10 +454,101 @@ def get_questions():
 				"category": question.category,
 				"animal_crop": question.animal_crop,
 				"location": question.location,
+				"audio": question.filename,
 				"user_name": user_name,
 			}
 		)
 
+	return jsonify(returned_data), HTTP_200_OK
+
+
+@jwt_required()
+@questions.get("/all")
+def get_questions():
+	current_user = get_jwt_identity()
+	isadmin = User.query.get(current_user)
+	questions = Question.query.filter(
+		(Question.user_id != isadmin.id)
+	).all()
+
+	if not questions:
+		return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
+
+	returned_data = []
+
+	for question in questions:
+		user = User.query.get(question.user_id)
+		if user:
+			user_name = f"{user.firstname} {user.lastname}"
+
+		returned_data.append(
+			{
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+				"audio": question.filename,
+				"user_name": user_name,
+			}
+		)
+
+	return jsonify(returned_data), HTTP_200_OK
+
+
+
+@jwt_required()
+@questions.get("/download")
+def download_questions():
+	verify_jwt_in_request()
+	user_id = get_jwt_identity()
+	isadmin = User.query.get(user_id)
+	start_date_str = request.args.get('start_date')
+	
+	if start_date_str:
+		try:
+			start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+			questions = Question.query.filter(
+				(Question.user_id != isadmin.id) &
+				(Question.created_at >= start_date)
+			).all()
+		except ValueError:
+			return jsonify({"message": "Invalid start_date format. Use YYYY-MM-DD."}), HTTP_400_BAD_REQUEST
+	else:
+		questions = Question.query.filter(
+			(Question.rephrased != "actual")
+		).all()
+
+	if not questions:
+		return jsonify({"message": "No questions yet."}), HTTP_204_NO_CONTENT
+
+	returned_data = []
+
+	for question in questions:
+		user = User.query.get(question.user_id)  # Get the user who asked the question
+		user_name = None
+		if user:
+			user_name = f"{user.firstname} {user.lastname}"
+
+		returned_data.append(
+			{
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+				"audio": question.filename,
+				"user_name": user_name,
+			}
+		)
 	return jsonify(returned_data), HTTP_200_OK
 
 @jwt_required()
@@ -521,14 +617,18 @@ def top_users_with_most_questions():
 @questions.get("/stats")
 # @admin_required
 def list_questions():
-	#     query_result = session.query(Question).filter(Question.user_id == user_id, Question.id == question_id).limit(1).all()
-
-	all_questions = Question.query.all()
+	verify_jwt_in_request()
+	current_user = get_jwt_identity()
+	isadmin = User.query.get(current_user)
+	all_questions = Question.query.filter(
+		(Question.user_id != isadmin.id)
+	).all()
+	
 	#     all_questions = db.sessionQuestion).all()
 	total_questions = len(all_questions)
 	questions_per_language = (
 		db.session.query(Question.language, func.count(Question.id))
-		.filter((Question.rephrased != "actual"), (Question.cleaned.is_(None) | (Question.cleaned != True)))
+		.filter((Question.user_id != isadmin.id))
 		.group_by(Question.language)
 		.all()
 	)
@@ -536,7 +636,7 @@ def list_questions():
 	average_daily_questions = total_questions / (
 		Question.query.filter(
 			(Question.rephrased != "actual"),
-			(Question.cleaned.is_(None) | (Question.cleaned != True))
+			(Question.user_id != isadmin.id)
 			& (Question.created_at >= datetime.date.today())
 		).count()
 		or 1
@@ -546,7 +646,7 @@ def list_questions():
 	average_weekly_questions = total_questions / (
 		Question.query.filter(
 			(Question.rephrased != "actual"),
-			(Question.cleaned.is_(None) | (Question.cleaned != True))
+			(Question.user_id != isadmin.id)
 			& (Question.created_at >= one_week_ago)
 		).count()
 		or 1
@@ -558,13 +658,13 @@ def list_questions():
 
 	plant_question_count = Question.query.filter(
 		(Question.rephrased != "actual"),
-		(Question.cleaned.is_(None) | (Question.cleaned != True))
+		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "crop")
 	).count()
 
 	animal_question_count = Question.query.filter(
 		(Question.rephrased != "actual"),
-		(Question.cleaned.is_(None) | (Question.cleaned != True))
+		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "animal")
 	).count()
 

@@ -189,6 +189,14 @@ content %}
             </svg>
             Admin Dashboard
           </a>
+          <a
+            type="button"
+            class="btn btn-outline-success"
+            href="{{ url_for('web.download') }}"
+          >
+            
+            Download Dash
+          </a>
 
           <button type="button" class="btn btn-primary" id="CSVButton">
             <svg
@@ -303,7 +311,7 @@ content %}
     const token = localStorage.getItem("token"); // Get the token from local storage
 
     // Fetch top users data
-    fetch("/api/v1/questions/all", {
+    fetch("/api/v1/questions/displayall", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
