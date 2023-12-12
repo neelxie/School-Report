@@ -520,7 +520,7 @@ def download_questions():
 			return jsonify({"message": "Invalid start_date format. Use YYYY-MM-DD."}), HTTP_400_BAD_REQUEST
 	else:
 		questions = Question.query.filter(
-			(Question.rephrased != "actual")
+			(Question.rephrased != "testing")
 		).all()
 
 	if not questions:
@@ -555,7 +555,7 @@ def download_questions():
 @questions.get("/myqns")
 def get_my_questions():
 	questions = Question.query.filter(
-		(Question.rephrased == "actual")
+		(Question.rephrased == "testing")
 	).all()
 
 	if not questions:
@@ -564,7 +564,7 @@ def get_my_questions():
 	returned_data = []
 
 	for question in questions:
-		user = User.query.get(question.user_id)  # Get the user who asked the question
+		user = User.query.get(question.user_id)
 		if user:
 			user_name = f"{user.firstname} {user.lastname}"
 
@@ -635,7 +635,7 @@ def list_questions():
 
 	average_daily_questions = total_questions / (
 		Question.query.filter(
-			(Question.rephrased != "actual"),
+			(Question.rephrased != "testing"),
 			(Question.user_id != isadmin.id)
 			& (Question.created_at >= datetime.date.today())
 		).count()
@@ -645,7 +645,7 @@ def list_questions():
 	one_week_ago = datetime.date.today() - datetime.timedelta(weeks=1)
 	average_weekly_questions = total_questions / (
 		Question.query.filter(
-			(Question.rephrased != "actual"),
+			(Question.rephrased != "testing"),
 			(Question.user_id != isadmin.id)
 			& (Question.created_at >= one_week_ago)
 		).count()
@@ -657,13 +657,13 @@ def list_questions():
 	average_questions_per_user = total_questions / (total_users or 1)
 
 	plant_question_count = Question.query.filter(
-		(Question.rephrased != "actual"),
+		(Question.rephrased != "testing"),
 		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "crop")
 	).count()
 
 	animal_question_count = Question.query.filter(
-		(Question.rephrased != "actual"),
+		(Question.rephrased != "testing"),
 		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "animal")
 	).count()
@@ -766,7 +766,7 @@ def main_question_review():
 		filters.append(sub_category_filter)
 	
 	matching_questions = (
-		Question.query.filter(Question.rephrased == "actual", reviewed_filter, *filters)
+		Question.query.filter(Question.rephrased == "testing", reviewed_filter, *filters)
 		.order_by(func.random())
 		.first()
 	)
@@ -825,7 +825,7 @@ def main_question_answer():
 
 	matching_questions = Question.query.filter(
 		Question.category.ilike(category),
-		Question.rephrased == "actual",
+		Question.rephrased == "testing",
     Question.reviewed == True,
     Question.answered.is_not(True),
 		*filters
@@ -954,7 +954,7 @@ def get_random_unanswered_question(user_id):
 @jwt_required()
 def get_luganda_questions():
 	luganda_questions = Question.query.filter(
-		(Question.rephrased != "actual"),
+		(Question.rephrased != "testing"),
 		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
 		& (func.lower(Question.language) == "luganda")
 	).all()
@@ -985,7 +985,7 @@ def get_luganda_questions():
 @jwt_required()
 def get_english_questions():
 	english_questions = Question.query.filter(
-		(Question.rephrased != "actual"),
+		(Question.rephrased != "testing"),
 		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
 		& (func.lower(Question.language) == "english")
 	).all()
@@ -1015,7 +1015,7 @@ def get_english_questions():
 @jwt_required()
 def get_expert_luganda_questions():
 	luganda_questions = Question.query.filter(
-		(Question.rephrased == "actual")
+		(Question.rephrased == "testing")
 		& (func.lower(Question.language) == "luganda")
 	).all()
 
@@ -1043,7 +1043,7 @@ def get_expert_luganda_questions():
 @jwt_required()
 def get_expert_english_questions():
 	luganda_questions = Question.query.filter(
-		(Question.rephrased == "actual")
+		(Question.rephrased == "testing")
 		& (func.lower(Question.language) == "english")
 	).all()
 
@@ -1071,7 +1071,7 @@ def get_expert_english_questions():
 @jwt_required()
 def get_expert_runyankole_questions():
 	luganda_questions = Question.query.filter(
-		(Question.rephrased == "actual")
+		(Question.rephrased == "testing")
 		& (func.lower(Question.language) == "runyankole")
 	).all()
 
@@ -1101,7 +1101,7 @@ def get_evaluated_questions():
 	
 	matching_questions = (
 		Question.query.filter(
-			Question.rephrased == "actual",
+			Question.rephrased == "testing",
     	Question.answered == True,
     	Question.finished == True)
 		.all()
@@ -1258,7 +1258,7 @@ def main_question_rank():
 	matching_questions = (
 		Question.query.filter(
 			Question.category.ilike(category),
-			Question.rephrased == "actual",
+			Question.rephrased == "testing",
     	Question.answered == True,
     	Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
@@ -1322,7 +1322,7 @@ def fetch_questions():
 
 	matching_questions = (
 		Question.query.filter(
-			Question.rephrased == "actual",
+			Question.rephrased == "testing",
     	Question.reviewed == False
 			)
 		.paginate(page=page, per_page=per_page, error_out=False)
@@ -1421,23 +1421,23 @@ def store_answer_ranks():
 @questions.route("/expert-stats", methods=["GET"])
 @jwt_required()
 def question_stats():
-	total_cleaned = Question.query.filter_by(cleaned=True, rephrased="actual").count()
-	cleaned_and_reviewed = Question.query.filter_by(cleaned=True, reviewed=True, rephrased="actual").count()
+	total_cleaned = Question.query.filter_by(cleaned=True, rephrased="testing").count()
+	cleaned_and_reviewed = Question.query.filter_by(cleaned=True, reviewed=True, rephrased="testing").count()
 	cleaned_reviewed_and_answered = Question.query.filter_by(
-		cleaned=True, answered=True, rephrased="actual"
+		cleaned=True, answered=True, rephrased="testing"
 	).count()
-	all_fields_true = Question.query.filter_by(cleaned=True, finished=True, rephrased="actual").count()
+	all_fields_true = Question.query.filter_by(cleaned=True, finished=True, rephrased="testing").count()
 	experts = User.query.filter_by(role="expert").all()
 	english_questions = Question.query.filter(
-		Question.rephrased == "actual",
+		Question.rephrased == "testing",
 		Question.language.ilike("english")
 	).count()
 	luganda_questions = Question.query.filter(
-		Question.rephrased == "actual",
+		Question.rephrased == "testing",
 		Question.language.ilike("luganda")
 	).count()
 	runyankole_questions = Question.query.filter(
-		Question.rephrased == "actual",
+		Question.rephrased == "testing",
 		Question.language.ilike("runyankole")
 	).count()
 
@@ -1608,7 +1608,7 @@ def upload_json_answers():
 		location = obj.get("Location")
 
 		# Check if the question already exists
-		if Question.query.filter_by(sentence=sentence, cleaned=True, rephrased="actual").first():
+		if Question.query.filter_by(sentence=sentence, cleaned=True, rephrased="testing").first():
 				dup_count += 1
 				duplicates.append({"sentence": sentence})
 		else:
@@ -1621,7 +1621,7 @@ def upload_json_answers():
 						animal_crop=animal_crop,
 						location=location,
 						cleaned=True,
-						rephrased="actual"
+						rephrased="testing"
 				)
 				db.session.add(question)
 				db.session.commit()
