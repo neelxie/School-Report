@@ -1,9 +1,7 @@
 {% extends "base.html" %} {% block title %}Experts Review Question Page{%
 endblock %} {% block content %}
 
-<div
-  class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
->
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
   <div class="app-header header-shadow">
     <div class="app-header__logo">
       <div class="" id=""></div>
@@ -21,11 +19,7 @@ endblock %} {% block content %}
                 <div class="widget-subheading">Expert</div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
-                <button
-                  type="button"
-                  class="btn-shadow p-1 btn btn-primary btn-sm"
-                  id="logoutButton"
-                >
+                <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm" id="logoutButton">
                   Logout
                 </button>
               </div>
@@ -46,17 +40,9 @@ endblock %} {% block content %}
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-header"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-header">
                         <div class="switch-animate switch-on">
-                          <input
-                            type="checkbox"
-                            checked
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -74,16 +60,9 @@ endblock %} {% block content %}
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-footer"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-footer">
                         <div class="switch-animate switch-off">
-                          <input
-                            type="checkbox"
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -104,18 +83,13 @@ endblock %} {% block content %}
                 <h5 class="pb-2">Page Section Tabs</h5>
                 <div class="theme-settings-swatches">
                   <div role="group" class="mt-2 btn-group">
-                    <button
-                      type="button"
-                      class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
-                      data-class="body-tabs-line"
-                    >
+                    <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-line">
                       Line
                     </button>
-                    <button
-                      type="button"
+                    <button type="button"
                       class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
-                      data-class="body-tabs-shadow"
-                    >
+                      data-class="body-tabs-shadow">
                       Shadow
                     </button>
                   </div>
@@ -134,28 +108,16 @@ endblock %} {% block content %}
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
               <li class="nav-item">
-                <a
-                  class="nav-link active"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.main_review') }}"
-                  >Review Questions</a
-                >
+                <a class="nav-link active" style="font-size: 1.5rem" href="{{ url_for('web.main_review') }}">Review
+                  Questions</a>
               </li>
               <li class="nav-item">
-                <a
-                  class="nav-link text-success"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.main_answer') }}"
-                  >Answer Questions</a
-                >
+                <a class="nav-link text-success" style="font-size: 1.5rem"
+                  href="{{ url_for('web.main_answer') }}">Answer Questions</a>
               </li>
               <li class="nav-item">
-                <a
-                  class="nav-link text-success"
-                  style="font-size: 1.5rem"
-                  href="{{ url_for('web.main_rank') }}"
-                  >Rank Answers</a
-                >
+                <a class="nav-link text-success" style="font-size: 1.5rem" href="{{ url_for('web.main_rank') }}">Rank
+                  Answers</a>
               </li>
             </ul>
           </div>
@@ -165,42 +127,13 @@ endblock %} {% block content %}
             <h1 class="text-center fs-4">Question Evaluation</h1>
             <form id="signUpForm" class="border border-dark">
               <div class="form-header d-flex mb-4 font-weight-bold h3">
-                <span class="stepIndicator font-weight-bold">Agriculture</span>
-                <span class="stepIndicator font-weight-bold"
-                  >Clarity/Grammar</span
-                >
-                <span class="stepIndicator font-weight-bold">Topic</span>
-              </div>
-              <div class="step">
-                <div
-                  class="card mb-3 ml-3 col-11 text-left text-dark font-weight-bold mx-4 my-4 p-2 shadow-none"
-                >
-                  <div class="text-center text-primary h2 font-weight-bold">
-                    Instructions:
-                  </div>
-                  <p class="h3">1. Read the Question.</p>
-                  <p class="h3">
-                    2. If the question is related to agriculture, click
-                    <strong>"Next."</strong>
-                  </p>
-                  <p class="h3">
-                    3. If the question is not related to agriculture, click
-                    <strong>"No."</strong>
-                  </p>
-                </div>
-                <div class="mb-3">
-                  <div class="h4 text-dark font-weight-bold">
-                    <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion" class="h2 font-weight-bold"></span>
-                  </div>
-                </div>
+                <span class="stepIndicator font-weight-bold">Tag Topics</span>
+                <span class="stepIndicator font-weight-bold">Answer Question</span>
               </div>
 
               <!-- step two -->
-              <div class="step">
-                <div
-                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4"
-                >
+              <!-- <div class="step">
+                <div class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4">
                   <p class="text-center text-primary h2 font-weight-bold">
                     Instructions:
                   </p>
@@ -220,26 +153,19 @@ endblock %} {% block content %}
                 </div>
                 <div class="mb-3">
                   <div class="h4 text-dark font-weight-bold">
-                    <span class="text-primary mr-3">Question:</span
-                    ><span id="oneQuestion1" class="h2 font-weight-bold"></span>
+                    <span class="text-primary mr-3">Question:</span><span id="oneQuestion1"
+                      class="h2 font-weight-bold"></span>
                   </div>
                 </div>
                 <div class="mb-3">
-                  <input
-                    type="text"
-                    name="rephrased"
-                    id="rephrased"
-                    class="border border-dark h3"
-                    placeholder="Rephrase the question here."
-                  />
+                  <input type="text" name="rephrased" id="rephrased" class="border border-dark h3"
+                    placeholder="Rephrase the question here." />
                 </div>
-              </div>
+              </div> -->
 
               <!-- step three -->
               <div class="step">
-                <div
-                  class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border"
-                >
+                <div class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border">
                   <p class="text-center text-primary h3 font-weight-bold">
                     Instructions:
                   </p>
@@ -262,40 +188,19 @@ endblock %} {% block content %}
                 </div>
                 <div class="h4 text-dark pb-2">
                   <div class="h4 text-dark font-weight-bold mb-3">
-                    <span class="text-primary mr-3 h2 font-weight-bold"
-                      >Question:</span
-                    ><span id="oneQuestion2" class="h2 font-weight-bold"></span>
+                    <span class="text-primary mr-3 h2 font-weight-bold">Question:</span><span id="oneQuestion"
+                      class="h2 font-weight-bold"></span>
                   </div>
-                  <!-- <hr class="hr" />
-                  <div class="h4 text-dark font-weight-bold mb-3">
-                    <span class="text-primary mr-3 h2 font-weight-bold"
-                      >Edited Question:</span
-                    ><span id="displayValue" class="h2 font-weight-bold"></span>
-                  </div> -->
                   <hr class="hr" />
                   <div class="h4 text-dark font-weight-bold mb-3">
-                    <span class="text-primary mr-3 h2 font-weight-bold"
-                      >Topic:</span
-                    ><strong
-                      id="questionTopic"
-                      class="h2 font-weight-bold"
-                    ></strong>
+                    <span class="text-primary mr-3 h2 font-weight-bold">Topic:</span><strong id="questionTopic"
+                      class="h2 font-weight-bold"></strong>
                   </div>
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Category:</span
-                  ><span
-                    id="questionCategory"
-                    class="h2 font-weight-bold"
-                    style="text-transform: capitalize"
-                  ></span>
+                  <span class="text-primary mr-3 h2 font-weight-bold">Category:</span><span id="questionCategory"
+                    class="h2 font-weight-bold" style="text-transform: capitalize"></span>
                   &nbsp;
-                  <span class="text-primary mr-3 h2 font-weight-bold"
-                    >Sub Category:</span
-                  ><span
-                    id="actualItem"
-                    class="h2 font-weight-bold"
-                    style="text-transform: capitalize"
-                  ></span>
+                  <span class="text-primary mr-3 h2 font-weight-bold">Sub Category:</span><span id="actualItem"
+                    class="h2 font-weight-bold" style="text-transform: capitalize"></span>
                 </div>
                 <hr class="hr" />
                 <div id="selectedTopics">
@@ -307,30 +212,18 @@ endblock %} {% block content %}
                 <div class="h4 text-dark font-weight-bold mb-5"></div>
                 <div class="mb-5 h4" id="topicForm">
                   <div>
-                    <label for="topics" class="font-weight-bold"
-                      >Select Topic:</label
-                    >
-                    <select
-                      id="topics"
-                      class="select m-2"
-                      onchange="populateSubTopics()"
-                    >
+                    <label for="topics" class="font-weight-bold">Select Topic:</label>
+                    <select id="topics" class="select m-2" onchange="populateSubTopics()">
                       <option value="">Select a Topic</option>
                     </select>
                   </div>
                   <div class="d-flex align-items-baseline">
-                    <label for="subTopics" class="font-weight-bold"
-                      >Select Sub-Topic:</label
-                    >
+                    <label for="subTopics" class="font-weight-bold">Select Sub-Topic:</label>
                     <select id="subTopics" class="select m-2">
                       <option value="">Select a Sub-Topic</option>
                     </select>
                     <div class="m-1 ml-5">
-                      <button
-                        type="button"
-                        onclick="addSelectedTopic()"
-                        class="btn btn-primary"
-                      >
+                      <button type="button" onclick="addSelectedTopic()" class="btn btn-primary">
                         Add Selected Topic
                       </button>
                     </div>
@@ -343,22 +236,55 @@ endblock %} {% block content %}
                 </div>
               </div>
 
+              <div class="step">
+                <div class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-1 my-4 border bg-success">
+                  <p class="text-center text-white h2 font-weight-bold">
+                    Instructions:
+                  </p>
+
+                  <p class="h3">
+                    Provide an answer to this question in the input field
+                    below, or you can choose to skip this question.
+                  </p>
+                </div>
+                <table>
+                  <tbody>
+                    <tr class="border">
+                      <th class="text-primary pr-3 h3">Question:</th>
+                      <td id="oneQuestion1" class="font-weight-bold h2"></td>
+                    </tr>
+                    <tr>
+                      <th class="text-primary pr-3 h3">Location:</th>
+                      <td id="location1" class="font-weight-bold h2"></td>
+                    </tr>
+                    <tr>
+                      <th class="text-primary pr-3 h3">Topics:</th>
+                      <td id="questionTopic1" class="font-weight-bold h2"></td>
+                    </tr>
+
+                    <tr class="border">
+                      <th class="text-primary pr-3 h3">Category:</th>
+                      <td id="questionCategory1" class="font-weight-bold h2"></td>
+                    </tr>
+                    <tr class="border">
+                      <th class="text-primary pr-3 h3 text-nowrap">
+                        Sub-category:
+                      </th>
+                      <td id="actualItem1" class="font-weight-bold h2"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <textarea name="answer" id="answer" placeholder="Add answer" rows="5" style="font-size: 1.3rem"
+                  class="form-control my-3 border border-dark h3"></textarea>
+              </div>
+
               <!-- start previous / next buttons -->
               <div class="form-footer d-flex">
-                <button
-                  type="button"
-                  id="prevBtn"
-                  onclick="nextPrev(-1)"
-                  class="bg-warning font-weight-bold text-white"
-                >
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)"
+                  class="bg-warning font-weight-bold text-white">
                   Previous
                 </button>
-                <button
-                  type="button"
-                  id="nextBtn"
-                  onclick="nextPrev(1)"
-                  class="font-weight-bold"
-                >
+                <button type="button" id="nextBtn" onclick="nextPrev(1)" class="font-weight-bold">
                   Next
                 </button>
               </div>
@@ -446,13 +372,13 @@ endblock %} {% block content %}
     x[n].style.display = "block";
 
     var prevBtn = document.getElementById("prevBtn");
-    if (n == 0) {
-      prevBtn.innerHTML = "No";
-      prevBtn.setAttribute("onclick", "nextPrev(-1, true)");
-    } else {
-      prevBtn.innerHTML = "Previous";
-      prevBtn.setAttribute("onclick", "nextPrev(-1, false)");
-    }
+    // if (n == 0) {
+    //   prevBtn.innerHTML = "No";
+    //   prevBtn.setAttribute("onclick", "nextPrev(-1, true)");
+    // } else {
+    prevBtn.innerHTML = "Previous";
+    prevBtn.setAttribute("onclick", "nextPrev(-1, false)");
+
 
     var nextBtn = document.getElementById("nextBtn");
     if (n == x.length - 1) {
@@ -471,7 +397,6 @@ endblock %} {% block content %}
     currentTab = currentTab + n;
     if (currentTab >= x.length) {
       submitForm();
-      // document.getElementById("signUpForm").submit();
 
       return false;
     }
@@ -479,14 +404,8 @@ endblock %} {% block content %}
   }
 
   const mytoken = localStorage.getItem("token");
-  let rephrased = document.getElementById("rephrased");
   let displayValue = document.getElementById("displayValue");
   let questio = document.getElementById("oneQuestion2");
-  rephrased.addEventListener("input", function () {
-    if (rephrased.value.trim() !== "") {
-      oneQuestion2.textContent = rephrased.value;
-    }
-  });
 
   function toggleTopics() {
     const topicType = document.querySelector(
@@ -516,7 +435,7 @@ endblock %} {% block content %}
     var formData = new FormData(form);
 
     let questionId2 = parseInt(form.getAttribute("data-question-id"));
-    const rephrased = document.getElementById("rephrased");
+
     const displayValue = document.getElementById("displayValue");
 
     const formx = document.getElementById("topicForm");
@@ -536,16 +455,7 @@ endblock %} {% block content %}
     const commaSeparatedString = values.join(", ");
     let itemBody = {};
 
-    if (rephrased && commaSeparatedString) {
-      itemBody = {
-        rephrased: rephrased.value,
-        topic: commaSeparatedString,
-      };
-    } else if (rephrased) {
-      itemBody = {
-        rephrased: rephrased.value,
-      };
-    } else if (commaSeparatedString) {
+    if (commaSeparatedString) {
       itemBody = {
         topic: commaSeparatedString,
       };
@@ -610,6 +520,7 @@ endblock %} {% block content %}
     })
       .then((response) => response.json())
       .then((randomQuestion) => {
+        console.log(randomQuestion);
         if (randomQuestion.message === "No questions available.") {
           let oneQuestion = document.getElementById("oneQuestion");
           oneQuestion.textContent = "No questions available.";
@@ -621,10 +532,12 @@ endblock %} {% block content %}
         oneQuestion.textContent = anyQuestion.sentence;
         const oneQuestion1 = document.getElementById("oneQuestion1");
         oneQuestion1.textContent = anyQuestion.sentence;
-        const oneQuestion2 = document.getElementById("oneQuestion2");
-        oneQuestion2.textContent = anyQuestion.sentence;
         const questionTopic = document.getElementById("questionTopic");
         questionTopic.textContent = anyQuestion.topics
+          ? anyQuestion.topics
+          : "No Topic";
+        const questionTopic1 = document.getElementById("questionTopic1");
+        questionTopic1.textContent = anyQuestion.topics
           ? anyQuestion.topics
           : "No Topic";
         const questionCategory = document.getElementById("questionCategory");
@@ -633,15 +546,23 @@ endblock %} {% block content %}
           : "No Category";
         const actualItem = document.getElementById("actualItem");
         actualItem.textContent = anyQuestion.animal_crop;
+        const questionCategory1 = document.getElementById("questionCategory1");
+        questionCategory1.textContent = anyQuestion.category
+          ? anyQuestion.category
+          : "No Category";
+        const actualItem1 = document.getElementById("actualItem1");
+        actualItem1.textContent = anyQuestion.animal_crop;
+        const location1 = document.getElementById("location1");
+        location1.textContent = anyQuestion.location;
         var questionId = anyQuestion.id;
-        // console.log(questionId);
+        
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
         if (incorrectQuestion) {
           incorrectQuestion.addEventListener("click", async function (event) {
             event.preventDefault();
             let questionId1 = parseInt(questionId);
-            // console.log(questionId1);
+            
             if (prevBtn.innerHTML === "No") {
               await updateQuestion(questionId1);
             }
@@ -650,23 +571,6 @@ endblock %} {% block content %}
       })
       .catch((error) => console.error(error));
 
-    function updateQuestion(questionId) {
-      // const response = fetch(`/api/v1/questions/incorrect/${questionId}`, {
-      //   method: "PUT",
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // })
-      //   .then((response) => response.json())
-      //   .then((responseData) => {
-      //     if (response) {
-      //       window.location.reload();
-      //     } else {
-      //       console.error("Error updating question:");
-      //     }
-      //   })
-      //   .catch((error) => console.error("Error parsing response:", error));
-    }
   });
 </script>
 <script>
@@ -680,7 +584,6 @@ endblock %} {% block content %}
     const topicsSelect = document.getElementById("topics").value;
     const subTopicsSelect = document.getElementById("subTopics");
 
-    // const selectedTopic = topicsSelect.value;
     subTopicsSelect.innerHTML = "";
 
     if (selectedCategory !== "" && topicsSelect !== "") {

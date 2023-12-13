@@ -38,7 +38,7 @@ def index():
                 session["language"] = user.language
                 session["category"] = user.category
                 session["sub_category"] = user.sub_category
-                return redirect(url_for("web.main_answer"))
+                return redirect(url_for("web.main_review"))
                 # return render_template(
                 #     "dashboard.html",
                 #     token=access_token,
