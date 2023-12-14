@@ -1179,8 +1179,7 @@ def get_evaluated_questions():
 	matching_questions = (
 		Question.query.filter(
 			Question.rephrased == "actual",
-    	Question.answered == True,
-    	Question.finished == True)
+    	Question.answered == True)
 		.all()
 	)
 	total_questions = len(matching_questions)
@@ -1425,7 +1424,6 @@ def fetch_questions():
 	all = []
 	random_question_data = None
 	if matching_questions:
-		# print(len(matching_questions))
 		for question in matching_questions:
 			answers = [{'text': answer.answer_text, 'source': answer.source} for answer in question.answers]
 
@@ -1449,13 +1447,6 @@ def fetch_questions():
 			'per_page': per_page,
 			'total_questions': matching_questions.total
     }
-
-		# result_object = {"random_question_data": all}
-		# file_path = "unreview.json"
-		# with open(file_path, "w") as json_file:
-		# 		json.dump(result_object, json_file)
-
-		# upload_to_bucket("your_bucket_name", file_path, "unreview.json")
 
 		return jsonify({'questions': all, 'pagination': pagination_details}), HTTP_200_OK
 	else:
