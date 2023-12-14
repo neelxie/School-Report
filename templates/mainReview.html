@@ -108,13 +108,13 @@ endblock %} {% block content %}
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
               <li class="nav-item">
-                <a class="nav-link active" style="font-size: 1.5rem" href="{{ url_for('web.main_review') }}">Review
+                <a class="nav-link active" style="font-size: 1.5rem" href="{{ url_for('web.main_review') }}">Answer
                   Questions</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link text-success" style="font-size: 1.5rem"
                   href="{{ url_for('web.main_answer') }}">Answer Questions</a>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <a class="nav-link text-success" style="font-size: 1.5rem" href="{{ url_for('web.main_rank') }}">Rank
                   Answers</a>
@@ -215,12 +215,23 @@ endblock %} {% block content %}
                     <label for="topics" class="font-weight-bold">Select Topic:</label>
                     <select id="topics" class="select m-2" onchange="populateSubTopics()">
                       <option value="">Select a Topic</option>
+                      <option value="Other">Other</option>
                     </select>
+                    <!-- <input type="text" id="customTopic" placeholder="Enter new topic"
+                      style="display: none; max-width: 18rem;" class="border border-primary">
+
+                    <input type="text" id="customSubTopic" placeholder="Enter new sub-topic"
+                      style="display: none; max-width: 18rem;" class="border border-primary"> -->
+
+                    <input type="text" id="customTopic" placeholder="Enter custom topic" style="display: none;">
+                    <input type="text" id="customSubTopic" placeholder="Enter custom sub-topic" style="display: none;">
+
                   </div>
                   <div class="d-flex align-items-baseline">
                     <label for="subTopics" class="font-weight-bold">Select Sub-Topic:</label>
-                    <select id="subTopics" class="select m-2">
+                    <select id="subTopics" class="select m-2" style="min-width: 8rem;">
                       <option value="">Select a Sub-Topic</option>
+                      <option value="Other">Other</option>
                     </select>
                     <div class="m-1 ml-5">
                       <button type="button" onclick="addSelectedTopic()" class="btn btn-primary">
@@ -428,6 +439,18 @@ endblock %} {% block content %}
     radio.addEventListener("change", toggleTopics);
   });
 
+  document.getElementById("topics").addEventListener("change", function () {
+    const customTopicInput = document.getElementById("customTopic");
+    if (this.value === "other") {
+      customTopicInput.style.display = "block";
+    } else {
+      customTopicInput.style.display = "none";
+    }
+
+    // Call populateSubTopics to update subTopics based on the selection
+    populateSubTopics();
+  });
+
   function submitForm() {
     event.preventDefault();
 
@@ -484,6 +507,34 @@ endblock %} {% block content %}
     } catch (error) {
       console.error("Error parsing response:", error);
     } finally {
+      window.location.reload();
+    }
+
+    if (wordCount(answer) < 5) {
+      alert("Answer must be at least 5 words.");
+      return;
+    }
+    const itemBodyt = {
+      answer: answer,
+    };
+    const response = fetch(`/api/v1/questions/add_answer/${questionId}`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(itemBodyt),
+    });
+
+    try {
+      const responseData = response.json();
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        errorMessage.textContent = responseData.error;
+      }
+    } catch (error) {
+      console.error("Error parsing response:");
       window.location.reload();
     }
   }
@@ -555,14 +606,14 @@ endblock %} {% block content %}
         const location1 = document.getElementById("location1");
         location1.textContent = anyQuestion.location;
         var questionId = anyQuestion.id;
-        
+
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
         if (incorrectQuestion) {
           incorrectQuestion.addEventListener("click", async function (event) {
             event.preventDefault();
             let questionId1 = parseInt(questionId);
-            
+
             if (prevBtn.innerHTML === "No") {
               await updateQuestion(questionId1);
             }
@@ -573,6 +624,7 @@ endblock %} {% block content %}
 
   });
 </script>
+
 <script>
   function getSelectedCategory() {
     const selectedCategory = localStorage.getItem("category");
@@ -588,12 +640,21 @@ endblock %} {% block content %}
 
     if (selectedCategory !== "" && topicsSelect !== "") {
       const subTopics = categories[selectedCategory][topicsSelect];
-      subTopics.forEach((subTopic) => {
-        const option = document.createElement("option");
-        option.value = subTopic;
-        option.textContent = subTopic;
-        subTopicsSelect.appendChild(option);
-      });
+
+      if (topicsSelect.value === "other") {
+        subTopicsSelect.style.display = "none";
+        document.getElementById("customFields").style.display = "block";
+      } else {
+        subTopicsSelect.style.display = "block";
+        document.getElementById("customFields").style.display = "none";
+
+        subTopics.forEach((subTopic) => {
+          const option = document.createElement("option");
+          option.value = subTopic;
+          option.textContent = subTopic;
+          subTopicsSelect.appendChild(option);
+        });
+      }
     } else {
       const option = document.createElement("option");
       option.value = "";
@@ -606,6 +667,11 @@ endblock %} {% block content %}
     let selectedCategory = getSelectedCategory();
     const topicsSelect = document.getElementById("topics");
     topicsSelect.innerHTML = "";
+
+    const otherOption = document.createElement("option");
+    otherOption.value = "other";
+    otherOption.textContent = "Other";
+    topicsSelect.appendChild(otherOption);
 
     for (const topic in categories[selectedCategory]) {
       const option = document.createElement("option");
@@ -624,6 +690,11 @@ endblock %} {% block content %}
     const topicsSelect = document.getElementById("topics");
     const selectedTopic = topicsSelect.value;
     const selectedSubTopic = document.getElementById("subTopics").value;
+
+    if (selectedTopic === "other") {
+      selectedSubTopic = document.getElementById("customTopic").value;
+      selectedSubTopic = document.getElementById("customSubTopic").value;
+    }
 
     if (selectedTopic !== "" && selectedSubTopic !== "") {
       selectedTopics.push({ topic: selectedTopic, subTopic: selectedSubTopic });
