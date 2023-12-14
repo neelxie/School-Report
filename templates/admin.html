@@ -589,7 +589,7 @@ content %}
     })
       .then((response) => response.json())
       .then((statsData) => {
-        // console.log(statsData)
+        console.log(statsData)
         const totalQuestions = document.getElementById("totalQuestions");
         totalQuestions.textContent = statsData.total_questions;
         // Display other statistics data
@@ -618,9 +618,9 @@ content %}
         const englishQuestions = document.getElementById("englishQuestions");
         englishQuestions.textContent = englishCount;
 
-        const plantCategory = document.getElementById("plantCategory");
+        let plantCategory = document.getElementById("plantCategory");
         plantCategory.textContent = statsData.plant_category;
-        const animalCategory = document.getElementById("animalCategory");
+        let animalCategory = document.getElementById("animalCategory");
         animalCategory.textContent = statsData.animal_category;
       })
       .catch((error) =>

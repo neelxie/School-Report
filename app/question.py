@@ -673,15 +673,13 @@ def list_questions():
 	#  Calculate average questions per user
 	total_users = User.query.count()
 	average_questions_per_user = total_questions / (total_users or 1)
-
+	
 	plant_question_count = Question.query.filter(
-		(Question.rephrased != "actual"),
 		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "crop")
 	).count()
 
 	animal_question_count = Question.query.filter(
-		(Question.rephrased != "actual"),
 		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "animal")
 	).count()
