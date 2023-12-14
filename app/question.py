@@ -882,6 +882,46 @@ def add_answer(question_id):
 		return jsonify({"message": "Answer added successfully."}), HTTP_201_CREATED
 	return jsonify({"message": "Failed to add answer."})
 
+@questions.post("/review_and_answer/<int:question_id>")
+@jwt_required()
+def review_and_answer(question_id):
+	user_id = get_jwt_identity()
+	question = Question.query.get(question_id)
+
+	if not question:
+		return jsonify({"message": "Question not found."}), HTTP_404_NOT_FOUND
+
+	data = request.get_json()
+	answer_text = data.get("answer", "").strip()
+	new_topic = data.get("topic")
+
+	if answer_text and len(answer_text) > 7:
+		new_answer = Answer(
+				question_id=question_id,
+				user_id=user_id,
+				answer_text=answer_text,
+				source="expert",
+		)
+
+		db.session.add(new_answer)
+		question.answered = True
+		question.answer_expert_one = user_id
+
+		if question.topic:
+			if new_topic:
+				question.topic = (new_topic + ", " + question.topic)
+		else:
+			question.topic = new_topic
+
+		question.reviewed = True
+		question.correct = True
+		question.reviewer_id = user_id
+
+		db.session.commit()
+
+		return jsonify({"message": "Answer added successfully and question attributes updated."}), HTTP_201_CREATED
+
+	return jsonify({"message": "Failed to add answer or update question attributes."})
 
 @questions.route("/incorrect/<int:question_id>", methods=["PUT"])
 @jwt_required()

@@ -108,13 +108,13 @@ endblock %} {% block content %}
           <div class="col-9 col-sm-12">
             <ul class="nav nav-pills nav-fill">
               <li class="nav-item">
-                <a class="nav-link active" style="font-size: 1.5rem" href="{{ url_for('web.main_review') }}">Review
+                <a class="nav-link active" style="font-size: 1.5rem" href="{{ url_for('web.main_review') }}">Answer
                   Questions</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a class="nav-link text-success" style="font-size: 1.5rem"
                   href="{{ url_for('web.main_answer') }}">Answer Questions</a>
-              </li>
+              </li> -->
               <li class="nav-item">
                 <a class="nav-link text-success" style="font-size: 1.5rem" href="{{ url_for('web.main_rank') }}">Rank
                   Answers</a>
@@ -215,12 +215,23 @@ endblock %} {% block content %}
                     <label for="topics" class="font-weight-bold">Select Topic:</label>
                     <select id="topics" class="select m-2" onchange="populateSubTopics()">
                       <option value="">Select a Topic</option>
+                      <option value="Other">Other</option>
                     </select>
+                    <!-- <input type="text" id="customTopic" placeholder="Enter new topic"
+                      style="display: none; max-width: 18rem;" class="border border-primary">
+
+                    <input type="text" id="customSubTopic" placeholder="Enter new sub-topic"
+                      style="display: none; max-width: 18rem;" class="border border-primary"> -->
+
+                    <input type="text" id="customTopic" placeholder="Enter custom topic" style="display: none;">
+                    <input type="text" id="customSubTopic" placeholder="Enter custom sub-topic" style="display: none;">
+
                   </div>
                   <div class="d-flex align-items-baseline">
                     <label for="subTopics" class="font-weight-bold">Select Sub-Topic:</label>
-                    <select id="subTopics" class="select m-2">
+                    <select id="subTopics" class="select m-2" style="min-width: 8rem;">
                       <option value="">Select a Sub-Topic</option>
+                      <option value="Other">Other</option>
                     </select>
                     <div class="m-1 ml-5">
                       <button type="button" onclick="addSelectedTopic()" class="btn btn-primary">
@@ -261,6 +272,12 @@ endblock %} {% block content %}
                       <th class="text-primary pr-3 h3">Topics:</th>
                       <td id="questionTopic1" class="font-weight-bold h2"></td>
                     </tr>
+                    <!-- <tr>
+                      <th class="text-primary pr-3 h3">Tagged Topics:</th>
+                      <td class="font-weight-bold h2">
+                        <ul id="selectedTopicsList"></ul>
+                      </td>
+                    </tr> -->
 
                     <tr class="border">
                       <th class="text-primary pr-3 h3">Category:</th>
@@ -397,7 +414,6 @@ endblock %} {% block content %}
     currentTab = currentTab + n;
     if (currentTab >= x.length) {
       submitForm();
-
       return false;
     }
     showTab(currentTab);
@@ -428,15 +444,35 @@ endblock %} {% block content %}
     radio.addEventListener("change", toggleTopics);
   });
 
+  document.getElementById("topics").addEventListener("change", function () {
+    const customTopicInput = document.getElementById("customTopic");
+    if (this.value === "other") {
+      customTopicInput.style.display = "block";
+    } else {
+      customTopicInput.style.display = "none";
+    }
+
+    // Call populateSubTopics to update subTopics based on the selection
+    populateSubTopics();
+  });
+
+  function wordCount(text) {
+    return text.split(/\s+/).filter(function (word) {
+      return word.length > 0;
+    }).length;
+  }
+
   function submitForm() {
     event.preventDefault();
 
+    console.log("yeaaah");
     var form = document.getElementById("signUpForm");
     var formData = new FormData(form);
 
     let questionId2 = parseInt(form.getAttribute("data-question-id"));
 
     const displayValue = document.getElementById("displayValue");
+    let answer = document.getElementById("answer").value;
 
     const formx = document.getElementById("topicForm");
     const selectedTopicsList = document.getElementById("selectedTopicsList");
@@ -454,18 +490,23 @@ endblock %} {% block content %}
     });
     const commaSeparatedString = values.join(", ");
     let itemBody = {};
+    if (wordCount(answer) < 5) {
+      alert("Answer must be at least 5 words.");
+      return;
+    }
 
     if (commaSeparatedString) {
       itemBody = {
         topic: commaSeparatedString,
+        answer: answer
       };
     }
 
     try {
       const response = fetch(
-        `/api/v1/questions/question_review/${questionId2}`,
+        `/api/v1/questions/review_and_answer/${questionId2}`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
             "content-type": "application/json",
             Authorization: `Bearer ${mytoken}`,
@@ -489,20 +530,20 @@ endblock %} {% block content %}
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Get the token from local storage
+
     const token = localStorage.getItem("token");
     const language = localStorage.getItem("language");
     const category = localStorage.getItem("category");
     const sub_category = localStorage.getItem("sub_category");
 
     function showFormWithQuestionId(questionId) {
-      // Display the form and set the question ID as a data attribute
+
       var form = document.getElementById("signUpForm");
       form.style.display = "block";
       form.setAttribute("data-question-id", questionId);
     }
-    // Current tab is set to be the first tab (0)
-    showTab(currentTab); // Display the current tab
+
+    showTab(currentTab);
 
     let userDetails = {
       category: category,
@@ -555,14 +596,14 @@ endblock %} {% block content %}
         const location1 = document.getElementById("location1");
         location1.textContent = anyQuestion.location;
         var questionId = anyQuestion.id;
-        
+
         showFormWithQuestionId(questionId);
         const incorrectQuestion = document.getElementById("prevBtn");
         if (incorrectQuestion) {
           incorrectQuestion.addEventListener("click", async function (event) {
             event.preventDefault();
             let questionId1 = parseInt(questionId);
-            
+
             if (prevBtn.innerHTML === "No") {
               await updateQuestion(questionId1);
             }
@@ -573,6 +614,7 @@ endblock %} {% block content %}
 
   });
 </script>
+
 <script>
   function getSelectedCategory() {
     const selectedCategory = localStorage.getItem("category");
@@ -587,13 +629,22 @@ endblock %} {% block content %}
     subTopicsSelect.innerHTML = "";
 
     if (selectedCategory !== "" && topicsSelect !== "") {
-      const subTopics = categories[selectedCategory][topicsSelect];
-      subTopics.forEach((subTopic) => {
-        const option = document.createElement("option");
-        option.value = subTopic;
-        option.textContent = subTopic;
-        subTopicsSelect.appendChild(option);
-      });
+      let subTopics = categories[selectedCategory][topicsSelect];
+
+      if (topicsSelect.value === "other") {
+        subTopicsSelect.style.display = "none";
+        document.getElementById("customFields").style.display = "block";
+      } else {
+        subTopicsSelect.style.display = "block";
+        // document.getElementById("customFields").style.display = "none";
+
+        subTopics.forEach((subTopic) => {
+          const option = document.createElement("option");
+          option.value = subTopic;
+          option.textContent = subTopic;
+          subTopicsSelect.appendChild(option);
+        });
+      }
     } else {
       const option = document.createElement("option");
       option.value = "";
@@ -607,6 +658,11 @@ endblock %} {% block content %}
     const topicsSelect = document.getElementById("topics");
     topicsSelect.innerHTML = "";
 
+    const otherOption = document.createElement("option");
+    otherOption.value = "other";
+    otherOption.textContent = "Other";
+    topicsSelect.appendChild(otherOption);
+
     for (const topic in categories[selectedCategory]) {
       const option = document.createElement("option");
       option.value = topic;
@@ -616,7 +672,7 @@ endblock %} {% block content %}
     populateSubTopics();
   }
 
-  const selectedTopics = [];
+  let selectedTopics = [];
 
   function addSelectedTopic() {
     event.preventDefault();
@@ -624,6 +680,11 @@ endblock %} {% block content %}
     const topicsSelect = document.getElementById("topics");
     const selectedTopic = topicsSelect.value;
     const selectedSubTopic = document.getElementById("subTopics").value;
+
+    if (selectedTopic === "other") {
+      selectedSubTopic = document.getElementById("customTopic").value;
+      selectedSubTopic = document.getElementById("customSubTopic").value;
+    }
 
     if (selectedTopic !== "" && selectedSubTopic !== "") {
       selectedTopics.push({ topic: selectedTopic, subTopic: selectedSubTopic });
