@@ -673,15 +673,13 @@ def list_questions():
 	#  Calculate average questions per user
 	total_users = User.query.count()
 	average_questions_per_user = total_questions / (total_users or 1)
-
+	
 	plant_question_count = Question.query.filter(
-		(Question.rephrased != "actual"),
 		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "crop")
 	).count()
 
 	animal_question_count = Question.query.filter(
-		(Question.rephrased != "actual"),
 		(Question.user_id != isadmin.id)
 		& (func.lower(Question.category) == "animal")
 	).count()
@@ -769,10 +767,20 @@ def main_question_review():
 				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
 				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper"
 		]
+
+		poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
+
+		cattle_sub_categories = ["cattle", "goat", "goats"]
 		sub_categories = []
 
 		if sub_category == "vegetables":
 			sub_categories = vegetable_sub_categories
+
+		elif sub_category == "cattle":
+			sub_categories = cattle_sub_categories
+
+		elif sub_category == "poultry":
+			sub_categories = poultry_sub_categories
 		else:
 			
 			sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
@@ -782,6 +790,17 @@ def main_question_review():
 
 		
 		filters.append(sub_category_filter)
+	
+	if category.lower() == "animal":
+		animal_sub_category_filter = func.lower(Question.animal_crop) == "animal"
+		animals_sub_category = func.lower(Question.animal_crop) == "animals"
+		filters.append(animal_sub_category_filter)
+		filters.append(animals_sub_category)
+	elif category.lower() == "crop":
+		crop_sub_category_filter = func.lower(Question.animal_crop) == "crop"
+		crops_sub_category = func.lower(Question.animal_crop) == "crops"
+		filters.append(crop_sub_category_filter)
+		filters.append(crops_sub_category)
 	
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", reviewed_filter, *filters)
@@ -1291,26 +1310,44 @@ def main_question_rank():
 	
 	if sub_category:
 		sub_category = sub_category.lower()
-		if sub_category.lower() == "vegetables":
-			allowed_vegetables = [
-				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", 
-        "beetroot", "doodoo", "spinach", "cucumbers", "avocado", 
-        "cabbage", "nakati", "ginger", "green pepper", "garlic", 
-        "okra", "lettuce", "malakwang", "pepper"
-				]
-			if ',' in sub_category:
-				sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
-				sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
-				sub_category_filter = and_(sub_category_filter, func.lower(Question.animal_crop).in_(allowed_vegetables))
-			else:
-				sub_category_filter = func.lower(Question.animal_crop).in_(allowed_vegetables)
+
+		vegetable_sub_categories = [
+				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
+				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
+				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper"
+		]
+
+		poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
+
+		cattle_sub_categories = ["cattle", "goat", "goats"]
+		sub_categories = []
+
+		if sub_category == "vegetables":
+			sub_categories = vegetable_sub_categories
+
+		elif sub_category == "cattle":
+			sub_categories = cattle_sub_categories
+
+		elif sub_category == "poultry":
+			sub_categories = poultry_sub_categories
 		else:
-			if ',' in sub_category:
-				sub_categories = [lang.strip().lower() for lang in sub_category.split(",")]
-				sub_category_filter = func.lower(Question.animal_crop).in_(sub_categories)
-			else:
-				sub_category_filter = func.lower(Question.animal_crop) == sub_category.strip().lower()
+			
+			sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
+		
+		sub_category_filter = func.lower(Question.animal_crop).in_([sc.lower() for sc in sub_categories])
+		
 		filters.append(sub_category_filter)
+	
+	if category.lower() == "animal":
+		animal_sub_category_filter = func.lower(Question.animal_crop) == "animal"
+		animals_sub_category = func.lower(Question.animal_crop) == "animals"
+		filters.append(animal_sub_category_filter)
+		filters.append(animals_sub_category)
+	elif category.lower() == "crop":
+		crop_sub_category_filter = func.lower(Question.animal_crop) == "crop"
+		crops_sub_category = func.lower(Question.animal_crop) == "crops"
+		filters.append(crop_sub_category_filter)
+		filters.append(crops_sub_category)
 
 	random_question_data = None
 	matching_questions = (
