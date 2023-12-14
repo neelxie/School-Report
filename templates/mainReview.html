@@ -272,6 +272,12 @@ endblock %} {% block content %}
                       <th class="text-primary pr-3 h3">Topics:</th>
                       <td id="questionTopic1" class="font-weight-bold h2"></td>
                     </tr>
+                    <!-- <tr>
+                      <th class="text-primary pr-3 h3">Tagged Topics:</th>
+                      <td class="font-weight-bold h2">
+                        <ul id="selectedTopicsList"></ul>
+                      </td>
+                    </tr> -->
 
                     <tr class="border">
                       <th class="text-primary pr-3 h3">Category:</th>
@@ -408,7 +414,6 @@ endblock %} {% block content %}
     currentTab = currentTab + n;
     if (currentTab >= x.length) {
       submitForm();
-
       return false;
     }
     showTab(currentTab);
@@ -451,15 +456,23 @@ endblock %} {% block content %}
     populateSubTopics();
   });
 
+  function wordCount(text) {
+    return text.split(/\s+/).filter(function (word) {
+      return word.length > 0;
+    }).length;
+  }
+
   function submitForm() {
     event.preventDefault();
 
+    console.log("yeaaah");
     var form = document.getElementById("signUpForm");
     var formData = new FormData(form);
 
     let questionId2 = parseInt(form.getAttribute("data-question-id"));
 
     const displayValue = document.getElementById("displayValue");
+    let answer = document.getElementById("answer").value;
 
     const formx = document.getElementById("topicForm");
     const selectedTopicsList = document.getElementById("selectedTopicsList");
@@ -477,18 +490,23 @@ endblock %} {% block content %}
     });
     const commaSeparatedString = values.join(", ");
     let itemBody = {};
+    if (wordCount(answer) < 5) {
+      alert("Answer must be at least 5 words.");
+      return;
+    }
 
     if (commaSeparatedString) {
       itemBody = {
         topic: commaSeparatedString,
+        answer: answer
       };
     }
 
     try {
       const response = fetch(
-        `/api/v1/questions/question_review/${questionId2}`,
+        `/api/v1/questions/review_and_answer/${questionId2}`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
             "content-type": "application/json",
             Authorization: `Bearer ${mytoken}`,
@@ -509,51 +527,23 @@ endblock %} {% block content %}
     } finally {
       window.location.reload();
     }
-
-    if (wordCount(answer) < 5) {
-      alert("Answer must be at least 5 words.");
-      return;
-    }
-    const itemBodyt = {
-      answer: answer,
-    };
-    const response = fetch(`/api/v1/questions/add_answer/${questionId}`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(itemBodyt),
-    });
-
-    try {
-      const responseData = response.json();
-      if (response.ok) {
-        window.location.reload();
-      } else {
-        errorMessage.textContent = responseData.error;
-      }
-    } catch (error) {
-      console.error("Error parsing response:");
-      window.location.reload();
-    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    // Get the token from local storage
+
     const token = localStorage.getItem("token");
     const language = localStorage.getItem("language");
     const category = localStorage.getItem("category");
     const sub_category = localStorage.getItem("sub_category");
 
     function showFormWithQuestionId(questionId) {
-      // Display the form and set the question ID as a data attribute
+
       var form = document.getElementById("signUpForm");
       form.style.display = "block";
       form.setAttribute("data-question-id", questionId);
     }
-    // Current tab is set to be the first tab (0)
-    showTab(currentTab); // Display the current tab
+
+    showTab(currentTab);
 
     let userDetails = {
       category: category,
@@ -639,14 +629,14 @@ endblock %} {% block content %}
     subTopicsSelect.innerHTML = "";
 
     if (selectedCategory !== "" && topicsSelect !== "") {
-      const subTopics = categories[selectedCategory][topicsSelect];
+      let subTopics = categories[selectedCategory][topicsSelect];
 
       if (topicsSelect.value === "other") {
         subTopicsSelect.style.display = "none";
         document.getElementById("customFields").style.display = "block";
       } else {
         subTopicsSelect.style.display = "block";
-        document.getElementById("customFields").style.display = "none";
+        // document.getElementById("customFields").style.display = "none";
 
         subTopics.forEach((subTopic) => {
           const option = document.createElement("option");
@@ -682,7 +672,7 @@ endblock %} {% block content %}
     populateSubTopics();
   }
 
-  const selectedTopics = [];
+  let selectedTopics = [];
 
   function addSelectedTopic() {
     event.preventDefault();
