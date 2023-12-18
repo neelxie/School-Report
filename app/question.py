@@ -424,12 +424,12 @@ def get_question(id):
 @questions.get('/delete-questions')
 def delete_questions():
 	try:
-		questions_to_delete = Question.query.filter(Question.rephrased == 'testing', Question.reviewed != True).all()
+		questions_to_delete = Question.query.filter(Question.rephrased == "actual", Question.reviewed != True).all()
 		
 		# for question in questions_to_delete:
 		#		Answer.query.filter_by(question_id=question.id).delete()
 
-		# num_deleted = Question.query.filter(Question.rephrased == 'testing', Question.reviewed != True).delete()
+		# num_deleted = Question.query.filter(Question.rephrased == "actual", Question.reviewed != True).delete()
 		num_deleted = len(questions_to_delete)
 
 		db.session.commit()
