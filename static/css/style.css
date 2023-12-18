@@ -195,7 +195,7 @@ body {
 }
 #signUpForm input {
   padding: 15px 20px;
-  width: 100%;
+
   border: 1px solid #e3e3e3;
   border-radius: 5px;
 }
@@ -232,6 +232,12 @@ body {
 #signUpForm .form-footer #prevBtn {
   background-color: #fff;
   color: #3ac47d;
+}
+
+.customy input {
+  border: 1px solid !important;
+  padding: 3px 4px !important;
+  margin: 5px 15px 5px 0 !important;
 }
 
 .minus,

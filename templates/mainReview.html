@@ -214,7 +214,7 @@ endblock %} {% block content %}
                   <div>
                     <label for="topics" class="font-weight-bold">Select Topic:</label>
                     <select id="topics" class="select m-2" onchange="populateSubTopics()">
-                      <option value="">Select a Topic</option>
+                      <option value="" selected>Select a Topic</option>
                       <option value="Other">Other</option>
                     </select>
                     <!-- <input type="text" id="customTopic" placeholder="Enter new topic"
@@ -222,10 +222,10 @@ endblock %} {% block content %}
 
                     <input type="text" id="customSubTopic" placeholder="Enter new sub-topic"
                       style="display: none; max-width: 18rem;" class="border border-primary"> -->
-
-                    <input type="text" id="customTopic" placeholder="Enter custom topic" style="display: none;">
-                    <input type="text" id="customSubTopic" placeholder="Enter custom sub-topic" style="display: none;">
-
+                    <div class="customy" id="customy" style="display: none;"> <input type="text" id="customTopic"
+                        placeholder="Enter custom topic">
+                      <input type="text" id="customSubTopic" placeholder="Enter custom sub-topic">
+                    </div>
                   </div>
                   <div class="d-flex align-items-baseline">
                     <label for="subTopics" class="font-weight-bold">Select Sub-Topic:</label>
@@ -389,19 +389,22 @@ endblock %} {% block content %}
     x[n].style.display = "block";
 
     var prevBtn = document.getElementById("prevBtn");
-    // if (n == 0) {
-    //   prevBtn.innerHTML = "No";
-    //   prevBtn.setAttribute("onclick", "nextPrev(-1, true)");
-    // } else {
-    prevBtn.innerHTML = "Previous";
-    prevBtn.setAttribute("onclick", "nextPrev(-1, false)");
-
-
     var nextBtn = document.getElementById("nextBtn");
-    if (n == x.length - 1) {
-      nextBtn.innerHTML = "Submit";
-    } else {
+
+    if (n === 0) {
+      prevBtn.style.visibility = "hidden"; // Hide the "Previous" button on the first step
       nextBtn.innerHTML = "Next";
+      nextBtn.setAttribute("onclick", "nextPrev(1)");
+    } else {
+      prevBtn.style.visibility = "visible"; // Show the "Previous" button for other steps
+      prevBtn.innerHTML = "Previous";
+      prevBtn.setAttribute("onclick", "nextPrev(-1)");
+      if (n === x.length - 1) {
+        nextBtn.innerHTML = "Submit";
+      } else {
+        nextBtn.innerHTML = "Next";
+        nextBtn.setAttribute("onclick", "nextPrev(1)");
+      }
     }
 
     fixStepIndicator(n);
@@ -439,20 +442,19 @@ endblock %} {% block content %}
     }
   }
 
-  const topicTypeRadios = document.querySelectorAll('input[name="topicType"]');
-  topicTypeRadios.forEach((radio) => {
-    radio.addEventListener("change", toggleTopics);
-  });
-
   document.getElementById("topics").addEventListener("change", function () {
-    const customTopicInput = document.getElementById("customTopic");
-    if (this.value === "other") {
-      customTopicInput.style.display = "block";
-    } else {
-      customTopicInput.style.display = "none";
-    }
+    let customTopic = document.getElementById("customy");
+    let subtopy = document.getElementById("subTopics");
 
-    // Call populateSubTopics to update subTopics based on the selection
+    if (this.value === "Other") {
+      customTopic.style.display = "block";
+      subtopy.style.display = "none";
+
+    } else {
+      customTopic.style.display = "none";
+      subtopy.style.display = "block";
+
+    }
     populateSubTopics();
   });
 
@@ -465,7 +467,6 @@ endblock %} {% block content %}
   function submitForm() {
     event.preventDefault();
 
-    console.log("yeaaah");
     var form = document.getElementById("signUpForm");
     var formData = new FormData(form);
 
@@ -633,10 +634,10 @@ endblock %} {% block content %}
 
       if (topicsSelect.value === "other") {
         subTopicsSelect.style.display = "none";
-        document.getElementById("customFields").style.display = "block";
+        document.getElementById("customTopic").style.display = "block";
       } else {
         subTopicsSelect.style.display = "block";
-        // document.getElementById("customFields").style.display = "none";
+        // document.getElementById("customTopicInput").style.display = "none";
 
         subTopics.forEach((subTopic) => {
           const option = document.createElement("option");
@@ -659,7 +660,7 @@ endblock %} {% block content %}
     topicsSelect.innerHTML = "";
 
     const otherOption = document.createElement("option");
-    otherOption.value = "other";
+    otherOption.value = "Other";
     otherOption.textContent = "Other";
     topicsSelect.appendChild(otherOption);
 
@@ -677,20 +678,32 @@ endblock %} {% block content %}
   function addSelectedTopic() {
     event.preventDefault();
 
-    const topicsSelect = document.getElementById("topics");
-    const selectedTopic = topicsSelect.value;
-    const selectedSubTopic = document.getElementById("subTopics").value;
+    let topicsSelect = document.getElementById("topics");
+    let selectedTopic = topicsSelect.value;
+    let selectedSubTopic = document.getElementById("subTopics").value;
 
-    if (selectedTopic === "other") {
-      selectedSubTopic = document.getElementById("customTopic").value;
-      selectedSubTopic = document.getElementById("customSubTopic").value;
+    if (selectedTopic === "Other") {
+
+      let customTopicInput = document.getElementById("customTopic").value;
+      let customSubTopicInput = document.getElementById("customSubTopic").value;
+
+      if (customTopicInput !== "" && customSubTopicInput !== "") {
+        selectedTopics.push({ topic: customTopicInput, subTopic: customSubTopicInput });
+        updateSelectedTopicsList();
+        resetSelections();
+      } else {
+        alert("Please fill in both custom topic and sub-topic.");
+      }
+    } else {
+      if (selectedTopic !== "" && selectedSubTopic !== "") {
+        selectedTopics.push({ topic: selectedTopic, subTopic: selectedSubTopic });
+        updateSelectedTopicsList();
+        resetSelections();
+      } else {
+        alert("Please select both topic and sub-topic.");
+      }
     }
 
-    if (selectedTopic !== "" && selectedSubTopic !== "") {
-      selectedTopics.push({ topic: selectedTopic, subTopic: selectedSubTopic });
-      updateSelectedTopicsList();
-      resetSelections();
-    }
   }
 
   function updateSelectedTopicsList() {
@@ -722,6 +735,8 @@ endblock %} {% block content %}
   function resetSelections() {
     document.getElementById("topics").value = "";
     document.getElementById("subTopics").value = "";
+    document.getElementById("customTopic").value = "";
+    document.getElementById("customSubTopic").value = "";
   }
 
   const categories = {
