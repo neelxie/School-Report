@@ -1476,12 +1476,22 @@ def store_answer_ranks():
 			answer = Answer.query.get(answer_id)
 
 			if answer:
-				answer.relevance = ranking.get("relevance")
-				answer.coherence = ranking.get("coherence")
-				answer.fluency = ranking.get("fluency")
-				answer.context = ranking.get("context")
+				relevance = answer.relevance if answer.relevance is not None else 0
+				coherence = answer.coherence if answer.coherence is not None else 0
+				fluency = answer.fluency if answer.fluency is not None else 0
+
+				relevance += ranking.get("relevance")
+				coherence += ranking.get("coherence")
+				fluency += ranking.get("fluency")
+				# answer.context = ranking.get("context")
 				if ranking.get("isFlagged"):
 					answer.offensive = True
+
+				answer.relevance = relevance
+				answer.coherence = coherence
+				answer.fluency = fluency
+				answer.context = ranking.get("context")
+
 
 		if question:
 			if question.rank_expert_one is None:
