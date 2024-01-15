@@ -1099,11 +1099,15 @@ def get_english_questions():
 @questions.route("/runyankole", methods=["GET"])
 @jwt_required()
 def get_runyankole_questions():
-	runya_questions = Question.query.filter(
-		(Question.rephrased != "actual"),
-		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
-		& (func.lower(Question.language) == "runyankole")
-	).all()
+	verify_jwt_in_request()
+	current_user = get_jwt_identity()
+	is_admin = User.query.get(current_user)
+
+	runya_questions = (Question.query
+	.filter(Question.user_id != is_admin.id)
+	.filter(func.lower(Question.language) == "runyankole")
+	.all())
+
 
 	if runya_questions:
 		questions_data = []
