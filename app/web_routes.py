@@ -263,6 +263,15 @@ def runyankole():
         "runyankole.html", token=access_token, role=role, user=username
     )
 
+@web_bp.route("/audios")
+def audios():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    return render_template(
+        "audios.html", token=access_token, role=role, user=username
+    )
+
 
 @web_bp.route("/my-answers")
 def my_answers():

@@ -29,6 +29,11 @@ DATASET_PATH = join(dirname(realpath(__file__)), "static/dataset")
 
 questions = Blueprint("questions", __name__, url_prefix="/api/v1/questions")
 
+def get_audio_file_content(file_path):
+	# file_path = os.path.join(UPLOADS_PATH, filename)
+	return send_file(file_path, as_attachment=True)
+
+
 
 def format_question(question, language):
 	return {
@@ -650,6 +655,8 @@ def list_questions():
 		.group_by(Question.language)
 		.all()
 	)
+	
+	audio_questions = Question.query.filter(Question.filename.isnot(None)).all()
 
 	average_daily_questions = total_questions / (
 		Question.query.filter(
@@ -694,6 +701,7 @@ def list_questions():
 		"average_questions_per_user": round(average_questions_per_user, 2),
 		"plant_category": plant_question_count,
 		"animal_category": animal_question_count,
+		"audios": len(audio_questions),
 		"questions": [
 			{
 				"id": question.id,
@@ -1087,6 +1095,69 @@ def get_english_questions():
 		return jsonify(questions_data), HTTP_200_OK
 	else:
 		return jsonify({"message": "No Luganda questions found"}), HTTP_404_NOT_FOUND
+	
+@questions.route("/runyankole", methods=["GET"])
+@jwt_required()
+def get_runyankole_questions():
+	runya_questions = Question.query.filter(
+		(Question.rephrased != "actual"),
+		(Question.cleaned.is_(None) | (Question.cleaned != "t"))
+		& (func.lower(Question.language) == "runyankole")
+	).all()
+
+	if runya_questions:
+		questions_data = []
+		for question in runya_questions:
+			question_data = {
+				"id": question.id,
+				"sentence": question.sentence,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+				"cleaned": question.cleaned,
+			}
+			questions_data.append(question_data)
+
+		return jsonify(questions_data), HTTP_200_OK
+	else:
+		return jsonify({"message": "No Runyankole questions found"}), HTTP_404_NOT_FOUND
+	
+@questions.route("/audios", methods=["GET"])
+@jwt_required()
+def audio_questions():
+	
+	audio_questions = Question.query.filter(Question.filename.isnot(None)).all()
+	audio_questions_list = []
+
+	if audio_questions:
+		
+
+		for question in audio_questions:
+			print(question.filename)
+			print(UPLOADS_PATH)
+			file_path = os.path.join(UPLOADS_PATH, question.filename)
+			# print(file_path)
+			# print("Current working directory:", os.getcwd())
+			# if os.path.exists(file_path):
+			audio_questions_list.append({
+				'id': question.id,
+				"language": question.language,
+				"created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+				"topics": question.topic,
+				"sub_topic": question.sub_topic,
+				"category": question.category,
+				"animal_crop": question.animal_crop,
+				"location": question.location,
+				'filename': question.filename,
+				# 'file_content': get_audio_file_content(file_path)
+			})
+				# print(len(audio_questions_list))
+		return jsonify(audio_questions_list)
+	return jsonify({"message": "No Audio questions found"}), HTTP_404_NOT_FOUND
 
 @questions.route("/expertluganda", methods=["GET"])
 @jwt_required()

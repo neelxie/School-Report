@@ -278,7 +278,7 @@ content %}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-xl-6">
+          <!-- <div class="col-md-6 col-xl-6">
             <div class="card mb-3 widget-content">
               <div class="widget-content-outer">
                 <div class="widget-content-wrapper">
@@ -297,6 +297,48 @@ content %}
                 </div>
               </div>
             </div>
+          </div> -->
+          <div class="col-md-6 col-xl-3">
+            <a
+              class="card mb-3 widget-content nav-link"
+              href="{{ url_for('web.runyankole') }}"
+            >
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Runyankole</div>
+                    <div class="widget-subheading">Total Runyankole Questions</div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-warning"
+                      id="runyankoleQuestions"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-xl-3">
+            <a
+              class="card mb-3 widget-content nav-link"
+              href="{{ url_for('web.audios') }}"
+            >
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Audio</div>
+                    <div class="widget-subheading">Total Audio Questions</div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-danger"
+                      id="audios"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </a>
           </div>
 
           <div class="col-md-6 col-xl-6">
@@ -319,7 +361,7 @@ content %}
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-xl-6">
+          <!-- <div class="col-md-6 col-xl-6">
             <div class="card mb-3 widget-content">
               <div class="widget-content-outer">
                 <div class="widget-content-wrapper">
@@ -338,7 +380,49 @@ content %}
                 </div>
               </div>
             </div>
+          </div> -->
+          <div class="col-md-6 col-xl-3">
+            <div
+              class="card mb-3 widget-content nav-link"
+            >
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Crop Category</div>
+                    <div class="widget-subheading">Total Questions on Crops</div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-danger"
+                      id="plantCategory"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          <div class="col-md-6 col-xl-3">
+            <div
+              class="card mb-3 widget-content nav-link"
+              
+            >
+              <div class="widget-content-outer">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left">
+                    <div class="widget-heading">Animal Category</div>
+                    <div class="widget-subheading">Total Questions on Animals</div>
+                  </div>
+                  <div class="widget-content-right">
+                    <div
+                      class="widget-numbers text-danger"
+                      id="animalCategory"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
 
           <div class="col-md-6 col-xl-6">
             <div class="card mb-3 widget-content">
@@ -611,6 +695,7 @@ content %}
 
         const lugandaCount = languageCounts["Luganda"] || 0;
         const englishCount = languageCounts["English"] || 0;
+        const runyankoleCount = languageCounts["Runyankole"] || 0;
 
         const lugandaQuestions = document.getElementById("lugandaQuestions");
         lugandaQuestions.textContent = lugandaCount;
@@ -622,6 +707,8 @@ content %}
         plantCategory.textContent = statsData.plant_category;
         let animalCategory = document.getElementById("animalCategory");
         animalCategory.textContent = statsData.animal_category;
+        const runyankoleQuestions = document.getElementById("runyankoleQuestions");
+        runyankoleQuestions.textContent = runyankoleCount;
       })
       .catch((error) =>
         console.error("Error fetching statistics data:", error)
