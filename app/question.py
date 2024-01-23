@@ -1790,6 +1790,8 @@ def upload_json_answers():
 						location=location,
 						cleaned=True,
 						rephrased="actual"
+						reviewed=True,
+						reviewer_id = 1
 				)
 				db.session.add(question)
 				db.session.commit()
