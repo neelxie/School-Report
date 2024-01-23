@@ -811,11 +811,11 @@ def main_question_review():
 		Question.query.filter(Question.rephrased == "actual", *filters)
 		.all()
 	)
-
+	print(matching_questions)
 	# questions_data = []
 
-	if matching_questions is not None:
-		random_question = random.choice(matching_questions)
+	if matching_questions:
+		random_question = random.sample(matching_questions, 1)[0]
 		questions_data = format_question(random_question, "Any Language")
 		return jsonify([questions_data]), HTTP_200_OK
 	else:
