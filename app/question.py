@@ -809,15 +809,15 @@ def main_question_review():
 	
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", *filters)
-		.order_by(func.random())
-		.first()
+		.all()
 	)
 
-	questions_data = []
+	# questions_data = []
 
 	if matching_questions is not None:
-		questions_data.append(format_question(matching_questions, "Any Language"))
-		return jsonify(questions_data), HTTP_200_OK
+		random_question = random.choice(matching_questions)
+		questions_data = format_question(random_question, "Any Language")
+		return jsonify([questions_data]), HTTP_200_OK
 	else:
 		return jsonify({"message": "No questions available."}), HTTP_404_NOT_FOUND
 
