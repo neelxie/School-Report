@@ -760,7 +760,6 @@ def main_question_review():
 	filters = []
 
 	category_filter = func.lower(Question.category) == category
-	reviewed_filter = Question.reviewed == False
 
 	if language:
 		languages = [lang.strip().lower() for lang in language.split(",")]
@@ -768,50 +767,48 @@ def main_question_review():
 		filters.append(language_filter)
 
 	if sub_category:
-		sub_category = sub_category.lower()
+		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
 
 		vegetable_sub_categories = [
 				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
 				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
-				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper"
+				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
+				"kale", "hubiscus"
 		]
 
 		poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
 
 		cattle_sub_categories = ["cattle", "goat", "goats"]
-		sub_categories = []
+		cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
+		fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
+		legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
+		sub_category_filters = []
 
-		if sub_category == "vegetables":
-			sub_categories = vegetable_sub_categories
-
-		elif sub_category == "cattle":
-			sub_categories = cattle_sub_categories
-
-		elif sub_category == "poultry":
-			sub_categories = poultry_sub_categories
-		else:
-			
-			sub_categories = [sub_cat.strip() for sub_cat in (sub_category.split(",") if ',' in sub_category else [sub_category])]
+		for sc in sub_categories:
+			if sc == "vegetables":
+				sub_category_filters.append(func.lower(Question.animal_crop).in_(vegetable_sub_categories))
+			elif sc == "fruits":
+				sub_category_filters.append(func.lower(Question.animal_crop).in_(fruits_sub_categories))
+			elif sc == "cereals":
+				sub_category_filters.append(func.lower(Question.animal_crop).in_(cereals_sub_categories))
+			elif sc == "legumes":
+				sub_category_filters.append(func.lower(Question.animal_crop).in_(legumes_sub_categories))
+			elif sc == "cattle":
+				sub_category_filters.append(func.lower(Question.animal_crop).in_(cattle_sub_categories))
+			elif sc == "poultry":
+				sub_category_filters.append(func.lower(Question.animal_crop).in_(poultry_sub_categories))
+			else:
+				sub_category_filters.append(func.lower(Question.animal_crop) == sc)
 		
-		# sub_category_filter = Question.animal_crop.in_(justa)
-		sub_category_filter = func.lower(Question.animal_crop).in_([sc.lower() for sc in sub_categories])
-
-		
-		filters.append(sub_category_filter)
+		filters.extend(sub_category_filters)
 	
 	if category.lower() == "animal":
-		animal_sub_category_filter = func.lower(Question.animal_crop) == "animal"
-		animals_sub_category = func.lower(Question.animal_crop) == "animals"
-		filters.append(animal_sub_category_filter)
-		filters.append(animals_sub_category)
+		filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
 	elif category.lower() == "crop":
-		crop_sub_category_filter = func.lower(Question.animal_crop) == "crop"
-		crops_sub_category = func.lower(Question.animal_crop) == "crops"
-		filters.append(crop_sub_category_filter)
-		filters.append(crops_sub_category)
+		filters.append(func.lower(Question.animal_crop).in_(["crop", "crops"]))
 	
 	matching_questions = (
-		Question.query.filter(Question.rephrased == "actual", reviewed_filter, *filters)
+		Question.query.filter(Question.rephrased == "actual", *filters)
 		.order_by(func.random())
 		.first()
 	)
