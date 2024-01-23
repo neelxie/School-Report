@@ -1789,9 +1789,9 @@ def upload_json_answers():
 						animal_crop=animal_crop,
 						location=location,
 						cleaned=True,
-						rephrased="actual"
+						rephrased="actual",
 						reviewed=True,
-						reviewer_id = 1
+						reviewer_id=1
 				)
 				db.session.add(question)
 				db.session.commit()
