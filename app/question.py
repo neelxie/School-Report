@@ -799,8 +799,10 @@ def main_question_review():
 				sub_category_filters.append(func.lower(Question.animal_crop).in_(poultry_sub_categories))
 			else:
 				sub_category_filters.append(func.lower(Question.animal_crop) == sc)
+				print(f"Added unspecified sub-category: {sc}")
 		
 		filters.extend(sub_category_filters)
+		print(f"Sub-category filters: {sub_category_filters}")
 	
 	if category.lower() == "animal":
 		filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
