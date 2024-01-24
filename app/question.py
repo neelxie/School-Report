@@ -789,26 +789,30 @@ def main_question_review():
 		for sc in sub_categories:
 			print(sc)
 			if sc == "vegetables":
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(vegetable_sub_categories))
+				vegetables_filters = [func.lower(Question.animal_crop) == vegetable for vegetable in vegetable_sub_categories]
+        		sub_category_filters.extend(vegetables_filters)
 			elif sc == "fruits":
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(fruits_sub_categories))
+				fruits_filters = [func.lower(Question.animal_crop) == fruit for fruit in fruits_sub_categories]
+        		sub_category_filters.extend(fruits_filters)
 			elif sc == "cereals":
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(cereals_sub_categories))
+				cereals_filters = [func.lower(Question.animal_crop) == cereal for cereal in cereals_sub_categories]
+        		sub_category_filters.extend(cereals_filters)
 			elif sc == "legumes":
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(legumes_sub_categories))
+				legumes_filters = [func.lower(Question.animal_crop) == legume for legume in legumes_sub_categories]
+        		sub_category_filters.extend(legumes_filters)
 			elif sc == "cattle":
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(cattle_sub_categories))
+				cattle_filters = [func.lower(Question.animal_crop) == cow for cow in cattle_sub_categories]
+        		sub_category_filters.extend(cattle_filters)
 			elif sc == "poultry":
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(poultry_sub_categories))
+				poultry_filters = [func.lower(Question.animal_crop) == hen for hen in poultry_sub_categories]
+        		sub_category_filters.extend(poultry_filters)
 			elif sc == "banana":
-				print("we got here")
 				banana_filter = or_(
 					func.lower(Question.animal_crop) == "banana",
 					func.lower(Question.animal_crop) == "bananas"
     		    )
 				sub_category_filters.append(banana_filter)
-				print("Hot here too")
-
+	
 			else:
 				sub_category_filters.append(func.lower(Question.animal_crop) == sc)
 				print(f"Added unspecified sub-category: {sc}")
