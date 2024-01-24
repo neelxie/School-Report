@@ -819,7 +819,7 @@ def main_question_review():
 		filters.append(func.lower(Question.animal_crop).in_(["crop", "crops"]))
 	
 	matching_questions = (
-		Question.query.filter(Question.rephrased == "actual", Question.answered == False, *filters)
+		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
 		.all()
 	)
 	print(matching_questions)
