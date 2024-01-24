@@ -1404,10 +1404,11 @@ def main_question_rank():
 			*filters)
 		.all()
 	)
+	print(random_question)
 
 	matching_questions = None
 	if random_question:
-		matching_questions = random.sample(matching_questions, 1)[0]
+		matching_questions = random.sample(random_question, 1)[0]
 	
 	if matching_questions:
 		random_question_data = {
