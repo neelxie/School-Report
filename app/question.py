@@ -787,6 +787,7 @@ def main_question_review():
 		sub_category_filters = []
 
 		for sc in sub_categories:
+			print(sc)
 			if sc == "vegetables":
 				sub_category_filters.append(func.lower(Question.animal_crop).in_(vegetable_sub_categories))
 			elif sc == "fruits":
