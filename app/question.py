@@ -801,11 +801,13 @@ def main_question_review():
 			elif sc == "poultry":
 				sub_category_filters.append(func.lower(Question.animal_crop).in_(poultry_sub_categories))
 			elif sc == "banana":
+				print("we got here")
 				banana_filter = or_(
 					func.lower(Question.animal_crop) == "banana",
 					func.lower(Question.animal_crop) == "bananas"
-    		)
+    		    )
 				sub_category_filters.append(banana_filter)
+				print("Hot here too")
 
 			else:
 				sub_category_filters.append(func.lower(Question.animal_crop) == sc)
