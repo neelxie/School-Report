@@ -823,7 +823,12 @@ def main_question_review():
 		.all()
 	)
 	print(matching_questions)
-	# questions_data = []
+	mputa_questions = (
+		Question.query.filter(Question.rephrased == "actual", Question.answered == False, Question.animal_crop == 'banana')
+		.all()
+	)
+	print(len(mputa_questions))
+	print(mputa_questions)
 
 	if matching_questions:
 		random_question = random.sample(matching_questions, 1)[0]
