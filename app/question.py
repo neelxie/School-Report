@@ -820,11 +820,11 @@ def main_question_review():
 		print("the subz")
 		print(sub_categories)
 		if len(sub_categories) == 1:
-			sub_category_filter = func.lower(Question.sub_category) == sub_categories[0]
+			sub_category_filter = func.lower(Question.animal_crop) == sub_categories[0]
 			filters.append(sub_category_filter)
 		else:
 			
-			sub_category_filters = [func.lower(Question.sub_category).in_(sub_list) for sub_list in [vegetable_sub_categories, poultry_sub_categories, cattle_sub_categories, cereals_sub_categories, fruits_sub_categories, legumes_sub_categories]]
+			sub_category_filters = [func.lower(Question.animal_crop).in_(sub_list) for sub_list in [vegetable_sub_categories, poultry_sub_categories, cattle_sub_categories, cereals_sub_categories, fruits_sub_categories, legumes_sub_categories]]
 			filters.append(or_(*sub_category_filters))
 
 	print(filters)
