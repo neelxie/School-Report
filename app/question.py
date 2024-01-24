@@ -816,10 +816,10 @@ def main_question_review():
 		filters.extend(sub_category_filters)
 		print(f"Sub-category filters: {sub_category_filters}")
 	
-	if category.lower() == "animal":
-		filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
-	elif category.lower() == "crop":
-		filters.append(func.lower(Question.animal_crop).in_(["crop", "crops"]))
+	# if category.lower() == "animal":
+	# 	filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
+	# elif category.lower() == "crop":
+	# 	filters.append(func.lower(Question.animal_crop).in_(["crop", "crops"]))
 	
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
