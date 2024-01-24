@@ -788,12 +788,12 @@ def main_question_review():
 				for hen in poultry_sub_categories
 			)
 		elif sc == "cereals":
-			return and_(
+			return or_(
 				func.lower(Question.animal_crop) == cereal
 				for cereal in cereals_sub_categories
 			)
 		elif sc == "legumes":
-			return and_(
+			return or_(
 				func.lower(Question.animal_crop) == legume
 				for legume in legumes_sub_categories
 			)
