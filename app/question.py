@@ -790,22 +790,22 @@ def main_question_review():
 			print(sc)
 			if sc == "vegetables":
 				vegetables_filters = [func.lower(Question.animal_crop) == vegetable for vegetable in vegetable_sub_categories]
-        		sub_category_filters.extend(vegetables_filters)
+				sub_category_filters.extend(vegetables_filters)
 			elif sc == "fruits":
 				fruits_filters = [func.lower(Question.animal_crop) == fruit for fruit in fruits_sub_categories]
-        		sub_category_filters.extend(fruits_filters)
+				sub_category_filters.extend(fruits_filters)
 			elif sc == "cereals":
 				cereals_filters = [func.lower(Question.animal_crop) == cereal for cereal in cereals_sub_categories]
-        		sub_category_filters.extend(cereals_filters)
+				sub_category_filters.extend(cereals_filters)
 			elif sc == "legumes":
 				legumes_filters = [func.lower(Question.animal_crop) == legume for legume in legumes_sub_categories]
-        		sub_category_filters.extend(legumes_filters)
+				sub_category_filters.extend(legumes_filters)
 			elif sc == "cattle":
 				cattle_filters = [func.lower(Question.animal_crop) == cow for cow in cattle_sub_categories]
-        		sub_category_filters.extend(cattle_filters)
+				sub_category_filters.extend(cattle_filters)
 			elif sc == "poultry":
 				poultry_filters = [func.lower(Question.animal_crop) == hen for hen in poultry_sub_categories]
-        		sub_category_filters.extend(poultry_filters)
+				sub_category_filters.extend(poultry_filters)
 			elif sc == "banana":
 				banana_filter = or_(
 					func.lower(Question.animal_crop) == "banana",
