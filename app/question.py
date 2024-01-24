@@ -787,6 +787,16 @@ def main_question_review():
 				func.lower(Question.animal_crop) == hen
 				for hen in poultry_sub_categories
 			)
+		elif sc == "cereals":
+			return or_(
+				func.lower(Question.animal_crop) == cereal
+				for cereal in cereals_sub_categories
+			)
+		elif sc == "legumes":
+			return or_(
+				func.lower(Question.animal_crop) == legume
+				for legume in legumes_sub_categories
+			)
 		else:
 			
 			return func.lower(Question.animal_crop) == sc
@@ -813,7 +823,7 @@ def main_question_review():
 
 		combined_sub_category_filter = None
 		for sc in sub_categories:
-			if sc in ["vegetables", "fruits", "cattle", "poultry"]:
+			if sc in ["vegetables", "fruits", "cattle", "poultry", "legumes", "cereals"]:
 				specific_filter = create_filter_for_sub_category(sc)
 				if combined_sub_category_filter is None:
 					combined_sub_category_filter = specific_filter
