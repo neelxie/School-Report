@@ -751,7 +751,6 @@ def random_question_and_add_answer():
 @jwt_required()
 def main_question_review():
 
-
 	vegetable_sub_categories = [
 			"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
 			"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
@@ -820,23 +819,14 @@ def main_question_review():
 		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
 		print("the subz")
 		print(sub_categories)
+		if len(sub_categories) == 1:
+			sub_category_filter = func.lower(Question.sub_category) == sub_categories[0]
+			filters.append(sub_category_filter)
+		else:
+			
+			sub_category_filters = [func.lower(Question.sub_category).in_(sub_list) for sub_list in [vegetable_sub_categories, poultry_sub_categories, cattle_sub_categories, cereals_sub_categories, fruits_sub_categories, legumes_sub_categories]]
+			filters.append(or_(*sub_category_filters))
 
-		combined_sub_category_filter = None
-		for sc in sub_categories:
-			if sc in ["vegetables", "fruits", "cattle", "poultry", "legumes", "cereals"]:
-				specific_filter = create_filter_for_sub_category(sc)
-				if combined_sub_category_filter is None:
-					combined_sub_category_filter = specific_filter
-				else:
-					combined_sub_category_filter = and_(combined_sub_category_filter, specific_filter)
-			else:
-				specific_filter = func.lower(Question.animal_crop) == sc
-				if combined_sub_category_filter is None:
-					combined_sub_category_filter = specific_filter
-				else:
-					combined_sub_category_filter = and_(combined_sub_category_filter, specific_filter)
-					
-		filters.append(combined_sub_category_filter)
 	print(filters)
 	
 	# if category.lower() == "animal":
