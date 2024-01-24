@@ -824,7 +824,10 @@ def main_question_review():
 	)
 	print(matching_questions)
 	mputa_questions = (
-		Question.query.filter(Question.rephrased == "actual", Question.answered == False, Question.animal_crop == 'banana')
+		Question.query
+		.filter(func.lower(Question.rephrased) == 'actual')
+		.filter(Question.answered.is_(False))
+		.filter(func.lower(Question.animal_crop) == 'banana')
 		.all()
 	)
 	print(len(mputa_questions))
