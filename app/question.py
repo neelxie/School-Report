@@ -71,6 +71,31 @@ def file_name(file):
 	file_name, file_extension = os.path.splitext(name)
 	return file_name, file_extension
 
+def create_filter_for_sub_category(sc):
+
+    if sc == "vegetables":
+        return or_(
+            func.lower(Question.animal_crop) == vegetable
+            for vegetable in vegetable_sub_categories
+        )
+    elif sc == "fruits":
+        return or_(
+            func.lower(Question.animal_crop) == fruit
+            for fruit in fruits_sub_categories
+        )
+    elif sc == "cattle":
+        return or_(
+            func.lower(Question.animal_crop) == cow
+            for cow in cattle_sub_categories
+        )
+    elif sc == "poultry":
+        return or_(
+            func.lower(Question.animal_crop) == hen
+            for hen in poultry_sub_categories
+        )
+    else:
+        # Handle single values for other sub-categories
+        return func.lower(Question.animal_crop) == sc
 
 @questions.route("/", methods=["POST", "GET"])
 @jwt_required()
@@ -751,33 +776,6 @@ def random_question_and_add_answer():
 @questions.route("/main_question_review", methods=["POST"])
 @jwt_required()
 def main_question_review():
-	def _create_filter_for_sub_category(sc):
-    """Creates a filter for the given sub-category, handling multiple values if necessary."""
-
-    if sc == "vegetables":
-        return or_(
-            func.lower(Question.animal_crop) == vegetable
-            for vegetable in vegetable_sub_categories
-        )
-    elif sc == "fruits":
-        return or_(
-            func.lower(Question.animal_crop) == fruit
-            for fruit in fruits_sub_categories
-        )
-    elif sc == "cattle":
-        return or_(
-            func.lower(Question.animal_crop) == cow
-            for cow in cattle_sub_categories
-        )
-    elif sc == "poultry":
-        return or_(
-            func.lower(Question.animal_crop) == hen
-            for hen in poultry_sub_categories
-        )
-    else:
-        # Handle single values for other sub-categories
-        return func.lower(Question.animal_crop) == sc
-
 	data = request.get_json()
 	
 	category = data.get("category", None)
@@ -814,7 +812,7 @@ def main_question_review():
 		combined_sub_category_filter = None
         for sc in sub_categories:
             if sc in ["vegetables", "fruits", "cattle", "poultry"]:
-                specific_filter = _create_filter_for_sub_category(sc)
+                specific_filter = create_filter_for_sub_category(sc)
                 if combined_sub_category_filter is None:
                     combined_sub_category_filter = specific_filter
                 else:
