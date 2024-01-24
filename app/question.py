@@ -768,6 +768,8 @@ def main_question_review():
 
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
+		print("the subz")
+		print(sub_categories)
 
 		vegetable_sub_categories = [
 				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
@@ -817,7 +819,7 @@ def main_question_review():
 		filters.append(func.lower(Question.animal_crop).in_(["crop", "crops"]))
 	
 	matching_questions = (
-		Question.query.filter(Question.rephrased == "actual", Question.answered.is_not(True), *filters)
+		Question.query.filter(Question.rephrased == "actual", Question.answered == False, *filters)
 		.all()
 	)
 	print(matching_questions)
