@@ -820,13 +820,11 @@ def main_question_review():
 			else:
 				specific_filter = func.lower(Question.animal_crop) == sc
 				if combined_sub_category_filter is None:
-                    combined_sub_category_filter = specific_filter
-                else:
-                    combined_sub_category_filter = and_(
-                        combined_sub_category_filter, specific_filter
-                    )
-
-        filters.append(combined_sub_category_filter)
+					combined_sub_category_filter = specific_filter
+				else:
+					combined_sub_category_filter = and_(combined_sub_category_filter, specific_filter)
+					
+		filters.append(combined_sub_category_filter)
 	
 	# if category.lower() == "animal":
 	# 	filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
