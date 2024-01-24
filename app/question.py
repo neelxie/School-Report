@@ -751,6 +751,33 @@ def random_question_and_add_answer():
 @questions.route("/main_question_review", methods=["POST"])
 @jwt_required()
 def main_question_review():
+	def _create_filter_for_sub_category(sc):
+    """Creates a filter for the given sub-category, handling multiple values if necessary."""
+
+    if sc == "vegetables":
+        return or_(
+            func.lower(Question.animal_crop) == vegetable
+            for vegetable in vegetable_sub_categories
+        )
+    elif sc == "fruits":
+        return or_(
+            func.lower(Question.animal_crop) == fruit
+            for fruit in fruits_sub_categories
+        )
+    elif sc == "cattle":
+        return or_(
+            func.lower(Question.animal_crop) == cow
+            for cow in cattle_sub_categories
+        )
+    elif sc == "poultry":
+        return or_(
+            func.lower(Question.animal_crop) == hen
+            for hen in poultry_sub_categories
+        )
+    else:
+        # Handle single values for other sub-categories
+        return func.lower(Question.animal_crop) == sc
+
 	data = request.get_json()
 	
 	category = data.get("category", None)
@@ -784,45 +811,26 @@ def main_question_review():
 		cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
 		fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
 		legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
-		sub_category_filters = []
+		combined_sub_category_filter = None
+        for sc in sub_categories:
+            if sc in ["vegetables", "fruits", "cattle", "poultry"]:
+                specific_filter = _create_filter_for_sub_category(sc)
+                if combined_sub_category_filter is None:
+                    combined_sub_category_filter = specific_filter
+                else:
+                    combined_sub_category_filter = and_(
+                        combined_sub_category_filter, specific_filter
+                    )
+            else:
+                specific_filter = func.lower(Question.animal_crop) == sc
+                if combined_sub_category_filter is None:
+                    combined_sub_category_filter = specific_filter
+                else:
+                    combined_sub_category_filter = and_(
+                        combined_sub_category_filter, specific_filter
+                    )
 
-		for sc in sub_categories:
-			print(sc)
-			if sc == "vegetables":
-				vegetables_filters = [func.lower(Question.animal_crop) == vegetable for vegetable in vegetable_sub_categories]
-				sub_category_filters.extend(vegetables_filters)
-			elif sc == "fruits":
-				fruits_filters = [func.lower(Question.animal_crop) == fruit for fruit in fruits_sub_categories]
-				sub_category_filters.extend(fruits_filters)
-			elif sc == "cereals":
-				cereals_filters = or_(
-					func.lower(Question.animal_crop) == cereal for cereal in cereals_sub_categories
-					)
-				sub_category_filters.append(cereals_filters)
-			elif sc == "legumes":
-				legumes_filters = or_(
-					func.lower(Question.animal_crop) == legume for legume in legumes_sub_categories
-					)
-				sub_category_filters.append(legumes_filters)
-			elif sc == "cattle":
-				cattle_filters = [func.lower(Question.animal_crop) == cow for cow in cattle_sub_categories]
-				sub_category_filters.extend(cattle_filters)
-			elif sc == "poultry":
-				poultry_filters = [func.lower(Question.animal_crop) == hen for hen in poultry_sub_categories]
-				sub_category_filters.extend(poultry_filters)
-			elif sc == "banana":
-				banana_filter = or_(
-					func.lower(Question.animal_crop) == "banana",
-					func.lower(Question.animal_crop) == "bananas"
-    		    )
-				sub_category_filters.append(banana_filter)
-	
-			else:
-				sub_category_filters.append(func.lower(Question.animal_crop) == sc)
-				print(f"Added unspecified sub-category: {sc}")
-		
-		filters.extend(sub_category_filters)
-		print(f"Sub-category filters: {sub_category_filters}")
+        filters.append(combined_sub_category_filter)
 	
 	# if category.lower() == "animal":
 	# 	filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
