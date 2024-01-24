@@ -795,8 +795,10 @@ def main_question_review():
 				fruits_filters = [func.lower(Question.animal_crop) == fruit for fruit in fruits_sub_categories]
 				sub_category_filters.extend(fruits_filters)
 			elif sc == "cereals":
-				cereals_filters = [func.lower(Question.animal_crop) == cereal for cereal in cereals_sub_categories]
-				sub_category_filters.extend(cereals_filters)
+				cereals_filters = or_(
+					func.lower(Question.animal_crop) == cereal for cereal in cereals_sub_categories
+					)
+				sub_category_filters.append(cereals_filters)
 			elif sc == "legumes":
 				legumes_filters = or_(
 					func.lower(Question.animal_crop) == legume for legume in legumes_sub_categories
