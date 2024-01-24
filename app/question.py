@@ -798,8 +798,10 @@ def main_question_review():
 				cereals_filters = [func.lower(Question.animal_crop) == cereal for cereal in cereals_sub_categories]
 				sub_category_filters.extend(cereals_filters)
 			elif sc == "legumes":
-				legumes_filters = [func.lower(Question.animal_crop) == legume for legume in legumes_sub_categories]
-				sub_category_filters.extend(legumes_filters)
+				legumes_filters = or_(
+					func.lower(Question.animal_crop) == legume for legume in legumes_sub_categories
+					)
+				sub_category_filters.append(legumes_filters)
 			elif sc == "cattle":
 				cattle_filters = [func.lower(Question.animal_crop) == cow for cow in cattle_sub_categories]
 				sub_category_filters.extend(cattle_filters)
@@ -830,15 +832,6 @@ def main_question_review():
 		.all()
 	)
 	print(matching_questions)
-	mputa_questions = (
-		Question.query
-		.filter(func.lower(Question.rephrased) == 'actual')
-		.filter(Question.answered.is_(False))
-		.filter(func.lower(Question.animal_crop) == 'banana')
-		.all()
-	)
-	print(len(mputa_questions))
-	print(mputa_questions)
 
 	if matching_questions:
 		random_question = random.sample(matching_questions, 1)[0]
