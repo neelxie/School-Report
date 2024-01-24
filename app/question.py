@@ -1367,12 +1367,6 @@ def main_question_rank():
 
 	current_user = get_jwt_identity()
 
-	data = request.get_json()
-	
-	category = data.get("category", None)
-	language = data.get("language", None)
-	sub_category = data.get("sub_category", None)
-
 	filters = []
 
 	category_filter = func.lower(Question.category) == category
