@@ -767,30 +767,29 @@ def main_question_review():
 	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
 
 	def create_filter_for_sub_category(sc):
-
-    if sc == "vegetables":
-        return or_(
-            func.lower(Question.animal_crop) == vegetable
-            for vegetable in vegetable_sub_categories
-        )
-    elif sc == "fruits":
-        return or_(
-            func.lower(Question.animal_crop) == fruit
-            for fruit in fruits_sub_categories
-        )
-    elif sc == "cattle":
-        return or_(
-            func.lower(Question.animal_crop) == cow
-            for cow in cattle_sub_categories
-        )
-    elif sc == "poultry":
-        return or_(
-            func.lower(Question.animal_crop) == hen
-            for hen in poultry_sub_categories
-        )
-    else:
-        # Handle single values for other sub-categories
-        return func.lower(Question.animal_crop) == sc
+		if sc == "vegetables":
+			return or_(
+				func.lower(Question.animal_crop) == vegetable
+				for vegetable in vegetable_sub_categories
+			)
+		elif sc == "fruits":
+			return or_(
+				func.lower(Question.animal_crop) == fruit
+				for fruit in fruits_sub_categories
+			)
+		elif sc == "cattle":
+			return or_(
+				func.lower(Question.animal_crop) == cow
+				for cow in cattle_sub_categories
+			)
+		elif sc == "poultry":
+			return or_(
+				func.lower(Question.animal_crop) == hen
+				for hen in poultry_sub_categories
+			)
+		else:
+			
+			return func.lower(Question.animal_crop) == sc
 
 	data = request.get_json()
 	
