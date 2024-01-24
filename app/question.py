@@ -71,32 +71,6 @@ def file_name(file):
 	file_name, file_extension = os.path.splitext(name)
 	return file_name, file_extension
 
-def create_filter_for_sub_category(sc):
-
-    if sc == "vegetables":
-        return or_(
-            func.lower(Question.animal_crop) == vegetable
-            for vegetable in vegetable_sub_categories
-        )
-    elif sc == "fruits":
-        return or_(
-            func.lower(Question.animal_crop) == fruit
-            for fruit in fruits_sub_categories
-        )
-    elif sc == "cattle":
-        return or_(
-            func.lower(Question.animal_crop) == cow
-            for cow in cattle_sub_categories
-        )
-    elif sc == "poultry":
-        return or_(
-            func.lower(Question.animal_crop) == hen
-            for hen in poultry_sub_categories
-        )
-    else:
-        # Handle single values for other sub-categories
-        return func.lower(Question.animal_crop) == sc
-
 @questions.route("/", methods=["POST", "GET"])
 @jwt_required()
 def handle_questions():
@@ -776,6 +750,48 @@ def random_question_and_add_answer():
 @questions.route("/main_question_review", methods=["POST"])
 @jwt_required()
 def main_question_review():
+
+
+	vegetable_sub_categories = [
+			"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
+			"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
+			"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
+			"kale", "hubiscus"
+	]
+
+	poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
+
+	cattle_sub_categories = ["cattle", "goat", "goats"]
+	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
+	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
+	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
+
+	def create_filter_for_sub_category(sc):
+
+    if sc == "vegetables":
+        return or_(
+            func.lower(Question.animal_crop) == vegetable
+            for vegetable in vegetable_sub_categories
+        )
+    elif sc == "fruits":
+        return or_(
+            func.lower(Question.animal_crop) == fruit
+            for fruit in fruits_sub_categories
+        )
+    elif sc == "cattle":
+        return or_(
+            func.lower(Question.animal_crop) == cow
+            for cow in cattle_sub_categories
+        )
+    elif sc == "poultry":
+        return or_(
+            func.lower(Question.animal_crop) == hen
+            for hen in poultry_sub_categories
+        )
+    else:
+        # Handle single values for other sub-categories
+        return func.lower(Question.animal_crop) == sc
+
 	data = request.get_json()
 	
 	category = data.get("category", None)
@@ -796,19 +812,6 @@ def main_question_review():
 		print("the subz")
 		print(sub_categories)
 
-		vegetable_sub_categories = [
-				"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
-				"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
-				"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
-				"kale", "hubiscus"
-		]
-
-		poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
-
-		cattle_sub_categories = ["cattle", "goat", "goats"]
-		cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
-		fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
-		legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
 		combined_sub_category_filter = None
 		for sc in sub_categories:
 			if sc in ["vegetables", "fruits", "cattle", "poultry"]:
