@@ -541,6 +541,7 @@ endblock %} {% block content %}
     const language = localStorage.getItem("language");
     const category = localStorage.getItem("category");
     const sub_category = localStorage.getItem("sub_category");
+    const new_category = localStorage.getItem("new_category");
 
     function showFormWithQuestionId(questionId) {
 
@@ -555,6 +556,7 @@ endblock %} {% block content %}
       category: category,
       language: language,
       sub_category: sub_category,
+      new_category:new_category,
     };
 
     fetch("/api/v1/questions/main_question_review", {
