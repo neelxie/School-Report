@@ -782,7 +782,7 @@ def main_question_review():
 		filters.append(language_filter)
 
 	if sub_category:
-		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
+		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 		
 		if len(sub_categories) == 1:
 			sub_category_filter = func.lower(Question.animal_crop) == sub_categories[0]
@@ -1380,9 +1380,8 @@ def main_question_rank():
 		filters.append(language_filter)
 
 	if sub_category:
-		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
-		print("the subz")
-		print(sub_categories)
+		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+		
 		if len(sub_categories) == 1:
 			sub_category_filter = func.lower(Question.animal_crop) == sub_categories[0]
 			filters.append(sub_category_filter)
@@ -1397,11 +1396,10 @@ def main_question_rank():
     	Question.answered.is_(True),
     	Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
-			(Question.rank_expert_one == None) | (Question.rank_expert_one == None),
+			(Question.rank_expert_one == None) | (Question.rank_expert_two == None),
 			*filters)
 		.all()
 	)
-	print(random_question)
 
 	matching_questions = None
 	if random_question:
