@@ -341,6 +341,10 @@ endblock %} {% block content %}
     "sub_category",
     "{{ sub_category }}"
   );
+  const new_category = getValueFromLocalStorage(
+    "new_category",
+    "{{ new_category }}"
+  );
 
   // Update localStorage with the current values
   localStorage.setItem("token", token);
@@ -349,6 +353,7 @@ endblock %} {% block content %}
   localStorage.setItem("language", language);
   localStorage.setItem("category", category);
   localStorage.setItem("sub_category", sub_category);
+  localStorage.setItem("new_category", new_category);
 
   const userElement = document.getElementById("user-info");
   var currentTab = 0;

@@ -27,6 +27,7 @@ class User(db.Model):
     language = db.Column(db.String(20), nullable=True)
     category = db.Column(db.String(20), nullable=True)
     sub_category = db.Column(db.String(20), nullable=True)
+    new_category = db.Column(db.Text, nullable=True)
     questions = db.relationship(
         "Question", backref="user", foreign_keys="Question.user_id"
     )

@@ -38,6 +38,7 @@ def index():
                 session["language"] = user.language
                 session["category"] = user.category
                 session["sub_category"] = user.sub_category
+                session["new_category"] = user.new_category
                 return redirect(url_for("web.main_review"))
                 # return render_template(
                 #     "dashboard.html",
@@ -70,6 +71,7 @@ def main_review():
     language = session.get("language")
     category = session.get("category")
     sub_category = session.get("sub_category")
+    new_category = session.get("new_category")
     return render_template(
         "mainReview.html",
         token=access_token,
@@ -78,6 +80,7 @@ def main_review():
         language=language,
         category=category,
         sub_category=sub_category,
+        new_category = new_category,
     )
 
 @web_bp.route("/main_answer")
@@ -88,6 +91,7 @@ def main_answer():
     language = session.get("language")
     category = session.get("category")
     sub_category = session.get("sub_category")
+    new_category = session.get("new_category")
     return render_template(
         "mainAnswer.html",
         token=access_token,
@@ -96,6 +100,7 @@ def main_answer():
         language=language,
         category=category,
         sub_category=sub_category,
+        new_category = new_category,
     )
 
 @web_bp.route("/main_rank")
@@ -106,6 +111,7 @@ def main_rank():
     language = session.get("language")
     category = session.get("category")
     sub_category = session.get("sub_category")
+    new_category = session.get("new_category")
     return render_template(
         "mainRank.html",
         token=access_token,
@@ -114,6 +120,7 @@ def main_rank():
         language=language,
         category=category,
         sub_category=sub_category,
+        new_category = new_category,
     )
 
 @web_bp.route("/expert_english")
@@ -179,7 +186,7 @@ def answer_page():
     language = session.get("language")
     category = session.get("category")
     sub_category = session.get("sub_category")
-
+    new_category = session.get("new_category")
     return render_template(
         "answer_page.html",
                 token=access_token,
@@ -188,6 +195,7 @@ def answer_page():
         language=language,
         category=category,
         sub_category=sub_category,
+        new_category = new_category,
     )
 
 @web_bp.route("/expert_answers.html")
