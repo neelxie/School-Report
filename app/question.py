@@ -770,6 +770,7 @@ def main_question_review():
 	category = data.get("category", None)
 	language = data.get("language", None)
 	sub_category = data.get("sub_category", None)
+	new_category = data.get("new_category", None)
 
 	filters = []
 
@@ -817,6 +818,7 @@ def main_question_answer():
 	category = (data.get("category", None)).title()
 	language = data.get("language", None)
 	sub_category = data.get("sub_category", None)
+	new_category = data.get("new_category", None)
 	filters = []
 	if language:
 		if ',' in language:
@@ -1364,6 +1366,7 @@ def main_question_rank():
 	category = (data.get("category", None)).title()
 	language = data.get("language", None)
 	sub_category = data.get("sub_category", None)
+	new_category = data.get("new_category", None)
 
 	current_user = get_jwt_identity()
 
