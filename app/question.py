@@ -1602,6 +1602,7 @@ def question_stats():
 			"language": expert.language,
 			"expertise": expert.category,
 			"sub_category": expert.sub_category,
+			"new_category": expert.new_category,
 			"created_at": expert.created_at,
 		}
 
