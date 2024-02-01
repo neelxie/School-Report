@@ -1386,6 +1386,7 @@ def main_question_rank():
 	current_user = get_jwt_identity()
 
 	filters = []
+	random_question_data = None
 
 	category_filter = func.lower(Question.category) == category
 
