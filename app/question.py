@@ -1257,7 +1257,9 @@ def get_evaluated_questions():
     	Question.answered == True)
 		.all()
 	)
+	print(matching_questions)
 	total_questions = len(matching_questions)
+	print(total_questions)
 
 	if matching_questions:
 		questions_data = []
@@ -1287,6 +1289,7 @@ def get_evaluated_questions():
 					"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 				}
 				question_data["answers"].append(answer_data)
+			print(question_data)
 
 			questions_data.append(question_data)
 
