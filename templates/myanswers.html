@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Experts Crop Dash Page{% endblock %}
+{% extends "base.html" %} {% block title %}My answers Dash Page{% endblock %}
 {% block content %}
 
 <div
@@ -133,7 +133,7 @@
         <a
           type="button"
           class="btn btn-warning mb-3"
-          href="{{ url_for('web.main_answer') }}"
+          href="{{ url_for('web.main_review') }}"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -151,27 +151,7 @@
           Back to Dashboard
         </a>
         <div class="row">
-          <div class="col-md-6 col-xl-4">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Reviewed</div>
-                    <div class="widget-subheading">
-                      Total Questions Reviewed
-                    </div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="allQuestionsReviewed"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-xl-4">
+          <div class="col-md-6 col-xl-6">
             <div class="card mb-3 widget-content">
               <div class="widget-content-outer">
                 <div class="widget-content-wrapper">
@@ -192,7 +172,7 @@
             </div>
           </div>
 
-          <div class="col-md-6 col-xl-4">
+          <div class="col-md-6 col-xl-6">
             <div class="card mb-3 widget-content">
               <div class="widget-content-outer">
                 <div class="widget-content-wrapper">
@@ -351,7 +331,7 @@
         const tableBody = document.querySelector(".english tbody");
         userAnswers.all_answers.forEach((answer, index) => {
           const tableRow = document.createElement("tr");
-          if (answer.rank === 1 || answer.rank === 2) {
+          if (answer.ranking_count > 0 ) {
             tableRow.innerHTML += `
             <td class="text-muted">${answer.answer_text}</td>
             <td class=" text-muted">${answer.sentence}</td>
@@ -375,8 +355,6 @@
           }
         
         });
-        const reviewd = document.getElementById("allQuestionsReviewed");
-        reviewd.textContent = userAnswers.reviewed_questions;
         const answered = document.getElementById("allQuestionsAnswered");
         answered.textContent = userAnswers.answers;
         const ranked = document.getElementById("allQuestionsRanked");
