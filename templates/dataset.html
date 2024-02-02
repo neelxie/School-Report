@@ -258,13 +258,15 @@ content %}
     const downloadButton = document.getElementById("downloadButton");
     const token = localStorage.getItem("token");
 
-    downloadButton.addEventListener("click",function () {
+    downloadButton.addEventListener("click", async function () {
       try {
-        let response = fetch("/api/v1/questions/evaluated", {
+        let response = await fetch("/api/v1/questions/evaluated", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        let blob = new Blob([JSON.stringify(response)], {
+        console.log(response);
+        let data = await response.json();
+        console.log(data);
+        let blob = new Blob([JSON.stringify(data)], {
           type: "application/json",
         });
         let url = URL.createObjectURL(blob);
