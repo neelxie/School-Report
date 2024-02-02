@@ -1257,7 +1257,6 @@ def get_evaluated_questions():
     	Question.answered == True)
 		.all()
 	)
-	print(matching_questions)
 	total_questions = len(matching_questions)
 	print(total_questions)
 
@@ -1289,14 +1288,15 @@ def get_evaluated_questions():
 					"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
 				}
 				question_data["answers"].append(answer_data)
-			print(question_data)
 
 			questions_data.append(question_data)
+			print(len(question_data))
 
 		result_object = {
 				"questions": questions_data,
 				"total_questions": total_questions
 		}
+		print(result_object)
 		return jsonify(result_object), HTTP_200_OK
 	else:
 		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
