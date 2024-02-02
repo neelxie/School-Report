@@ -258,7 +258,7 @@ content %}
     const downloadButton = document.getElementById("downloadButton");
     const token = localStorage.getItem("token");
 
-    downloadButton.addEventListener("click", function () {
+    downloadButton.addEventListener("click",function () {
       try {
         let response = fetch("/api/v1/questions/evaluated", {
           headers: { Authorization: `Bearer ${token}` },
@@ -428,5 +428,49 @@ content %}
   if (logoutButton) {
     logoutButton.addEventListener("click", logout);
   }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token");
+    fetch("/api/v1/questions/expert-stats", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((topUsersData) => {
+        console.log(topUsersData);
+        const allQuestions = document.getElementById("allQuestions");
+        allQuestions.textContent = topUsersData.total_cleaned;
+        const finalizedQuestions =
+          document.getElementById("finalizedQuestions");
+        finalizedQuestions.textContent = topUsersData.all_fields_true;
+        // const rankee = document.getElementById("rankee")
+        let answeredqn = topUsersData.cleaned_reviewed_and_answered;
+        document.getElementById("answeredqn").style.width = answeredqn;
+        document
+          .getElementById("answeredqn")
+          .setAttribute("aria-valuenow", answeredqn);
+        let reviewedqn = topUsersData.cleaned_and_reviewed;
+        document.getElementById("reviewedqn").style.width = reviewedqn;
+        document
+          .getElementById("reviewedqn")
+          .setAttribute("aria-valuenow", reviewedqn);
+        let rankedqn = topUsersData.all_fields_true;
+        document.getElementById("rankee").style.width = rankedqn;
+        document
+          .getElementById("rankee")
+          .setAttribute("aria-valuenow", rankedqn);
+        const reviewedQuestions = document.getElementById("reviewedQuestions");
+        reviewedQuestions.textContent = reviewedqn;
+        const answeredQuestions = document.getElementById("answeredQuestions");
+        answeredQuestions.textContent = answeredqn;
+        topUsersData.experts.forEach((user) => {
+          user.created_at = new Date(user.created_at);
+        });
+
+
+      })
+      .catch((error) => console.error("Error fetching top users data:", error));
+  });
 </script>
 {% endblock %}

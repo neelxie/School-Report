@@ -1295,7 +1295,7 @@ def get_evaluated_questions():
 				"questions": questions_data,
 				"total_questions": total_questions
 		}
-		print(len(total_questions))
+		print(len(question_data))
 		return jsonify(result_object), HTTP_200_OK
 	else:
 		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
