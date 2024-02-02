@@ -1290,13 +1290,12 @@ def get_evaluated_questions():
 				question_data["answers"].append(answer_data)
 
 			questions_data.append(question_data)
-			print(len(question_data))
 
 		result_object = {
 				"questions": questions_data,
 				"total_questions": total_questions
 		}
-		print(result_object)
+		print(len(total_questions))
 		return jsonify(result_object), HTTP_200_OK
 	else:
 		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
