@@ -796,16 +796,15 @@ def main_question_review():
 
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+		print(sub_categories)
 		sub_category_filters = []
 		
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
-				
-		if sub_category_filters:
-			filters.append(and_(*sub_category_filters))
+				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
 
+	print(len(filters))
 	# if category.lower() == "animal":
 	# 	filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
 	# elif category.lower() == "crop":
