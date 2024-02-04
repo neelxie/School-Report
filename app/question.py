@@ -799,8 +799,8 @@ def main_question_review():
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				sub_category_filter = func.lower(Question.animal_crop).in_(sub_category_list)
-				sub_category_filters.append(sub_category_filter)
+				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+				
 		if sub_category_filters:
 			filters.append(and_(*sub_category_filters))
 
