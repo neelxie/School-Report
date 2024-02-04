@@ -755,7 +755,7 @@ def main_question_review():
 			"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
 			"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
 			"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
-			"kale", "hubiscus"
+			"kale", "hubiscus", "crops", "crop"
 	]
 
 	poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
@@ -796,7 +796,6 @@ def main_question_review():
 
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-		print(sub_categories)
 		sub_category_filters = []
 		
 		for sub_category_name in sub_categories:
@@ -804,12 +803,6 @@ def main_question_review():
 			if sub_category_list:
 				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
 
-	print(len(filters))
-	# if category.lower() == "animal":
-	# 	filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
-	# elif category.lower() == "crop":
-	# 	filters.append(func.lower(Question.animal_crop).in_(["crop", "crops"]))
-	
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
 		.all()
@@ -1415,10 +1408,7 @@ def main_question_rank():
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				sub_category_filter = func.lower(Question.animal_crop).in_(sub_category_list)
-				sub_category_filters.append(sub_category_filter)
-		if sub_category_filters:
-			filters.append(and_(*sub_category_filters))
+				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
 
 	random_question = (
 		Question.query.filter(
