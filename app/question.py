@@ -1359,7 +1359,7 @@ def main_question_rank():
 		"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
 		"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
 		"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
-		"kale", "hubiscus"
+		"kale", "hubiscus", "crops", "crop"
 	]
 
 	poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
