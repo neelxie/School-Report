@@ -762,6 +762,7 @@ def main_question_review():
 
 	cattle_sub_categories = ["cattle", "goat", "goats"]
 	fish_sub = ["fish", 'Fish']
+	pigg = ["pigs", 'animal', 'animals']
 	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
 	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
 	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
@@ -773,7 +774,8 @@ def main_question_review():
 		"fish": fish_sub,
 		"fruits": fruits_sub_categories,
 		"cereals": cereals_sub_categories,
-		"legumes": legumes_sub_categories
+		"legumes": legumes_sub_categories,
+		"piggery": pigg
   }
 
 	data = request.get_json()
@@ -1372,6 +1374,7 @@ def main_question_rank():
 
 	cattle_sub_categories = ["cattle", "goat", "goats"]
 	fish_sub = ["fish", 'Fish']
+	pigg = ["pigs", 'animal', 'animals']
 	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
 	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
 	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
@@ -1383,7 +1386,8 @@ def main_question_rank():
 		"fish": fish_sub,
 		"fruits": fruits_sub_categories,
 		"cereals": cereals_sub_categories,
-		"legumes": legumes_sub_categories
+		"legumes": legumes_sub_categories,
+		"piggery": pigg
   }
 
 	data = request.get_json()
