@@ -765,6 +765,16 @@ def main_question_review():
 	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
 	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
 	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
+	
+	sub_category_map = {
+    "poultry": poultry_sub_categories,
+    "vegetables": vegetable_sub_categories,
+		"cattle": cattle_sub_categories,
+		"fish": fish_sub,
+		"fruits": fruits_sub_categories,
+		"cereals": cereals_sub_categories,
+		"legumes": legumes_sub_categories
+  }
 
 	data = request.get_json()
 	
@@ -784,30 +794,15 @@ def main_question_review():
 
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+		sub_category_filters = []
 		
-		if len(sub_categories) == 1 and sub_categories[0] == "poultry":
-			sub_category_filter = func.lower(Question.animal_crop).in_(poultry_sub_categories)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "vegetables":
-			sub_category_filter = func.lower(Question.animal_crop).in_(vegetable_sub_categories)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "cattle":
-			sub_category_filter = func.lower(Question.animal_crop).in_(cattle_sub_categories)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "piggery":
-			# sub_category_filter = func.lower(Question.sub_category).in_(vegetable_sub_categories)
-			filters.append(func.lower(Question.animal_crop).in_(["animal", "animals", "pigs"]))
-		elif len(sub_categories) == 1 and sub_categories[0] == "fish":
-			sub_category_filter = func.lower(Question.animal_crop).in_(fish_sub)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "coffee":
-			filters.append(func.lower(Question.animal_crop).in_(["coffee"]))
-		elif len(sub_categories) == 1 and sub_categories[0] == "banana":
-			filters.append(func.lower(Question.animal_crop).in_(["banana", "bananas"]))
-		else:
-			
-			sub_category_filters = [func.lower(Question.animal_crop).in_(sub_list) for sub_list in [vegetable_sub_categories, poultry_sub_categories, cattle_sub_categories, cereals_sub_categories, fruits_sub_categories, legumes_sub_categories]]
-			filters.append(or_(*sub_category_filters))
+		for sub_category_name in sub_categories:
+			sub_category_list = sub_category_map.get(sub_category_name)
+			if sub_category_list:
+				sub_category_filter = func.lower(Question.animal_crop).in_(sub_category_list)
+				sub_category_filters.append(sub_category_filter)
+		if sub_category_filters:
+			filters.append(and_(*sub_category_filters))
 
 	# if category.lower() == "animal":
 	# 	filters.append(func.lower(Question.animal_crop).in_(["animal", "animals"]))
@@ -1381,6 +1376,16 @@ def main_question_rank():
 	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
 	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
 
+	sub_category_map = {
+    "poultry": poultry_sub_categories,
+    "vegetables": vegetable_sub_categories,
+		"cattle": cattle_sub_categories,
+		"fish": fish_sub,
+		"fruits": fruits_sub_categories,
+		"cereals": cereals_sub_categories,
+		"legumes": legumes_sub_categories
+  }
+
 	data = request.get_json()
 	
 	category = (data.get("category", None)).title()
@@ -1402,30 +1407,15 @@ def main_question_rank():
 
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+		sub_category_filters = []
 		
-		if len(sub_categories) == 1 and sub_categories[0] == "poultry":
-			sub_category_filter = func.lower(Question.animal_crop).in_(poultry_sub_categories)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "vegetables":
-			sub_category_filter = func.lower(Question.animal_crop).in_(vegetable_sub_categories)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "cattle":
-			sub_category_filter = func.lower(Question.sub_category).in_(cattle_sub_categories)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "piggery":
-			# sub_category_filter = func.lower(Question.sub_category).in_(vegetable_sub_categories)
-			filters.append(func.lower(Question.animal_crop).in_(["animal", "animals", "pigs"]))
-		elif len(sub_categories) == 1 and sub_categories[0] == "fish":
-			sub_category_filter = func.lower(Question.animal_crop).in_(fish_sub)
-			filters.append(sub_category_filter)
-		elif len(sub_categories) == 1 and sub_categories[0] == "coffee":
-			filters.append(func.lower(Question.animal_crop).in_(["coffee"]))
-		elif len(sub_categories) == 1 and sub_categories[0] == "banana":
-			filters.append(func.lower(Question.animal_crop).in_(["banana", "bananas"]))
-		else:
-			
-			sub_category_filters = [func.lower(Question.animal_crop).in_(sub_list) for sub_list in [ cereals_sub_categories, fruits_sub_categories, legumes_sub_categories]]
-			filters.append(or_(*sub_category_filters))
+		for sub_category_name in sub_categories:
+			sub_category_list = sub_category_map.get(sub_category_name)
+			if sub_category_list:
+				sub_category_filter = func.lower(Question.animal_crop).in_(sub_category_list)
+				sub_category_filters.append(sub_category_filter)
+		if sub_category_filters:
+			filters.append(and_(*sub_category_filters))
 
 	random_question = (
 		Question.query.filter(
