@@ -423,6 +423,12 @@ endblock %} {% block content %}
       }
     }
 
+    const selectedTopicDisplay = document.getElementById("selectedTopicDisplay");
+    const selectedSubTopicDisplay = document.getElementById("selectedSubTopicDisplay");
+    selectedTopicDisplay.textContent = selectedTopic;
+    selectedSubTopicDisplay.textContent = selectedSubTopic;
+
+
     fixStepIndicator(n);
   }
 
@@ -480,7 +486,7 @@ endblock %} {% block content %}
     }).length;
   }
 
-  function submitForm() {
+  async function submitForm() {
     event.preventDefault();
 
     var form = document.getElementById("signUpForm");
@@ -520,7 +526,7 @@ endblock %} {% block content %}
     }
 
     try {
-      const response = fetch(
+      const response = await fetch(
         `/api/v1/questions/review_and_answer/${questionId2}`,
         {
           method: "POST",
@@ -532,7 +538,7 @@ endblock %} {% block content %}
         }
       );
 
-      const responseData = response.json();
+      const responseData = await response.json();
       if (response) {
         window.location.reload();
         // window.location.href = window.location.href;
@@ -541,7 +547,6 @@ endblock %} {% block content %}
       }
     } catch (error) {
       console.error("Error parsing response:", error);
-    } finally {
       window.location.reload();
     }
   }
