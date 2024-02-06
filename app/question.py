@@ -750,32 +750,21 @@ def random_question_and_add_answer():
 @questions.route("/main_question_review", methods=["POST"])
 @jwt_required()
 def main_question_review():
-
-	vegetable_sub_categories = [
+	
+	sub_category_map = {
+    "poultry": ["chicken", "ducks", "guinea fowls", "turkeys"],
+    "vegetables":  [
 			"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
 			"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
 			"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
 			"kale", "hubiscus", "crops", "crop"
-	]
-
-	poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
-
-	cattle_sub_categories = ["cattle", "goat", "goats", "sheep"]
-	fish_sub = ["fish", 'Fish']
-	pigg = ["pigs", 'animal', 'animals']
-	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
-	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
-	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
-	
-	sub_category_map = {
-    "poultry": poultry_sub_categories,
-    "vegetables": vegetable_sub_categories,
-		"cattle": cattle_sub_categories,
-		"fish": fish_sub,
-		"fruits": fruits_sub_categories,
-		"cereals": cereals_sub_categories,
-		"legumes": legumes_sub_categories,
-		"piggery": pigg
+	],
+		"cattle": ["cattle", "goat", "goats", "sheep"],
+		"fish": ["fish", 'Fish'],
+		"fruits": ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"],
+		"cereals": ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"],
+		"legumes": [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"],
+		"piggery": ["pigs", 'animal', 'animals']
   }
 
 	data = request.get_json()
@@ -799,7 +788,11 @@ def main_question_review():
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 		sub_category_filters = []
 		for sub_category_name in sub_categories:
-			sub_category_list = sub_categories.get(sub_category_name, [sub_category_name])
+			sub_category_list = None
+			if sub_category_name in sub_category_map:
+				sub_category_list = sub_category_map[sub_category_name]
+			else:
+				sub_category_list = [sub_category_name]
 			sub_category_filters.append(func.lower(Question.animal_crop).in_(sub_category_list))
 	filters.append(sub_category_filters)
 				
