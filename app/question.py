@@ -802,6 +802,8 @@ def main_question_review():
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
 				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+			else:
+				filters.append(func.lower(Question.animal_crop) == sub_category_name)
 
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
@@ -1366,7 +1368,6 @@ def main_question_rank():
 
 	cattle_sub_categories = ["cattle", "goat", "goats"]
 	fish_sub = ["fish", 'Fish']
-	coffee_sub = ["coffee", "Coffee", "crops", "crop"]
 	pigg = ["pigs", 'animal', 'animals']
 	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
 	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
@@ -1380,8 +1381,7 @@ def main_question_rank():
 		"fruits": fruits_sub_categories,
 		"cereals": cereals_sub_categories,
 		"legumes": legumes_sub_categories,
-		"piggery": pigg,
-		"coffee": coffee_sub
+		"piggery": pigg
   }
 
 	data = request.get_json()
@@ -1411,6 +1411,8 @@ def main_question_rank():
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
 				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+			else:
+				filters.append(func.lower(Question.animal_crop) == sub_category_name)
 
 	random_question = (
 		Question.query.filter(
