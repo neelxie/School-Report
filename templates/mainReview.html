@@ -408,9 +408,9 @@ endblock %} {% block content %}
     var nextBtn = document.getElementById("nextBtn");
 
     if (n === 0) {
-      prevBtn.style.visibility = "hidden"; // Hide the "Previous" button on the first step
       nextBtn.innerHTML = "Next";
       nextBtn.setAttribute("onclick", "nextPrev(1)");
+      prevBtn.innerHTML = "Skip"
     } else {
       prevBtn.style.visibility = "visible"; // Show the "Previous" button for other steps
       prevBtn.innerHTML = "Previous";
@@ -423,11 +423,17 @@ endblock %} {% block content %}
       }
     }
 
-    const selectedTopicDisplay = document.getElementById("selectedTopicDisplay");
-    const selectedSubTopicDisplay = document.getElementById("selectedSubTopicDisplay");
-    selectedTopicDisplay.textContent = selectedTopic;
-    selectedSubTopicDisplay.textContent = selectedSubTopic;
+    let selectedTopicDisplay = document.getElementById("selectedTopicDisplay");
+    let selectedSubTopicDisplay = document.getElementById("selectedSubTopicDisplay");
+    // selectedTopicDisplay.textContent = selectedTopic;
+    // selectedSubTopicDisplay.textContent = selectedSubTopic;
 
+    // const topicDisplay = document.getElementById("topicDisplay");
+    // if (selectedTopic !== "" && selectedSubTopic !== "") {
+    //   topicDisplay.textContent = `${selectedTopic} - ${selectedSubTopic}`;
+    // } else {
+    //   topicDisplay.textContent = "No Extra topic Added";
+    // }
 
     fixStepIndicator(n);
   }
