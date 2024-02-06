@@ -802,11 +802,10 @@ def main_question_review():
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
 				print("hery")
-			else:
-				# filters.append(func.lower(Question.animal_crop) == sub_category_name)
-				pass
+		if sub_category_filters:
+			filters.append(or_(*sub_category_filters))
 	print(filters)
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
