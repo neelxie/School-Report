@@ -1366,6 +1366,7 @@ def main_question_rank():
 
 	cattle_sub_categories = ["cattle", "goat", "goats"]
 	fish_sub = ["fish", 'Fish']
+	coffee_sub = ["coffee", "Coffee", "crops", "crop"]
 	pigg = ["pigs", 'animal', 'animals']
 	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
 	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
@@ -1379,7 +1380,8 @@ def main_question_rank():
 		"fruits": fruits_sub_categories,
 		"cereals": cereals_sub_categories,
 		"legumes": legumes_sub_categories,
-		"piggery": pigg
+		"piggery": pigg,
+		"coffee": coffee_sub
   }
 
 	data = request.get_json()
