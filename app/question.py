@@ -1402,9 +1402,12 @@ def main_question_rank():
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
 			else:
-				filters.append(func.lower(Question.animal_crop) == sub_category_name)
+				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
+		
+		if sub_category_filters:
+			filters.append(or_(*sub_category_filters))
 
 	random_question = (
 		Question.query.filter(

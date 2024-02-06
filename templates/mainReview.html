@@ -411,6 +411,7 @@ endblock %} {% block content %}
       nextBtn.innerHTML = "Next";
       nextBtn.setAttribute("onclick", "nextPrev(1)");
       prevBtn.innerHTML = "Skip"
+      nextBtn.setAttribute("onclick", "reload()");
     } else {
       prevBtn.style.visibility = "visible"; // Show the "Previous" button for other steps
       prevBtn.innerHTML = "Previous";
