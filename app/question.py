@@ -794,7 +794,7 @@ def main_question_review():
 			else:
 				sub_category_list = [sub_category_name]
 			sub_category_filters.append(func.lower(Question.animal_crop).in_(sub_category_list))
-	filters.append(sub_category_filters)
+	filters.extend(sub_category_filters)
 				
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
