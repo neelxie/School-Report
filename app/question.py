@@ -798,15 +798,11 @@ def main_question_review():
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 		sub_category_filters = []
-		print(sub_categories)
 		for sub_category_name in sub_categories:
-			sub_category_list = sub_category_map.get(sub_category_name)
-			if sub_category_list:
-				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
-				print("hery")
-		if sub_category_filters:
-			filters.append(or_(*sub_category_filters))
-	print(filters)
+			sub_category_list = sub_categories.get(sub_category_name, [sub_category_name])
+			sub_category_filters.append(func.lower(Question.animal_crop).in_(sub_category_list))
+	filters.append(sub_category_filters)
+				
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
 		.all()
@@ -1412,10 +1408,9 @@ def main_question_rank():
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
-				print("hery")
-		if sub_category_filters:
-			filters.append(or_(*sub_category_filters))
+				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+			else:
+				filters.append(func.lower(Question.animal_crop) == sub_category_name)
 
 	random_question = (
 		Question.query.filter(
