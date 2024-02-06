@@ -400,7 +400,7 @@ endblock %} {% block content %}
     }
     x[n].className += " active";
   }
-  
+
   function showTab(n) {
     var x = document.getElementsByClassName("step");
     x[n].style.display = "block";
@@ -412,7 +412,7 @@ endblock %} {% block content %}
       nextBtn.innerHTML = "Next";
       nextBtn.setAttribute("onclick", "nextPrev(1)");
       prevBtn.innerHTML = "Skip"
-      prevBtn.setAttribute("onclick", () => location.reload());
+      prevBtn.setAttribute("onclick", "location.reload()");
     } else {
       prevBtn.style.visibility = "visible"; // Show the "Previous" button for other steps
       prevBtn.innerHTML = "Previous";
