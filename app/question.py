@@ -760,7 +760,7 @@ def main_question_review():
 
 	poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
 
-	cattle_sub_categories = ["cattle", "goat", "goats"]
+	cattle_sub_categories = ["cattle", "goat", "goats", "sheep"]
 	fish_sub = ["fish", 'Fish']
 	pigg = ["pigs", 'animal', 'animals']
 	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
@@ -793,18 +793,21 @@ def main_question_review():
 		languages = [lang.strip().lower() for lang in language.split(",")]
 		language_filter = func.lower(Question.language).in_(languages)
 		filters.append(language_filter)
+		print(languages)
 
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 		sub_category_filters = []
-		
+		print(sub_categories)
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
 				filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
-			# else:
-			# 	filters.append(func.lower(Question.animal_crop) == sub_category_name)
-
+				print("hery")
+			else:
+				# filters.append(func.lower(Question.animal_crop) == sub_category_name)
+				pass
+	print(filters)
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
 		.all()
