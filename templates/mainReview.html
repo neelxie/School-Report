@@ -400,12 +400,7 @@ endblock %} {% block content %}
     }
     x[n].className += " active";
   }
-
-  function handleFirstStep() {
-    nextBtn.innerHTML = "Skip";
-    nextBtn.addEventListener("click", () => location.reload()); // Reload on click
-  }
-
+  
   function showTab(n) {
     var x = document.getElementsByClassName("step");
     x[n].style.display = "block";
@@ -416,7 +411,8 @@ endblock %} {% block content %}
     if (n === 0) {
       nextBtn.innerHTML = "Next";
       nextBtn.setAttribute("onclick", "nextPrev(1)");
-      handleFirstStep();
+      prevBtn.innerHTML = "Skip"
+      nextBtn.setAttribute("onclick", () => location.reload());
     } else {
       prevBtn.style.visibility = "visible"; // Show the "Previous" button for other steps
       prevBtn.innerHTML = "Previous";
