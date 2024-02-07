@@ -1120,7 +1120,7 @@ def get_runyankole_questions():
 @jwt_required()
 def audio_questions():
 	
-	audio_questions = Question.query.filter(Question.filename != None, Question.filename != '').all()
+	audio_questions = Question.query.filter(Question.filename.like('Adsurv_%')).all()
 	audio_questions_list = []
 
 	if audio_questions:
@@ -1141,6 +1141,7 @@ def audio_questions():
 				"animal_crop": question.animal_crop,
 				"location": question.location,
 				'filename': question.filename,
+				'user_id': question.user_id,
 				# 'file_content': get_audio_file_content(file_path)
 			})
 		return jsonify(audio_questions_list)
