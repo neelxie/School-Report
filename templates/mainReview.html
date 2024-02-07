@@ -279,14 +279,14 @@ endblock %} {% block content %}
                       <th class="text-primary pr-3 h3">Location:</th>
                       <td id="location1" class="font-weight-bold h2"></td>
                     </tr>
-                    <tr>
+                    <tr class="border">
                       <th class="text-primary pr-3 h3">Previous Topics:</th>
                       <td id="questionTopic1" class="font-weight-bold h2"></td>
                     </tr>
                     <tr>
                       <th class="text-primary pr-3 h3">Added Topics:</th>
                       <td class="font-weight-bold h2">
-                        <ul id="selectedTopicsList"></ul>
+                        <ul id="selectedTopicsListOtha"></ul>
                       </td>
                     </tr>
 
@@ -507,6 +507,7 @@ endblock %} {% block content %}
 
     const formx = document.getElementById("topicForm");
     const selectedTopicsList = document.getElementById("selectedTopicsList");
+    const selectedTopicsListOtha = document.getElementById("selectedTopicsListOtha");
     // const checkboxes = formx.querySelectorAll('input[type="checkbox"]:checked');
 
     let my_topics = [];
@@ -520,6 +521,8 @@ endblock %} {% block content %}
       values.push(item.textContent.replace("Remove", "").trim());
     });
     const commaSeparatedString = values.join(", ");
+
+
     let itemBody = {};
     if (wordCount(answer) < 5) {
       alert("Answer must be at least 5 words.");
@@ -670,7 +673,7 @@ endblock %} {% block content %}
         subTopicsSelect.style.display = "block";
         // document.getElementById("customTopicInput").style.display = "none";
 
-        subTopics.forEach((subTopic) => {
+        subTopics?.forEach((subTopic) => {
           const option = document.createElement("option");
           option.value = subTopic;
           option.textContent = subTopic;
@@ -739,6 +742,8 @@ endblock %} {% block content %}
 
   function updateSelectedTopicsList() {
     const selectedTopicsList = document.getElementById("selectedTopicsList");
+    const selectedTopicsListOtha = document.getElementById("selectedTopicsListOtha");
+    selectedTopicsListOtha.innerHTML = ""
     selectedTopicsList.innerHTML = "";
 
     selectedTopics.forEach((topicObj) => {
@@ -750,8 +755,11 @@ endblock %} {% block content %}
       removeButton.addEventListener("click", () =>
         removeSelectedTopic(topicObj)
       );
+      const listItemClone = listItem.cloneNode(true);
+      
       listItem.appendChild(removeButton);
       selectedTopicsList.appendChild(listItem);
+      selectedTopicsListOtha.appendChild(listItemClone)
     });
   }
 
