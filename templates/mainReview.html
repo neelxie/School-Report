@@ -376,6 +376,10 @@ endblock %} {% block content %}
   } else {
     userElement.textContent = Expert;
   }
+
+  if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
+    logout();
+  }
   function logout() {
     localStorage.clear();
 
@@ -756,7 +760,7 @@ endblock %} {% block content %}
         removeSelectedTopic(topicObj)
       );
       const listItemClone = listItem.cloneNode(true);
-      
+
       listItem.appendChild(removeButton);
       selectedTopicsList.appendChild(listItem);
       selectedTopicsListOtha.appendChild(listItemClone)

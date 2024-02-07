@@ -291,13 +291,18 @@ block content %}
   var currentTab = 0;
 
   // Retrieve data from local storage
-  const storedUser = localStorage.getItem("user");
+  let storedUser = localStorage.getItem("user");
 
   if (storedUser) {
     userElement.textContent = storedUser;
   } else {
     userElement.textContent = Expert;
   }
+
+  if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
+    logout();
+  }
+  
   function logout() {
     // Clear the user token from localStorage
     localStorage.clear();
@@ -351,7 +356,7 @@ block content %}
       category: category,
       language: language,
       sub_category: sub_category,
-      new_category:new_category,
+      new_category: new_category,
     };
     fetch("/api/v1/questions/main_question_rank", {
       method: "POST",

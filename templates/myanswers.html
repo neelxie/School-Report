@@ -1,9 +1,7 @@
 {% extends "base.html" %} {% block title %}My answers Dash Page{% endblock %}
 {% block content %}
 
-<div
-  class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
->
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
   <div class="app-header header-shadow">
     <div class="app-header__logo">
       <div class="" id=""></div>
@@ -21,11 +19,7 @@
                 <div class="widget-subheading">Expert</div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
-                <button
-                  type="button"
-                  class="btn-shadow p-1 btn btn-primary btn-sm"
-                  id="logoutButton"
-                >
+                <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm" id="logoutButton">
                   Logout
                 </button>
               </div>
@@ -46,17 +40,9 @@
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-header"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-header">
                         <div class="switch-animate switch-on">
-                          <input
-                            type="checkbox"
-                            checked
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -74,16 +60,9 @@
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-footer"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-footer">
                         <div class="switch-animate switch-off">
-                          <input
-                            type="checkbox"
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -104,18 +83,13 @@
                 <h5 class="pb-2">Page Section Tabs</h5>
                 <div class="theme-settings-swatches">
                   <div role="group" class="mt-2 btn-group">
-                    <button
-                      type="button"
-                      class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
-                      data-class="body-tabs-line"
-                    >
+                    <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-line">
                       Line
                     </button>
-                    <button
-                      type="button"
+                    <button type="button"
                       class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
-                      data-class="body-tabs-shadow"
-                    >
+                      data-class="body-tabs-shadow">
                       Shadow
                     </button>
                   </div>
@@ -130,23 +104,12 @@
   <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner">
-        <a
-          type="button"
-          class="btn btn-warning mb-3"
-          href="{{ url_for('web.main_review') }}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-arrow-bar-left"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z"
-            ></path>
+        <a type="button" class="btn btn-warning mb-3" href="{{ url_for('web.main_review') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5ZM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5Z">
+            </path>
           </svg>
           Back to Dashboard
         </a>
@@ -162,10 +125,7 @@
                     </div>
                   </div>
                   <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-danger"
-                      id="allQuestionsAnswered"
-                    ></div>
+                    <div class="widget-numbers text-danger" id="allQuestionsAnswered"></div>
                   </div>
                 </div>
               </div>
@@ -181,10 +141,7 @@
                     <div class="widget-subheading">Total Questions Ranked</div>
                   </div>
                   <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="allQuestionsRanked"
-                    ></div>
+                    <div class="widget-numbers text-warning" id="allQuestionsRanked"></div>
                   </div>
                 </div>
               </div>
@@ -196,9 +153,7 @@
             <div class="main-card mb-3 card">
               <div class="card-header">Answers Provided</div>
               <div class="table-responsive">
-                <table
-                  class="align-middle mb-0 table table-bordered table-striped table-hover english bg-animation h4"
-                >
+                <table class="align-middle mb-0 table table-bordered table-striped table-hover english bg-animation h4">
                   <thead>
                     <tr>
                       <th>Answer</th>
@@ -242,6 +197,10 @@
     userElement.textContent = storedUser;
   } else {
     userElement.textContent = Expert;
+  }
+
+  if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
+    logout();
   }
   function logout() {
     // Clear the user token from localStorage
@@ -331,7 +290,7 @@
         const tableBody = document.querySelector(".english tbody");
         userAnswers.all_answers.forEach((answer, index) => {
           const tableRow = document.createElement("tr");
-          if (answer.ranking_count > 0 ) {
+          if (answer.ranking_count > 0) {
             tableRow.innerHTML += `
             <td class="text-muted">${answer.answer_text}</td>
             <td class=" text-muted">${answer.sentence}</td>
@@ -353,7 +312,7 @@
             <td class="text-center">${answer.created_at}</td>`;
             tableBody.appendChild(tableRow);
           }
-        
+
         });
         const answered = document.getElementById("allQuestionsAnswered");
         answered.textContent = userAnswers.answers;

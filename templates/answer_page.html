@@ -256,6 +256,10 @@
   } else {
     userElement.textContent = Expert;
   }
+
+  if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
+    logout();
+  }
   function logout() {
     // Clear the user token from localStorage
     localStorage.clear();
