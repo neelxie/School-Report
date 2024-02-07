@@ -1120,7 +1120,7 @@ def get_runyankole_questions():
 @jwt_required()
 def audio_questions():
 	
-	audio_questions = Question.query.filter(Question.filename.like('Adsurv_%')).all()
+	audio_questions = Question.query.filter(Question.filename.func.startswith(Question.filename, 'Adsurv_')).all()
 	audio_questions_list = []
 
 	if audio_questions:
