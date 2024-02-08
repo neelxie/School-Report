@@ -554,11 +554,12 @@ endblock %} {% block content %}
       );
 
       const responseData = await response.json();
-      if (response) {
+      if (response.ok) {
         window.location.reload();
         // window.location.href = window.location.href;
       } else {
-        errorMessage.textContent = responseData.error;
+        let myerror = await response.json()
+        alert(myerror.error);
       }
     } catch (error) {
       console.error("Error parsing response:", error);
