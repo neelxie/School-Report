@@ -1122,11 +1122,16 @@ def get_runyankole_questions():
 def audio_questions():
 	
 	audio_questions_list = []
-	questionzz = Question.query.filter((Question.sentence == None) | (Question.sentence == '')).all()
+	user_name = ''
+	questionzz = Question.query.filter((Question.sentence.is_(None)) | (Question.sentence == '')).all()
 
 	for question_detail in questionzz:
 
 		if question_detail:
+
+			user = User.query.get(question_detail.user_id)
+			if user:
+				user_name = f"{user.firstname} {user.lastname}"
 			audio_questions_list.append({
 				'id': question_detail.id,
 				"language": question_detail.language,
@@ -1137,10 +1142,9 @@ def audio_questions():
 				"animal_crop": question_detail.animal_crop,
 				"location": question_detail.location,
 				'filename': question_detail.filename,
-				'user_id': question_detail.user_id,
+				'username': user_name,
 				# 'file_content': get_audio_file_content(file_path)
 			})
-			print(audio_questions_list)
 	if len(audio_questions_list) > 0:
 		return jsonify(audio_questions_list)
 	else:
