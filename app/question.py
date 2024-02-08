@@ -1336,7 +1336,7 @@ def audio_questions():
 				"animal_crop": question_detail.animal_crop,
 				"location": question_detail.location,
 				'filename': question_detail.filename,
-				'user_id': question_detail.user_id,
+				'username': user_name,
 				# 'file_content': get_audio_file_content(file_path)
 			})
 			print(len(audio_questions_list))
