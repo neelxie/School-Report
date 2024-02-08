@@ -1322,6 +1322,7 @@ def audio_questions():
 		filename_filter = func.lower(Question.filename) == filename.lower()
 
 		question_detail = Question.query.filter(filename_filter).first()
+		print(question_detail)
 
 		if question_detail:
 			audio_questions_list.append({
@@ -1337,6 +1338,7 @@ def audio_questions():
 				'user_id': question_detail.user_id,
 				# 'file_content': get_audio_file_content(file_path)
 			})
+			print(audio_questions_list)
 	if len(audio_questions_list) > 0:
 		return jsonify(audio_questions_list)
 	else:
