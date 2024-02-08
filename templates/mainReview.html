@@ -563,6 +563,8 @@ endblock %} {% block content %}
     } catch (error) {
       console.error("Error parsing response:", error);
       window.location.reload();
+    } finally {
+      window.location.reload();
     }
   }
 
