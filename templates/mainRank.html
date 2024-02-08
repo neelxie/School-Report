@@ -556,8 +556,7 @@ block content %}
         }
       } catch (error) {
         console.error("Error parsing response:");
-      } finally {
-        window.location.reload();
+        alert("Failed to submit your ranks due to a connection error, please try again")
       }
     });
   });

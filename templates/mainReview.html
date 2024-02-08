@@ -136,7 +136,7 @@ endblock %} {% block content %}
         <div class="row">
           <div class="col-12 card">
             <h1 class="text-center fs-4">Question Evaluation</h1>
-            <form id="signUpForm" class="border border-dark">
+            <form id="signUpForm" class="border border-dark" onsubmit="submitForm()">
               <div class="form-header d-flex mb-4 font-weight-bold h3">
                 <span class="stepIndicator font-weight-bold">Tag Topics</span>
                 <span class="stepIndicator font-weight-bold">Answer Question</span>
@@ -562,9 +562,7 @@ endblock %} {% block content %}
       }
     } catch (error) {
       console.error("Error parsing response:", error);
-      window.location.reload();
-    } finally {
-      window.location.reload();
+      alert("An error occurred while submitting the form. Please try again or get a better connection.");
     }
   }
 
