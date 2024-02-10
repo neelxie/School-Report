@@ -957,6 +957,7 @@ def main_question_review():
 		],
 		"cattle": ["cattle", "goat", "goats", "sheep"],
 		"fish": ["fish", 'Fish'],
+		"banana": ["banana", "bananas", "crop", "crops"],
 		"fruits": ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"],
 		"cereals": ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"],
 		"legumes": [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"],
@@ -1548,31 +1549,21 @@ def upload_excel_file():
 @questions.route("/main_question_rank", methods=["POST"])
 @jwt_required()
 def main_question_rank():
-	vegetable_sub_categories = [
-		"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
-		"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
-		"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
-		"kale", "hubiscus", "crops", "crop"
-	]
-
-	poultry_sub_categories = ["chicken", "ducks", "guinea fowls", "turkeys"]
-
-	cattle_sub_categories = ["cattle", "goat", "goats"]
-	fish_sub = ["fish", 'Fish']
-	pigg = ["pigs", 'animal', 'animals']
-	cereals_sub_categories = ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"]
-	fruits_sub_categories = ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"]
-	legumes_sub_categories = [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"]
-
 	sub_category_map = {
-    "poultry": poultry_sub_categories,
-    "vegetables": vegetable_sub_categories,
-		"cattle": cattle_sub_categories,
-		"fish": fish_sub,
-		"fruits": fruits_sub_categories,
-		"cereals": cereals_sub_categories,
-		"legumes": legumes_sub_categories,
-		"piggery": pigg
+    "poultry": ["chicken", "ducks", "guinea fowls", "turkeys"],
+    "vegetables":  [
+			"tomatoes", "carrots", "onions", "mushrooms", "eggplant", "beetroot",
+			"doodo", "spinach", "cucumbers", "avocado", "cabbage", "nakati", "ginger",
+			"green pepper", "garlic", "okra", "lettuce", "malakwang", "pepper", "sukuma wiiki",
+			"kale", "hubiscus", "crops", "crop"
+		],
+		"cattle": ["cattle", "goat", "goats", "sheep"],
+		"fish": ["fish", 'Fish'],
+		"banana": ["banana", "bananas", "crop", "crops"],
+		"fruits": ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"],
+		"cereals": ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"],
+		"legumes": [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"],
+		"piggery": ["pigs", 'animal', 'animals']
   }
 
 	data = request.get_json()
