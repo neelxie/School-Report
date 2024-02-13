@@ -973,26 +973,34 @@ def main_question_review():
 
 	filters = []
 
+	expert_id = get_jwt_identity()
+
 	category_filter = func.lower(Question.category) == category
+	answers_count = Answer.query.filter_by(user_id=expert_id).count()
+	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 
-	if language:
-		languages = [lang.strip().lower() for lang in language.split(",")]
-		language_filter = func.lower(Question.language).in_(languages)
-		filters.append(language_filter)
+	if len(sub_categories) >= 3 and answers_count >= 350:
+		return jsonify({"message":"You have answered enough questions. START ranking."}), HTTP_200_OK
+	elif len(sub_categories) < 3 and answers_count >= 250:
+		return jsonify({"message":"You have answered enough questions. START ranking."}), HTTP_200_OK
+	else:
+		if language:
+			languages = [lang.strip().lower() for lang in language.split(",")]
+			language_filter = func.lower(Question.language).in_(languages)
+			filters.append(language_filter)
 
-	if sub_category:
-		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-		sub_category_filters = []
-		
-		for sub_category_name in sub_categories:
-			sub_category_list = sub_category_map.get(sub_category_name)
-			if sub_category_list:
-				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
-			else:
-				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
-		
-		if sub_category_filters:
-			filters.append(or_(*sub_category_filters))
+		if sub_category:
+			sub_category_filters = []
+			
+			for sub_category_name in sub_categories:
+				sub_category_list = sub_category_map.get(sub_category_name)
+				if sub_category_list:
+					sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+				else:
+					sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
+			
+			if sub_category_filters:
+				filters.append(or_(*sub_category_filters))
 
 	matching_questions = (
 		Question.query.filter(Question.rephrased == "actual", Question.answered.is_(False), *filters)
