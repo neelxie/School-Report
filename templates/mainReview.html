@@ -602,9 +602,9 @@ endblock %} {% block content %}
       .then((response) => response.json())
       .then((randomQuestion) => {
         console.log(randomQuestion);
-        if (randomQuestion.message === "No questions available.") {
+        if (randomQuestion.message) {
           let oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = "No questions available.";
+          oneQuestion.textContent = randomQuestion.message;
         }
         const anyQuestion = randomQuestion.find(
           (question) => question.question_language === "Any Language"
