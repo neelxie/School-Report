@@ -1802,6 +1802,9 @@ def question_stats():
 		Question.language.ilike("runyankole")
 	).count()
 
+	fully_ranked = Question.query.filter(Question.ranking_count == 2).count()
+	partial_ranked = Question.query.filter((Question.ranking_count == 1).count()
+
 	expert_data = []
 	for expert in experts:
 		reviewed_questions_count = Question.query.filter_by(
@@ -1837,7 +1840,9 @@ def question_stats():
 			"experts": expert_data,
 			"english_questions": english_questions,
 			"luganda_questions": luganda_questions,
-			"runyankole_questions": runyankole_questions
+			"runyankole_questions": runyankole_questions,
+			"fully_ranked": fully_ranked,
+			"partial_ranked": partial_ranked
 		}
 	)
 
