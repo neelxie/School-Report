@@ -1802,7 +1802,7 @@ def question_stats():
 	).count()
 
 	fully_ranked = Question.query.filter(Question.ranking_count == 2).count()
-	partial_ranked = Question.query.filter((Question.ranking_count == 1).count()
+	partial_ranked = Question.query.filter(Question.ranking_count == 1).count()
 
 	expert_data = []
 	for expert in experts:
