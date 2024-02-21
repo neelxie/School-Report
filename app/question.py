@@ -1444,8 +1444,7 @@ def get_evaluated_questions():
 	
 	matching_questions = (
 		Question.query.filter(
-			Question.rephrased == "actual",
-    	Question.answered == True)
+			Question.ranking_count == 2)
 		.all()
 	)
 	total_questions = len(matching_questions)
