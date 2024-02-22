@@ -1884,6 +1884,10 @@ def get_user_answers():
 		reviewer_id=user_id
 	).count()
 
+	questions_count = Question.query.filter_by(
+		Question.answer_expert_one == user_id
+	).count()
+
 	answers = Answer.query.filter_by(user_id=user_id).count()
 
 	ranked_answers = Question.query.filter((Question.rank_expert_one == user_id) | (Question.rank_expert_two == user_id)).count()
@@ -1904,7 +1908,7 @@ def get_user_answers():
 				"rank": question.ranking_count
 			}
 		)
-	return jsonify({"all_answers":answers_data, "answers": answers,"reviewed_questions": reviewed_questions_count,"ranked": ranked_answers})
+	return jsonify({"questions_count":questions_count, "all_answers":answers_data, "answers": answers,"reviewed_questions": reviewed_questions_count,"ranked": ranked_answers})
 
 
 @questions.route("/answers/<int:answer_id>", methods=["GET"])

@@ -555,6 +555,7 @@ endblock %} {% block content %}
 
       const responseData = await response.json();
       if (response.ok) {
+        alert("Answered successfully")
         window.location.reload();
         // window.location.href = window.location.href;
       } else {
