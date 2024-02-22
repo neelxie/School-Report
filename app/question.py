@@ -1743,10 +1743,13 @@ def store_answer_ranks():
 				relevance = answer.relevance if answer.relevance is not None else 0
 				coherence = answer.coherence if answer.coherence is not None else 0
 				fluency = answer.fluency if answer.fluency is not None else 0
-
+				print(answer.relevance)
+				print(type(answer.relevance))
 				relevance += ranking.get("relevance")
 				coherence += ranking.get("coherence")
 				fluency += ranking.get("fluency")
+				print(relevance)
+				print(type(relevance))
 				# answer.context = ranking.get("context")
 				if ranking.get("isFlagged"):
 					answer.offensive = True
