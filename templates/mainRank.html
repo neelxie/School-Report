@@ -441,24 +441,30 @@ block content %}
             const inputField = cell.querySelector("input");
 
             minusDiv.addEventListener("click", () => {
-              let currentValue = parseInt(inputField.value, 10);
-              if (isNaN(currentValue)) {
-                currentValue = 1;
-              } else if (currentValue > 1) {
+              let currentValue = parseInt(inputField.value);
+
+              currentValue = Math.max(Math.min(currentValue || 1, 5), 1);
+
+              if (currentValue > 1) {
                 currentValue--;
               }
+
               inputField.value = currentValue;
+
             });
 
             plusDiv.addEventListener("click", () => {
-              let currentValue = parseInt(inputField.value, 10);
-              if (isNaN(currentValue)) {
-                currentValue = 1;
-              } else if (currentValue < 5) {
+              let currentValue = parseInt(inputField.value);
+              currentValue = Math.max(Math.min(currentValue || 1, 5), 1);
+
+              if (currentValue < 5) {
                 currentValue++;
               }
+
               inputField.value = currentValue;
+
             });
+
           });
           const radioButtons = newRow.querySelectorAll('input[type="radio"]');
           radioButtons.forEach((radio) => {

@@ -267,6 +267,12 @@ def file_name(file):
 	file_name, file_extension = os.path.splitext(name)
 	return file_name, file_extension
 
+def chanelle(value):
+	try:
+		return int(value)
+	except ValueError:
+		return 1
+
 @questions.route("/", methods=["POST", "GET"])
 @jwt_required()
 def handle_questions():
@@ -1490,7 +1496,24 @@ def get_evaluated_questions():
 	else:
 		return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
 
-	
+@questions.route("/cleaning", methods=["GET"])
+@jwt_required()
+def clean_evaluated_questions():
+	matching_questions = Question.query.filter(Question.ranking_count == 2).all()
+	if matching_questions:
+		for entry in matching_questions:
+			for answer in entry.answers:
+				int_values = {key: int(value) for key, value in answer.items() if key in ['relevance', 'fluency', 'coherence']}
+				if any(int(value) > 10 for value in int_values.values()):
+					for key, value in int_values.items():
+						if value > 10:
+							sum_of_digits = sum(int(digit) for digit in str(value))
+							setattr(answer, key, sum_of_digits)
+			db.session.commit()
+			return jsonify({"message": "Values updated successfully."}), HTTP_200_OK
+	else:
+			return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
+
 @questions.route("/dataset_upload/", methods=["POST"])
 @jwt_required()
 def upload_excel_file():
@@ -1743,13 +1766,11 @@ def store_answer_ranks():
 				relevance = answer.relevance if answer.relevance is not None else 0
 				coherence = answer.coherence if answer.coherence is not None else 0
 				fluency = answer.fluency if answer.fluency is not None else 0
-				print(answer.relevance)
-				print(type(answer.relevance))
-				relevance += ranking.get("relevance")
-				coherence += ranking.get("coherence")
-				fluency += ranking.get("fluency")
-				print(relevance)
-				print(type(relevance))
+				
+				relevance = relevance + chanelle(ranking.get("relevance"))
+				coherence = coherence + chanelle(ranking.get("coherence"))
+				fluency = fluency + chanelle(ranking.get("fluency"))
+				
 				# answer.context = ranking.get("context")
 				if ranking.get("isFlagged"):
 					answer.offensive = True
