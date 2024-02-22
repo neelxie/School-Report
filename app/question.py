@@ -268,6 +268,8 @@ def file_name(file):
 	return file_name, file_extension
 
 def chanelle(value):
+	if int(value) == 6:
+		return 5
 	try:
 		return int(value)
 	except ValueError:
