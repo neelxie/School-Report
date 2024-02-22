@@ -1503,16 +1503,19 @@ def clean_evaluated_questions():
 	if matching_questions:
 		for entry in matching_questions:
 			for answer in entry.answers:
-				int_values = {key: int(value) for key, value in answer.items() if key in ['relevance', 'fluency', 'coherence']}
-				if any(int(value) > 10 for value in int_values.values()):
-					for key, value in int_values.items():
-						if value > 10:
-							sum_of_digits = sum(int(digit) for digit in str(value))
-							setattr(answer, key, sum_of_digits)
-			db.session.commit()
-			return jsonify({"message": "Values updated successfully."}), HTTP_200_OK
+				if answer.relevance > 10:
+					sum_of_digits = sum(int(digit) for digit in str(answer.relevance))
+					answer.relevance = sum_of_digits
+				if answer.coherence > 10:
+					sum_of_digits = sum(int(digit) for digit in str(answer.coherence))
+					answer.coherence = sum_of_digits
+				if answer.fluency > 10:
+					sum_of_digits = sum(int(digit) for digit in str(answer.fluency))
+					answer.fluency = sum_of_digits
+		db.session.commit()
+		return jsonify({"message": "Values updated successfully."}), HTTP_200_OK
 	else:
-			return jsonify({"message": "No questions available for ranking."}), HTTP_404_NOT_FOUND
+			return jsonify({"message": "No questions available for cleaning."}), HTTP_404_NOT_FOUND
 
 @questions.route("/dataset_upload/", methods=["POST"])
 @jwt_required()
