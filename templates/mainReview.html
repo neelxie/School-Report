@@ -540,32 +540,28 @@ endblock %} {% block content %}
       };
     }
 
-    try {
-      const response = await fetch(
-        `/api/v1/questions/review_and_answer/${questionId2}`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${mytoken}`,
-          },
-          body: JSON.stringify(itemBody),
-        }
-      );
-
-      const responseData = await response.json();
-      if (response.ok) {
-        alert("Answered successfully")
-        window.location.reload();
-        // window.location.href = window.location.href;
-      } else {
-        let myerror = await response.json()
-        alert(myerror.error);
+    
+    const response = await fetch(
+      `/api/v1/questions/review_and_answer/${questionId2}`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${mytoken}`,
+        },
+        body: JSON.stringify(itemBody),
       }
-    } catch (error) {
-      console.error("Error parsing response:", error);
-      alert("An error occurred while submitting the form. Please try again or get a better connection.");
+    );
+
+    const responseData = await response.json();
+    if (response.ok) {
+      alert("Answered successfully")
+      window.location.reload();
+    } else {
+      let myerror = await response.json()
+      alert(myerror.error ||"An error occurred while submitting the form. Please try again or get a better connection.");
     }
+    
   }
 
   document.addEventListener("DOMContentLoaded", function () {
