@@ -176,17 +176,6 @@
   const user = "{{ user }}";
   const role = "{{ role }}";
 
-  // Check if the token is not empty and store it in local storage
-  if (token) {
-    localStorage.setItem("token", token);
-  }
-  if (user) {
-    localStorage.setItem("user", user);
-  }
-  if (role) {
-    localStorage.setItem("role", role);
-  }
-
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
 
@@ -202,6 +191,7 @@
   if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
     logout();
   }
+
   function logout() {
     // Clear the user token from localStorage
     localStorage.clear();
