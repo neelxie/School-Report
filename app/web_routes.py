@@ -200,14 +200,23 @@ def answer_page():
 
 @web_bp.route("/expert_answers.html")
 def expert_answers():
+    
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    new_category = session.get("new_category")
     return render_template(
         "expert_answers.html",
         token=access_token,
         role=role,
-        user=username
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+        new_category = new_category,
     )
 
 
