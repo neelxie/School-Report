@@ -1884,7 +1884,7 @@ def get_user_answers():
 		reviewer_id=user_id
 	).count()
 
-	questions_count = Question.query.filter_by(
+	questions_count = Question.query.filter(
 		Question.answer_expert_one == user_id
 	).count()
 
