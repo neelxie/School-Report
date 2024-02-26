@@ -500,13 +500,17 @@ block content %}
       let currentAnswer = {};
       let contextError;
       let hasInvalidValue = false;
+      let shouldSubmit = true;
+
 
       answerElements.forEach((element, index) => {
         let answerID = element.dataset.answerId;
         const contextValue = getSelectedRadioValue(element);
         if (contextValue === "not selected") {
           alert("Please select a context for all the answers.");
+          shouldSubmit = false;
           return;
+
         }
         relevance = parseInt(element.querySelector(".relevance").value);
         coherence = parseInt(element.querySelector(".coherence").value);
@@ -514,7 +518,8 @@ block content %}
 
         if (relevance < 1 || coherence < 1 || fluency < 1) {
           alert("Relevance, Coherence, and Fluency values must be at least 1.");
-          hasInvalidValue = true; // Set the flag to true
+          hasInvalidValue = true;
+          shouldSubmit = false;
           return;
         }
 
@@ -542,7 +547,8 @@ block content %}
         rankings,
       };
 
-      try {
+      if (shouldSubmit) {
+
         const response = await fetch(`/api/v1/questions/store_answer_ranks`, {
           method: "POST",
           headers: {
@@ -554,15 +560,15 @@ block content %}
 
 
         const responseData = await response.json();
+        console.log(response)
         if (response.ok) {
+          alert("Ranked successfully")
           window.location.reload();
           window.location.href = window.location.href;
         } else {
           errorMessage.textContent = responseData.error;
+          alert(responseData.error || "Failed to submit your ranks due to a connection error, please try again")
         }
-      } catch (error) {
-        console.error("Error parsing response:");
-        alert("Failed to submit your ranks due to a connection error, please try again")
       }
     });
   });

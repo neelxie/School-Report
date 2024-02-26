@@ -554,6 +554,7 @@ endblock %} {% block content %}
     );
 
     const responseData = await response.json();
+    console.log(response)
     if (response.ok) {
       alert("Answered successfully")
       window.location.reload();
