@@ -311,7 +311,7 @@ block content %}
     window.location.href = "/"; // Redirect to the index page
   }
   function reloadPage() {
-    
+    event.preventDefault();
     window.location.reload();
   }
   function logout() {
