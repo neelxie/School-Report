@@ -1121,7 +1121,9 @@ def review_and_answer(question_id):
 	answer_text = data.get("answer", "").strip()
 	new_topic = data.get("topic")
 
-	if answer_text and len(answer_text) > 7:
+	
+
+	if answer_text and len(answer_text) > 4:
 		new_answer = Answer(
 				question_id=question_id,
 				user_id=user_id,
