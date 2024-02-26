@@ -539,9 +539,10 @@ endblock %} {% block content %}
         answer: answer
       };
     }
+    // localStorage.setItem(itemBody)
 
-    
-    const response = await fetch(
+
+    let response = await fetch(
       `/api/v1/questions/review_and_answer/${questionId2}`,
       {
         method: "POST",
