@@ -2086,4 +2086,4 @@ def get_debug_answers():
 				})
 				break
 		 
-	return jsonify({"questions_count":answers_data})
+	return jsonify({"questions_count":answers_data, "count":len(answers_data)})
