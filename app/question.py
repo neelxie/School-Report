@@ -1209,14 +1209,11 @@ def get_random_unanswered_question(user_id):
 	user_id = get_jwt_identity()
 
 	# Get a random unanswered question for the user
-	random_question = (
-		Question.query.outerjoin(
-			Answer, (Answer.question_id == Question.id) & (Answer.user_id == user_id)
-		)
-		.filter(Answer.id == None)
-		.order_by(func.random())
-		.first()
-	)
+	random_question = Question.query.filter(
+		Question.rephrased == "actual",
+    Question.reviewed == True,
+    Question.answered.is_not(True)
+		).all()
 
 	if random_question:
 		question_data = {
@@ -1224,10 +1221,9 @@ def get_random_unanswered_question(user_id):
 			"sentence": random_question.sentence,
 			"language": random_question.language,
 			"category": random_question.category,
-			"animal_crop": random_question.animal_crop,
+			"sub_topic": random_question.animal_crop,
 			"location": random_question.location,
-			"sub_topic": random_question.sub_topic,
-			# answer part
+			# "sub_topic": random_question.sub_topic,
 		}
 		return jsonify(question_data), 200
 	else:
