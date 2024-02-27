@@ -2055,3 +2055,26 @@ def upload_json_answers():
 
 	response_data = {"duplicates_count": dup_count, "duplicates": duplicates}
 	return jsonify(response_data), HTTP_200_OK
+
+
+@questions.route("/issues", methods=["GET"])
+@jwt_required()
+def get_debug_answers():
+	user_id = get_jwt_identity()
+
+	questions_count = Question.query.filter(
+		Question.user_id == user_id.
+		Question.rephrased == "actual",
+		Question.answered.is_(True),
+		Question.finished.is_not(True),
+		Question.ranking_count == 0,
+		(Question.rank_expert_one == None) & (Question.rank_expert_two == None),
+	).all()
+	answers_data = []
+	for question in questions_count:
+		for answer in question.answers:
+			if answer.relevance != 0 or answer.coherence != 0 or answer.fluency != 0:
+				answers_data.append(question)
+				break
+		 
+	return jsonify({"questions_count":answers_data})
