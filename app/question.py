@@ -2081,7 +2081,8 @@ def get_debug_answers():
 					"answer_id": answer.id,
 					"relevance": answer.relevance,
 					"coherence":answer.coherence,
-					"fluency":answer.fluency
+					"fluency":answer.fluency,
+					"answered": question.answered
 
 				})
 				break
