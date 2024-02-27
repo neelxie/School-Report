@@ -2063,7 +2063,7 @@ def get_debug_answers():
 	user_id = get_jwt_identity()
 
 	questions_count = Question.query.filter(
-		Question.user_id == user_id.
+		Question.user_id == user_id,
 		Question.rephrased == "actual",
 		Question.answered.is_(True),
 		Question.finished.is_not(True),
