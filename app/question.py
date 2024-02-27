@@ -2793,49 +2793,33 @@ def upload_json_answers():
 def get_debug_answers():
 	user_id = get_jwt_identity()
 
-	# questions_count = Question.query.filter(
-	# 	Question.user_id == user_id,
-	# 	Question.rephrased == "actual",
-	# 	Question.answered.is_(True),
-	# 	Question.finished.is_(True),
-	# 	Question.ranking_count == 2,
-  #   Question.rank_expert_one == Question.rank_expert_two,
-  #   Question.rank_expert_one != None,
-  #   Question.rank_expert_two != None, 
+	questions_count = Question.query.filter(
+		Question.user_id == user_id,
+		Question.rephrased == "actual",
+		Question.answered.is_(True),
+		Question.finished.is_(True),
+		Question.ranking_count == 2,
 
-	# ).all()
-	# question_ids = []
-	# for question in questions_count:
-	# 	question_ids.append(question.id)
-	# 	for answer in question.answers:
-	# 		if answer.relevance > 10 or answer.coherence > 10 or answer.fluency > 10:
-	# 			# question_ids.append(question.id)
-	# 			# answers_data.append(
-	# 			# {
-	# 			# 	"question_id": question.id,
-	# 			# 	"answer_id": answer.id,
-	# 			# 	"relevance": answer.relevance,
-	# 			# 	"coherence":answer.coherence,
-	# 			# 	"fluency":answer.fluency,
-	# 			# 	"answered": question.answered,
-	# 			# 	"rank_1": question.rank_expert_one,
-	# 			# 	"rank_2": question.rank_expert_two,
+	).all()
+	answers_data = []
+	for question in questions_count:
+		# question_ids.append(question.id)
+		for answer in question.answers:
+			if answer.relevance > 1 or answer.coherence > 1 or answer.fluency > 1:
+				# question_ids.append(question.id)
+				answers_data.append(
+				{
+					"question_id": question.id,
+					"answer_id": answer.id,
+					"relevance": answer.relevance,
+					"coherence":answer.coherence,
+					"fluency":answer.fluency,
+					"answered": question.answered,
+					"rank_1": question.rank_expert_one,
+					"rank_2": question.rank_expert_two,
 
-	# 			# })
-	# 			break
+				})
+				break
 
-	# question_ids = [item["question_id"] for item in answers_data]
-	
-	for one_id in jenga:
-		question = Question.query.filter_by(id=one_id).first()
-		if question:
-			question.ranking_count = 2
-			question.finished = True
-			question.rank_expert_two = 192
-			for answer in question.answers:
-				answer.relevance = answer.relevance + random.randint(1,5)
-				answer.coherence = answer.coherence + random.randint(1,5)
-				answer.fluency = answer.fluency + random.randint(1,5)
-		db.session.commit()
 		 
-	return jsonify({"questions_count":"done"})
+	return jsonify({"questions_count": answers_data})

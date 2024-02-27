@@ -142,39 +142,6 @@ endblock %} {% block content %}
                 <span class="stepIndicator font-weight-bold">Answer Question</span>
               </div>
 
-              <!-- step two -->
-              <!-- <div class="step">
-                <div class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4">
-                  <p class="text-center text-primary h2 font-weight-bold">
-                    Instructions:
-                  </p>
-                  <p class="h3">
-                    1. Determine if the question is clear and grammatically
-                    correct.
-                  </p>
-                  <p class="h3">
-                    2. If the question is clear and grammatically correct, click
-                    <strong>"Next."</strong>
-                  </p>
-                  <p class="h3">
-                    3. If the question needs improvement, rewrite it correctly
-                    it to improve clarity and grammar.
-                  </p>
-                  <p class="h3">4. Click <strong>Next.</strong></p>
-                </div>
-                <div class="mb-3">
-                  <div class="h4 text-dark font-weight-bold">
-                    <span class="text-primary mr-3">Question:</span><span id="oneQuestion1"
-                      class="h2 font-weight-bold"></span>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <input type="text" name="rephrased" id="rephrased" class="border border-dark h3"
-                    placeholder="Rephrase the question here." />
-                </div>
-              </div> -->
-
-              <!-- step three -->
               <div class="step">
                 <div class="card mb-3 ml-3 col-11 text-left font-weight-bold text-dark mx-4 my-4 border">
                   <p class="text-center text-primary h3 font-weight-bold">
@@ -199,7 +166,7 @@ endblock %} {% block content %}
                 </div>
                 <div class="h4 text-dark pb-2">
                   <div class="h4 text-dark font-weight-bold mb-3">
-                    <span class="text-primary mr-3 h2 font-weight-bold">Question:</span><span id="oneQuestion"
+                    <span class="text-primary mr-3 h2 font-weight-bold">Question: Use the excel sheet to answer questions.</span><span id="oneQuestion"
                       class="h2 font-weight-bold"></span>
                   </div>
                   <hr class="hr" />
@@ -589,66 +556,66 @@ endblock %} {% block content %}
       new_category: new_category,
     };
 
-    fetch("/api/v1/questions/main_question_review", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userDetails),
-    })
-      .then((response) => response.json())
-      .then((randomQuestion) => {
-        console.log(randomQuestion);
-        if (randomQuestion.message) {
-          let oneQuestion = document.getElementById("oneQuestion");
-          oneQuestion.textContent = randomQuestion.message;
-        }
-        const anyQuestion = randomQuestion.find(
-          (question) => question.question_language === "Any Language"
-        );
-        const oneQuestion = document.getElementById("oneQuestion");
-        oneQuestion.textContent = anyQuestion.sentence;
-        const oneQuestion1 = document.getElementById("oneQuestion1");
-        oneQuestion1.textContent = anyQuestion.sentence;
-        const questionTopic = document.getElementById("questionTopic");
-        questionTopic.textContent = anyQuestion.topics
-          ? anyQuestion.topics
-          : "No Topic";
-        const questionTopic1 = document.getElementById("questionTopic1");
-        questionTopic1.textContent = anyQuestion.topics
-          ? anyQuestion.topics
-          : "No Topic";
-        const questionCategory = document.getElementById("questionCategory");
-        questionCategory.textContent = anyQuestion.category
-          ? anyQuestion.category
-          : "No Category";
-        const actualItem = document.getElementById("actualItem");
-        actualItem.textContent = anyQuestion.animal_crop;
-        const questionCategory1 = document.getElementById("questionCategory1");
-        questionCategory1.textContent = anyQuestion.category
-          ? anyQuestion.category
-          : "No Category";
-        const actualItem1 = document.getElementById("actualItem1");
-        actualItem1.textContent = anyQuestion.animal_crop;
-        const location1 = document.getElementById("location1");
-        location1.textContent = anyQuestion.location;
-        var questionId = anyQuestion.id;
+    // fetch("/api/v1/questions/main_question_review", {
+    //   method: "POST",
+    //   headers: {
+    //     "content-type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   body: JSON.stringify(userDetails),
+    // })
+    //   .then((response) => response.json())
+    //   .then((randomQuestion) => {
+    //     console.log(randomQuestion);
+    //     if (randomQuestion.message) {
+    //       let oneQuestion = document.getElementById("oneQuestion");
+    //       oneQuestion.textContent = randomQuestion.message;
+    //     }
+    //     const anyQuestion = randomQuestion.find(
+    //       (question) => question.question_language === "Any Language"
+    //     );
+    //     const oneQuestion = document.getElementById("oneQuestion");
+    //     oneQuestion.textContent = anyQuestion.sentence;
+    //     const oneQuestion1 = document.getElementById("oneQuestion1");
+    //     oneQuestion1.textContent = anyQuestion.sentence;
+    //     const questionTopic = document.getElementById("questionTopic");
+    //     questionTopic.textContent = anyQuestion.topics
+    //       ? anyQuestion.topics
+    //       : "No Topic";
+    //     const questionTopic1 = document.getElementById("questionTopic1");
+    //     questionTopic1.textContent = anyQuestion.topics
+    //       ? anyQuestion.topics
+    //       : "No Topic";
+    //     const questionCategory = document.getElementById("questionCategory");
+    //     questionCategory.textContent = anyQuestion.category
+    //       ? anyQuestion.category
+    //       : "No Category";
+    //     const actualItem = document.getElementById("actualItem");
+    //     actualItem.textContent = anyQuestion.animal_crop;
+    //     const questionCategory1 = document.getElementById("questionCategory1");
+    //     questionCategory1.textContent = anyQuestion.category
+    //       ? anyQuestion.category
+    //       : "No Category";
+    //     const actualItem1 = document.getElementById("actualItem1");
+    //     actualItem1.textContent = anyQuestion.animal_crop;
+    //     const location1 = document.getElementById("location1");
+    //     location1.textContent = anyQuestion.location;
+    //     var questionId = anyQuestion.id;
 
-        showFormWithQuestionId(questionId);
-        const incorrectQuestion = document.getElementById("prevBtn");
-        if (incorrectQuestion) {
-          incorrectQuestion.addEventListener("click", async function (event) {
-            event.preventDefault();
-            let questionId1 = parseInt(questionId);
+    //     showFormWithQuestionId(questionId);
+    //     const incorrectQuestion = document.getElementById("prevBtn");
+    //     if (incorrectQuestion) {
+    //       incorrectQuestion.addEventListener("click", async function (event) {
+    //         event.preventDefault();
+    //         let questionId1 = parseInt(questionId);
 
-            if (prevBtn.innerHTML === "No") {
-              await updateQuestion(questionId1);
-            }
-          });
-        }
-      })
-      .catch((error) => console.error(error));
+    //         if (prevBtn.innerHTML === "No") {
+    //           await updateQuestion(questionId1);
+    //         }
+    //       });
+    //     }
+    //   })
+    //   .catch((error) => console.error(error));
 
   });
 </script>
