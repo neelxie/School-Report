@@ -2088,5 +2088,16 @@ def get_debug_answers():
 
 				})
 				break
+
+	question_ids = [item["question_id"] for item in answers_data]
+	
+	for one_id in question_ids:
+		question = Question.query.filter_by(id=one_id).first()
+		if question:
+			for answer in question.answers:
+				answer.relevance = 0
+				answer.coherence = 0
+				answer.fluency = 0
+				db.session.commit()
 		 
 	return jsonify({"questions_count":answers_data, "count":len(answers_data)})
