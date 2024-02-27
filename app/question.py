@@ -2067,7 +2067,7 @@ def get_debug_answers():
 		Question.rephrased == "actual",
 		Question.answered.is_(True),
 		Question.finished.is_(True),
-		Question.ranking_count == 1,
+		Question.ranking_count == 2,
 		# (Question.rank_expert_one == None) | (Question.rank_expert_two == None),
 	).all()
 	question_ids = []
