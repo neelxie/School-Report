@@ -444,7 +444,7 @@ block content %}
             minusDiv.addEventListener("click", () => {
               let currentValue = parseInt(inputField.value);
 
-              currentValue = Math.max(Math.min(currentValue || 1, 5), 1);
+              // currentValue = Math.max(Math.min(currentValue || 1, 5), 1);
 
               if (currentValue > 1) {
                 currentValue--;
@@ -456,7 +456,7 @@ block content %}
 
             plusDiv.addEventListener("click", () => {
               let currentValue = parseInt(inputField.value);
-              currentValue = Math.max(Math.min(currentValue || 1, 5), 1);
+              // currentValue = Math.max(Math.min(currentValue || 1, 5), 1);
 
               if (currentValue < 5) {
                 currentValue++;
