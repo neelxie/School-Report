@@ -2078,11 +2078,11 @@ def get_debug_answers():
 				answers_data.append(
 				{
 					"question_id": question.id,
-					"sentence": question.sentence,
-					"language": question.language,
-					"animal_crop": question.animal_crop,
-					"category": question.category,
-					"topic": question.topic,
+					"answer_id": answer.id,
+					"relevance": answer.relevance,
+					"coherence":answer.coherence,
+					"fluency":answer.fluency
+
 				})
 				break
 		 
