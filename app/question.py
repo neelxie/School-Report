@@ -1205,14 +1205,15 @@ def question_review(question_id):
 
 @questions.route("/random_unanswered_question", methods=["GET"])
 @jwt_required()
-def get_random_unanswered_question(user_id):
+def get_random_unanswered_question():
 	user_id = get_jwt_identity()
 
 	# Get a random unanswered question for the user
 	random_question = Question.query.filter(
 		Question.rephrased == "actual",
     Question.reviewed == True,
-    Question.answered.is_not(True)
+    Question.answered.is_not(True),
+		Question.user_id == user_id
 		).all()
 
 	if random_question:
