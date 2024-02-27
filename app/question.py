@@ -2831,7 +2831,7 @@ def get_debug_answers():
 		if question:
 			question.ranking_count = 2
 			question.finished = True
-			question.rank_expert_two = 80
+			question.rank_expert_two = 192
 			for answer in question.answers:
 				answer.relevance = answer.relevance + random.randint(1,5)
 				answer.coherence = answer.coherence + random.randint(1,5)
