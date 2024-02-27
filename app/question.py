@@ -2805,7 +2805,7 @@ def get_debug_answers():
 	for question in questions_count:
 		# question_ids.append(question.id)
 		for answer in question.answers:
-			if answer.relevance > 1 or answer.coherence > 1 or answer.fluency > 1:
+			if answer.relevance < 2 or answer.coherence < 2 or answer.fluency < 2:
 				# question_ids.append(question.id)
 				answers_data.append(
 				{
