@@ -1229,7 +1229,7 @@ def get_random_unanswered_question():
 				# "sub_topic": random_question.sub_topic,
 			}
 			questions_data.append(question_data)
-		return jsonify(question_data), 200
+		return jsonify(questions_data), 200
 	else:
 		return jsonify({"message": "No unanswered questions available"}), 404
 
