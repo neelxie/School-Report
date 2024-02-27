@@ -283,15 +283,39 @@ block content %}
 </div>
 
 <script>
-  const token = "{{ token }}";
-  const user = "{{ user }}";
-  const role = "{{ role }}";
+  function getValueFromLocalStorage(key, defaultValue) {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? storedValue : defaultValue;
+  }
+
+  // Retrieve values from localStorage or use default values
+  const token = getValueFromLocalStorage("token", "{{ token }}");
+  const user = getValueFromLocalStorage("user", "{{ user }}");
+  const role = getValueFromLocalStorage("role", "{{ role }}");
+  const language = getValueFromLocalStorage("language", "{{ language }}");
+  const category = getValueFromLocalStorage("category", "{{ category }}");
+  const sub_category = getValueFromLocalStorage(
+    "sub_category",
+    "{{ sub_category }}"
+  );
+  const new_category = getValueFromLocalStorage(
+    "new_category",
+    "{{ new_category }}"
+  );
+
+  // Update localStorage with the current values
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", user);
+  localStorage.setItem("role", role);
+  localStorage.setItem("language", language);
+  localStorage.setItem("category", category);
+  localStorage.setItem("sub_category", sub_category);
+  localStorage.setItem("new_category", new_category);
 
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
 
-  // Retrieve data from local storage
-  let storedUser = localStorage.getItem("user");
+  const storedUser = localStorage.getItem("user");
 
   if (storedUser) {
     userElement.textContent = storedUser;
@@ -301,14 +325,6 @@ block content %}
 
   if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
     logout();
-  }
-
-  function logout() {
-    // Clear the user token from localStorage
-    localStorage.clear();
-
-    // Redirect to the index.html page
-    window.location.href = "/"; // Redirect to the index page
   }
   function reloadPage() {
     event.preventDefault();
@@ -320,6 +336,11 @@ block content %}
 
     // Redirect to the index.html page
     window.location.href = "/"; // Redirect to the index page
+  }
+
+  const logoutButton = document.getElementById("logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logout);
   }
 
   function getSelectedRadioValue(element) {
@@ -341,10 +362,6 @@ block content %}
     const sub_category = localStorage.getItem("sub_category");
     const new_category = localStorage.getItem("new_category");
 
-    const logoutButton = document.getElementById("logoutButton");
-    if (logoutButton) {
-      logoutButton.addEventListener("click", logout);
-    }
 
     function showFormWithQuestionId(questionId) {
       // Display the form and set the question ID as a data attribute
