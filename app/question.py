@@ -2065,7 +2065,7 @@ def get_debug_answers():
 	questions_count = Question.query.filter(
 		Question.user_id == user_id,
 		Question.rephrased == "actual",
-		Question.answered.is_(True),
+		Question.answered.is_(False),
 		Question.finished.is_not(True),
 		Question.ranking_count == 0,
 		(Question.rank_expert_one == None) & (Question.rank_expert_two == None),
