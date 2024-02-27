@@ -1640,6 +1640,7 @@ def main_question_rank():
     	Question.answered.is_(True),
     	Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
+			(~Question.rank_expert_one == current_user),
 			(Question.rank_expert_one == None) | (Question.rank_expert_two == None),
 			*filters)
 		.all()
