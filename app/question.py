@@ -2070,27 +2070,14 @@ def get_debug_answers():
 		Question.ranking_count == 0,
 		(Question.rank_expert_one == None) & (Question.rank_expert_two == None),
 	).all()
-	answers_data = []
+	question_ids = []
 	for question in questions_count:
 		for answer in question.answers:
 			if answer.relevance != 0 or answer.coherence != 0 or answer.fluency != 0:
 				# answers_data.append(question)
-				answers_data.append(
-				{
-					"question_id": question.id,
-					"answer_id": answer.id,
-					"relevance": answer.relevance,
-					"coherence":answer.coherence,
-					"fluency":answer.fluency,
-					"answered": question.answered,
-					"rank_1": question.rank_expert_one,
-					"rank_2": question.rank_expert_two,
-
-				})
+				question_ids.append(question.id)
 				break
-
-	question_ids = [item["question_id"] for item in answers_data]
-	
+	print(question_ids)
 	for one_id in question_ids:
 		question = Question.query.filter_by(id=one_id).first()
 		if question:
@@ -2100,4 +2087,4 @@ def get_debug_answers():
 				answer.fluency = 0
 				db.session.commit()
 		 
-	return jsonify({"questions_count":answers_data, "count":len(answers_data)})
+	return jsonify({"questions_count":question_ids, "count":len(question_ids)})
