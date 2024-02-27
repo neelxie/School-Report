@@ -2082,7 +2082,9 @@ def get_debug_answers():
 					"relevance": answer.relevance,
 					"coherence":answer.coherence,
 					"fluency":answer.fluency,
-					"answered": question.answered
+					"answered": question.answered,
+					"rank_1": question.rank_expert_one,
+					"rank_2": question.rank_expert_two,
 
 				})
 				break
