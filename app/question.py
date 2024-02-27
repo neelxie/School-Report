@@ -2070,23 +2070,23 @@ def get_debug_answers():
 		Question.ranking_count == 2,
 		# (Question.rank_expert_one == None) | (Question.rank_expert_two == None),
 	).all()
-	question_ids = []
+	answers_data = []
 	for question in questions_count:
 		for answer in question.answers:
 			if answer.relevance > 10 or answer.coherence > 10 or answer.fluency > 10:
-				question_ids.append(question.id)
-				# answers_data.append(
-				# {
-				# 	"question_id": question.id,
-				# 	"answer_id": answer.id,
-				# 	"relevance": answer.relevance,
-				# 	"coherence":answer.coherence,
-				# 	"fluency":answer.fluency,
-				# 	"answered": question.answered,
-				# 	"rank_1": question.rank_expert_one,
-				# 	"rank_2": question.rank_expert_two,
+				# question_ids.append(question.id)
+				answers_data.append(
+				{
+					"question_id": question.id,
+					"answer_id": answer.id,
+					"relevance": answer.relevance,
+					"coherence":answer.coherence,
+					"fluency":answer.fluency,
+					"answered": question.answered,
+					"rank_1": question.rank_expert_one,
+					"rank_2": question.rank_expert_two,
 
-				# })
+				})
 				break
 
 	# question_ids = [item["question_id"] for item in answers_data]
@@ -2100,4 +2100,4 @@ def get_debug_answers():
 	# 			answer.fluency = answer.fluency - 2
 	# 			db.session.commit()
 		 
-	return jsonify({"questions_count":question_ids, "count":len(question_ids)})
+	return jsonify({"questions_count":answers_data, "count":len(answers_data)})
