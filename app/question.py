@@ -2066,14 +2066,14 @@ def get_debug_answers():
 		Question.user_id == user_id,
 		Question.rephrased == "actual",
 		Question.answered.is_(True),
-		Question.finished.is_not(True),
+		Question.finished.is_(True),
 		Question.ranking_count == 1,
 		# (Question.rank_expert_one == None) | (Question.rank_expert_two == None),
 	).all()
 	question_ids = []
 	for question in questions_count:
 		for answer in question.answers:
-			if answer.relevance > 5 or answer.coherence > 5 or answer.fluency > 5:
+			if answer.relevance > 10 or answer.coherence > 10 or answer.fluency > 10:
 				question_ids.append(question.id)
 				# answers_data.append(
 				# {
@@ -2091,13 +2091,13 @@ def get_debug_answers():
 
 	# question_ids = [item["question_id"] for item in answers_data]
 	
-	for one_id in question_ids:
-		question = Question.query.filter_by(id=one_id).first()
-		if question:
-			for answer in question.answers:
-				answer.relevance = answer.relevance - 2
-				answer.coherence =answer.coherence - 2
-				answer.fluency = answer.fluency - 2
-				db.session.commit()
+	# for one_id in question_ids:
+	# 	question = Question.query.filter_by(id=one_id).first()
+	# 	if question:
+	# 		for answer in question.answers:
+	# 			answer.relevance = answer.relevance - 2
+	# 			answer.coherence =answer.coherence - 2
+	# 			answer.fluency = answer.fluency - 2
+	# 			db.session.commit()
 		 
 	return jsonify({"questions_count":question_ids, "count":len(question_ids)})
