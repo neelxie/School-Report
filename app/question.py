@@ -1209,23 +1209,26 @@ def get_random_unanswered_question():
 	user_id = get_jwt_identity()
 
 	# Get a random unanswered question for the user
-	random_question = Question.query.filter(
+	random_questions = Question.query.filter(
 		Question.rephrased == "actual",
     Question.reviewed == True,
     Question.answered.is_not(True),
 		Question.user_id == user_id
-		).all()
-
-	if random_question:
-		question_data = {
-			"id": random_question.id,
-			"sentence": random_question.sentence,
-			"language": random_question.language,
-			"category": random_question.category,
-			"sub_topic": random_question.animal_crop,
-			"location": random_question.location,
-			# "sub_topic": random_question.sub_topic,
-		}
+	).all()
+	print(len(random_questions))
+	questions_data = []
+	if random_questions:
+		for random_question in random_questions:
+			question_data = {
+				"id": random_question.id,
+				"sentence": random_question.sentence,
+				"language": random_question.language,
+				"category": random_question.category,
+				"sub_topic": random_question.animal_crop,
+				"location": random_question.location,
+				# "sub_topic": random_question.sub_topic,
+			}
+			questions_data.append(question_data)
 		return jsonify(question_data), 200
 	else:
 		return jsonify({"message": "No unanswered questions available"}), 404
