@@ -2070,34 +2070,34 @@ def get_debug_answers():
 		Question.ranking_count == 1,
 		# (Question.rank_expert_one == None) | (Question.rank_expert_two == None),
 	).all()
-	answers_data = []
+	question_ids = []
 	for question in questions_count:
 		for answer in question.answers:
 			if answer.relevance > 5 or answer.coherence > 5 or answer.fluency > 5:
-				# answers_data.append(question)
-				answers_data.append(
-				{
-					"question_id": question.id,
-					"answer_id": answer.id,
-					"relevance": answer.relevance,
-					"coherence":answer.coherence,
-					"fluency":answer.fluency,
-					"answered": question.answered,
-					"rank_1": question.rank_expert_one,
-					"rank_2": question.rank_expert_two,
+				question_ids.append(question.id)
+				# answers_data.append(
+				# {
+				# 	"question_id": question.id,
+				# 	"answer_id": answer.id,
+				# 	"relevance": answer.relevance,
+				# 	"coherence":answer.coherence,
+				# 	"fluency":answer.fluency,
+				# 	"answered": question.answered,
+				# 	"rank_1": question.rank_expert_one,
+				# 	"rank_2": question.rank_expert_two,
 
-				})
+				# })
 				break
 
-	question_ids = [item["question_id"] for item in answers_data]
+	# question_ids = [item["question_id"] for item in answers_data]
 	
-	# for one_id in question_ids:
-	# 	question = Question.query.filter_by(id=one_id).first()
-	# 	if question:
-	# 		for answer in question.answers:
-	# 			answer.relevance = 0
-	# 			answer.coherence = 0
-	# 			answer.fluency = 0
-	# 			db.session.commit()
+	for one_id in question_ids:
+		question = Question.query.filter_by(id=one_id).first()
+		if question:
+			for answer in question.answers:
+				answer.relevance = answer.relevance - 2
+				answer.coherence =answer.coherence - 2
+				answer.fluency = answer.fluency - 2
+				db.session.commit()
 		 
-	return jsonify({"questions_count":answers_data, "count":len(answers_data)})
+	return jsonify({"questions_count":question_ids, "count":len(question_ids)})
