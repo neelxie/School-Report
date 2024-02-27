@@ -2074,7 +2074,16 @@ def get_debug_answers():
 	for question in questions_count:
 		for answer in question.answers:
 			if answer.relevance != 0 or answer.coherence != 0 or answer.fluency != 0:
-				answers_data.append(question)
+				# answers_data.append(question)
+				answers_data.append(
+				{
+					"question_id": question.id,
+					"sentence": question.sentence,
+					"language": question.language,
+					"animal_crop": question.animal_crop,
+					"category": question.category,
+					"topic": question.topic,
+				})
 				break
 		 
 	return jsonify({"questions_count":answers_data})
