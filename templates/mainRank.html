@@ -570,6 +570,8 @@ block content %}
           errorMessage.textContent = responseData.error;
           alert(responseData.error || "Failed to submit your ranks due to a connection error, please try again")
         }
+      } else {
+        reloadPage()
       }
     });
   });
