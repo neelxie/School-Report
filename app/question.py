@@ -1889,3 +1889,30 @@ def get_debug_answers():
 	return jsonify({
 		'updated_items': list_of_lists
 	})
+
+
+@questions.route("/expertsanswers", methods=["GET"])
+@jwt_required()
+def get_experts_and_answers():
+	experts = User.query.filter_by(role='expert').all()
+	experts_data = []
+	
+	for expert in experts:
+		expert_data = {
+			'id': expert.id,
+			'username': expert.username,
+			'expertise': expert.new_category,
+			'answers': []
+			}
+		answers = Answer.query.filter_by(user_id=expert.id).all()
+		
+		for answer in answers:
+			answer_data = {
+				'id': answer.id,
+				'question_id': answer.question_id,
+				'answer_text': answer.answer_text,
+				}
+			expert_data['answers'].append(answer_data)
+		experts_data.append(expert_data)
+
+	return jsonify(experts_data)
