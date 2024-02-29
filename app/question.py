@@ -1949,14 +1949,17 @@ def add_excel_answers():
 		if user is None:
 			return jsonify({'message': f'User with ID {user_id} not found'}), 404
 		
-		print(user)
+		print(user.username)
 		expert_answers = derek_list.get(expert, [])
 		for answer_data in expert_answers:
-			print(answer_data)
+			
 			question_id = answer_data.get('Question id')
 			answer_text = answer_data.get('Answer')
+			print(question_id)
+			print(answer_text)
 
-			existing_answer = Answer.query.filter_by(question_id=question_id).first()
+			existing_question = Question.query.filter_by(id=question_id).first()
+			print(existing_question.id)
 			# if existing_answer:
 			# 		new_answer = Answer(
 			# 				question_id=question_id,
