@@ -1610,6 +1610,8 @@ def store_answer_ranks():
 				answer.relevance = relevance
 				answer.coherence = coherence
 				answer.fluency = fluency
+				print(answer.context)
+				print(new_context)
 				if answer.context is None:
 					answer.context = new_context
 				elif answer.context.lower() == new_context.lower():
