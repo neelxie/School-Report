@@ -1602,7 +1602,7 @@ def store_answer_ranks():
 				relevance = relevance + chanelle(ranking.get("relevance"))
 				coherence = coherence + chanelle(ranking.get("coherence"))
 				fluency = fluency + chanelle(ranking.get("fluency"))
-				
+				new_context = ranking.get("context")
 				# answer.context = ranking.get("context")
 				if ranking.get("isFlagged"):
 					answer.offensive = True
@@ -1610,7 +1610,12 @@ def store_answer_ranks():
 				answer.relevance = relevance
 				answer.coherence = coherence
 				answer.fluency = fluency
-				answer.context = ranking.get("context")
+				if answer.context is None:
+					answer.context = new_context
+				elif answer.context.lower() == new_context.lower():
+					pass
+				else:
+					answer.context = answer.context + new_context
 
 
 		if question:
