@@ -1457,8 +1457,8 @@ def main_question_rank():
 
 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 
+	sub_category_filters = []
 	if sub_category:
-		sub_category_filters = []
 		
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
@@ -1470,8 +1470,8 @@ def main_question_rank():
 				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
 				sub_category_filters.append(func.lower(Question.animal_crop) == item.lower())
 		
-		if sub_category_filters:
-			filters.append(or_(*sub_category_filters))
+		# if sub_category_filters:
+		# 	filters.append(or_(*sub_category_filters))
 
 	random_questions = (
 		Question.query.filter(
@@ -1480,7 +1480,8 @@ def main_question_rank():
 			(~Question.answers.any(Answer.user_id == current_user)),
 			Question.rank_expert_one != current_user,
 			Question.ranking_count < 2,
-			*filters)
+			*filters,
+			or_(*sub_category_filters))
 		.all()
 	)
 	# base_filters = [
