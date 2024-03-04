@@ -1481,7 +1481,7 @@ def main_question_rank():
 			(~Question.answers.any(Answer.user_id == current_user)),
 			Question.rank_expert_one != current_user,
 			Question.ranking_count < 2,
-			and_(*filters),
+			# and_(*filters),
 			or_(*sub_category_filters))
 		.all()
 	)
