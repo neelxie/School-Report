@@ -1456,7 +1456,7 @@ def main_question_rank():
 	# 	language_filter = func.lower(Question.language).in_(languages)
 	# 	filters.append(or_(*language_filter))
 
-	# sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 
 	# sub_category_filters = []
 	# if sub_category:
@@ -1495,13 +1495,24 @@ def main_question_rank():
 			langua_filtered.append(item)
 
 	print(len(langua_filtered))
-
-	sub_sub = [item for item in langua_filtered if item.animal_crop.lower() in sub_category_map.get(new_category, [])]
-	print(len(sub_sub))
-	
 	filtered_objects =[]
-	filtered_objects = [item for item in langua_filtered if any(subcat.lower() in sub_category_map[new_category] for subcat in item.animal_crop.lower().split())]
+
+	for obj in langua_filtered:
+		obj_subcategory = obj["subcategory"].lower()
+		matched = False
+		for subcat in sub_categories:
+			if subcat in sub_category_map:
+				if obj_subcategory in map(str.lower, sub_category_map[subcat]):
+					matched = True
+					break
+			elif obj_subcategory == subcat:
+				matched = True
+				break
+		if matched:
+			filtered_objects.append(obj)
+	
 	print(len(filtered_objects))
+
 	# if new_category.strip().lower() in sub_category_map:
 	# 	filtered_objects = [obj for obj in langua_filtered if obj.animal_crop.lower() in sub_category_map[langua_filtered]]
 	# 	print(filtered_objects)
