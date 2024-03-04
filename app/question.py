@@ -1464,7 +1464,8 @@ def main_question_rank():
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
-				sub_category_filters.append( func.lower(Question.animal_crop).in_(sub_category_list))
+				for item in sub_category_list:
+					sub_category_filters.append( func.lower(Question.animal_crop) == item)
 			else:
 				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
 		
