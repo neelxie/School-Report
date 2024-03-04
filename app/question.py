@@ -1495,6 +1495,12 @@ def main_question_rank():
 			langua_filtered.append(item)
 
 	print(len(langua_filtered))
+
+	sub_sub = [item for item in langua_filtered if item.animal_crop and item.animal_crop.lower() in sub_category_map.get(new_category, [])]
+	print(sub_sub)
+
+	
+	# filtered_ranking = [item for item in items if item.mark is not None and item.mark < 2]
 	if random_questions:
 		partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
 
