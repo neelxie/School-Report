@@ -1531,13 +1531,13 @@ def main_question_rank():
 
 	
 	# filtered_ranking = [item for item in items if item.mark is not None and item.mark < 2]
-	if filtered_objects:
-		partial_ranked_qns = [q for q in filtered_objects if q.ranking_count == 1]
+	if not_answered:
+		partial_ranked_qns = [q for q in not_answered if q.ranking_count == 1]
 
 		if partial_ranked_qns:
 			matching_questions = random.choice(partial_ranked_qns)
 		else:
-			matching_questions = random.choice(filtered_objects)
+			matching_questions = random.choice(not_answered)
 	
 	if matching_questions:
 		random_question_data = {
