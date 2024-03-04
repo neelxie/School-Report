@@ -1497,7 +1497,16 @@ def main_question_rank():
 	print(len(langua_filtered))
 
 	sub_sub = [item for item in langua_filtered if item.animal_crop and item.animal_crop.lower() in sub_category_map.get(new_category, [])]
-	print(sub_sub)
+	print(len(sub_sub))
+	
+	filtered_objects =[]
+	if new_category.strip().lower() in sub_category_map:
+		filtered_objects = [obj for obj in langua_filtered if obj.animal_crop.lower() in sub_category_map[langua_filtered]]
+		print(filtered_objects)
+	else:
+		filtered_objects = [obj for obj in langua_filtered if obj.animal_crop.lower() == new_category.lower()]
+		print(filtered_objects)
+
 
 	
 	# filtered_ranking = [item for item in items if item.mark is not None and item.mark < 2]
