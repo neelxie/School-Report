@@ -1450,52 +1450,53 @@ def main_question_rank():
 
 	category_filter = func.lower(Question.category) == category
 
-	# if language:
-	# 	languages = [lang.strip().lower() for lang in language.split(",")]
-	# 	language_filter = func.lower(Question.language).in_(languages)
-	# 	filters.append(language_filter)
-
-	# sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-
-	# if sub_category:
-	# 	# sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-	# 	sub_category_filters = []
-		
-	# 	for sub_category_name in sub_categories:
-	# 		sub_category_list = sub_category_map.get(sub_category_name)
-	# 		if sub_category_list:
-	# 			for item in sub_category_list:
-	# 				sub_category_filters.append( func.lower(Question.animal_crop) == item.lower())
-	# 		else:
-	# 			sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name.lower())
-		
-	# 	if sub_category_filters:
-	# 		filters.append(or_(*sub_category_filters))
-
-	# random_questions = (
-	# 	Question.query.filter(
-  #   	Question.answered.is_(True),
-  #   	Question.finished.is_not(True),
-	# 		(~Question.answers.any(Answer.user_id == current_user)),
-	# 		Question.rank_expert_one != current_user,
-	# 		Question.ranking_count < 2,
-	# 		*filters)
-	# 	.all()
-	# )
-	base_filters = [
-		Question.answered.is_(True),
-		Question.finished.is_not(True),
-		(~Question.answers.any(Answer.user_id == current_user)),
-		Question.rank_expert_one != current_user,
-		Question.ranking_count < 2
-  ]
-	
-	language_filters = []
 	if language:
 		languages = [lang.strip().lower() for lang in language.split(",")]
-		language_filters = [func.lower(Question.language).in_(languages)]
+		language_filter = func.lower(Question.language).in_(languages)
+		filters.append(language_filter)
+
+	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+
+	if sub_category:
+		sub_category_filters = []
 		
-	sub_category_filters = []
+		for sub_category_name in sub_categories:
+			sub_category_list = sub_category_map.get(sub_category_name)
+			if sub_category_list:
+				for item in sub_category_list:
+					is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
+					sub_category_filters.append(is_matching_subcategory)
+			else:
+				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
+				sub_category_filters.append(func.lower(Question.animal_crop) == item.lower())
+		
+		if sub_category_filters:
+			filters.append(or_(*sub_category_filters))
+
+	random_questions = (
+		Question.query.filter(
+    	Question.answered.is_(True),
+    	Question.finished.is_not(True),
+			(~Question.answers.any(Answer.user_id == current_user)),
+			Question.rank_expert_one != current_user,
+			Question.ranking_count < 2,
+			*filters)
+		.all()
+	)
+	# base_filters = [
+	# 	Question.answered.is_(True),
+	# 	Question.finished.is_not(True),
+	# 	(~Question.answers.any(Answer.user_id == current_user)),
+	# 	Question.rank_expert_one != current_user,
+	# 	Question.ranking_count < 2
+  # ]
+	
+	# language_filters = []
+	# if language:
+	# 	languages = [lang.strip().lower() for lang in language.split(",")]
+	# 	language_filters = [func.lower(Question.language).in_(languages)]
+		
+	# sub_category_filters = []
 	# if new_category:
 	# 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 	# 	for sub_category_name in sub_categories:
@@ -1515,24 +1516,24 @@ def main_question_rank():
 	# 		*filters
 	# 	).all()
 	# )
-	if new_category:
-		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-		print(sub_categories)
-		for sub_category_name in sub_categories:
-			sub_category_list = sub_category_map.get(sub_category_name)
-			if sub_category_list:
-				sub_category_filters.append(func.lower(Question.animal_crop).in_(sub_category_list))
-			else:
-				print("should be here")
-				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
+	# if new_category:
+	# 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+	# 	print(sub_categories)
+	# 	for sub_category_name in sub_categories:
+	# 		sub_category_list = sub_category_map.get(sub_category_name)
+	# 		if sub_category_list:
+	# 			sub_category_filters.append(func.lower(Question.animal_crop).in_(sub_category_list))
+	# 		else:
+	# 			print("should be here")
+	# 			sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
 				
-	filters = base_filters + sub_category_filters
-	print(new_category)
-	print(filters)
-	random_questions = (
-		Question.query.filter(and_(*base_filters), or_(*sub_category_filters))
-		.all()
-	)
+	# filters = base_filters + sub_category_filters
+	# print(new_category)
+	# print(filters)
+	# random_questions = (
+	# 	Question.query.filter(and_(*base_filters), or_(*sub_category_filters))
+	# 	.all()
+	# )
 	matching_questions = None
 	print(len(random_questions))
 	if random_questions:
