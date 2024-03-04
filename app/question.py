@@ -1517,7 +1517,7 @@ def main_question_rank():
 
 	print(len(not_ranked_by_me))
 
-	not_answered = [obj for obj in not_ranked_by_me if not any(cls['user_id'] == current_user for cls in obj.answers)]
+	not_answered = [obj for obj in not_ranked_by_me if not any(cls.user_id == current_user for cls in obj.answers)]
 
 	print(len(not_answered))
 
