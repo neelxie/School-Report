@@ -1209,6 +1209,9 @@ def get_expert_luganda_questions():
 				"category": question.category,
 				"animal_crop": question.animal_crop,
 				"location": question.location,
+				"answered": question.answered,
+				"ranking_count": question.ranking_count,
+				"ranked": question.finished
 			}
 			questions_data.append(question_data)
 
@@ -1237,6 +1240,9 @@ def get_expert_english_questions():
 				"category": question.category,
 				"animal_crop": question.animal_crop,
 				"location": question.location,
+				"answered": question.answered,
+				"ranking_count": question.ranking_count,
+				"ranked": question.finished
 			}
 			questions_data.append(question_data)
 
@@ -1265,6 +1271,9 @@ def get_expert_runyankole_questions():
 				"category": question.category,
 				"animal_crop": question.animal_crop,
 				"location": question.location,
+				"answered": question.answered,
+				"ranking_count": question.ranking_count,
+				"ranked": question.finished
 			}
 			questions_data.append(question_data)
 
