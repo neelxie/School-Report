@@ -1472,7 +1472,7 @@ def main_question_rank():
 				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
 				sub_category_filters.append(is_matching_subcategory)
 		
-		filters.append(or_(*sub_category_filters))
+		filters.append(and_(*sub_category_filters))
 		
 
 	random_questions = (
@@ -1482,7 +1482,7 @@ def main_question_rank():
 			(~Question.answers.any(Answer.user_id == current_user)),
 			Question.rank_expert_one != current_user,
 			Question.ranking_count < 2,
-			and_(*filters))
+			or_(*filters))
 			# or_(*sub_category_filters))
 		.all()
 	)
