@@ -1433,7 +1433,7 @@ def main_question_rank():
 		"fruits": ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"],
 		"cereals": ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"],
 		"legumes": [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"],
-		"piggery": ["pigs", 'animal', 'animals']
+		"piggery": ["pigs", 'animal', 'animals, Pigs']
   }
 
 	data = request.get_json()
@@ -1469,7 +1469,7 @@ def main_question_rank():
 		if sub_category_filters:
 			filters.append(or_(*sub_category_filters))
 
-	random_question = (
+	random_questions = (
 		Question.query.filter(
 			Question.rephrased == "actual",
     	Question.answered.is_(True),
@@ -1482,13 +1482,14 @@ def main_question_rank():
 	)
 
 	matching_questions = None
-	if random_question:
-		partial_ranked_qns = [q for q in random_question if q.ranking_count == 1]
+	print(len(random_questions))
+	if random_questions:
+		partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
 
 		if partial_ranked_qns:
-			matching_questions = random.sample(partial_ranked_qns, 1)[0]
+			matching_questions = random.choice(partial_ranked_qns)
 		else:
-			matching_questions = random.sample(random_question, 1)[0]
+			matching_questions = random.choice(random_questions)
 	
 	if matching_questions:
 		random_question_data = {
