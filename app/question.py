@@ -1446,45 +1446,78 @@ def main_question_rank():
 	current_user = get_jwt_identity()
 
 	filters = []
-	random_question_data = None
+	random_questions = (
+		Question.query.filter(
+			Question.answered.is_(True),
+			Question.finished.is_not(True),
+			(~Question.answers.any(Answer.user_id == current_user)),
+			Question.rank_expert_one != current_user,
+			Question.ranking_count < 2
+		)
+	)
 
-	category_filter = func.lower(Question.category) == category
-
+	# Language filter
 	if language:
 		languages = [lang.strip().lower() for lang in language.split(",")]
-		language_filter = func.lower(Question.language).in_(languages)
-		filters.append(language_filter)
+		language_filters = [func.lower(Question.language).like(lang) for lang in languages]
+		filters.append(or_(*language_filters))
 
-	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-
-	sub_category_filters = []
+	# Sub-category filter
 	if sub_category:
+		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
+		sub_category_filters = [
+				func.lower(Question.sub_category).in_(sub_categories)
+		]
+		filters.append(or_(*sub_category_filters))
+
+	# Apply all filters
+	if filters:
+		random_questions = random_questions.filter(and_(*filters))
+
+	# Retrieve filtered questions
+	random_question_data = random_questions.all()
+	print(random_questions)
+	print(random_question_data)
+
+	# random_question_data = None
+
+	# category_filter = func.lower(Question.category) == category
+
+	# if language:
+	# 	languages = [lang.strip().lower() for lang in language.split(",")]
+	# 	language_filter = func.lower(Question.language).in_(languages)
+	# 	filters.append(language_filter)
+
+	# sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+
+	# sub_category_filters = []
+	# if sub_category:
 		
-		for sub_category_name in sub_categories:
-			sub_category_list = sub_category_map.get(sub_category_name)
-			if sub_category_list:
-				for item in sub_category_list:
-					is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-					sub_category_filters.append(is_matching_subcategory)
-			else:
-				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-				sub_category_filters.append(is_matching_subcategory)
+	# 	for sub_category_name in sub_categories:
+	# 		sub_category_list = sub_category_map.get(sub_category_name)
+	# 		if sub_category_list:
+	# 			for item in sub_category_list:
+	# 				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
+	# 				sub_category_filters.append(is_matching_subcategory)
+	# 		else:
+	# 			is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
+	# 			sub_category_filters.append(is_matching_subcategory)
 		
 		# if sub_category_filters:
 		# 	filters.append(or_(*sub_category_filters))
 		
 
-	random_questions = (
-		Question.query.filter(
-    	Question.answered.is_(True),
-    	Question.finished.is_not(True),
-			(~Question.answers.any(Answer.user_id == current_user)),
-			Question.rank_expert_one != current_user,
-			Question.ranking_count < 2)
-			# and_(*filters),
-			# or_(*sub_category_filters))
-		.all()
-	)
+	# random_questions = (
+	# 	Question.query.filter(
+  #   	Question.answered.is_(True),
+  #   	Question.finished.is_not(True),
+	# 		(~Question.answers.any(Answer.user_id == current_user)),
+	# 		Question.rank_expert_one != current_user,
+	# 		Question.ranking_count < 2)
+	# 		# and_(*filters),
+	# 		# or_(*sub_category_filters))
+	# 	.all()
+	# )
 	
 	matching_questions = None
 	print(len(random_questions))
