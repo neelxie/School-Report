@@ -1446,119 +1446,87 @@ def main_question_rank():
 	current_user = get_jwt_identity()
 
 	filters = []
-	random_questions = (
-		Question.query.filter(
-			Question.answered.is_(True),
-			Question.finished.is_not(True),
-			(~Question.answers.any(Answer.user_id == current_user)),
-			Question.rank_expert_one != current_user,
-			Question.ranking_count < 2
-		)
-	)
+	
+	random_question_data = None
 
-	# Language filter
+	category_filter = func.lower(Question.category) == category
+
 	if language:
 		languages = [lang.strip().lower() for lang in language.split(",")]
-		language_filters = [func.lower(Question.language).like(lang) for lang in languages]
-		filters.append(or_(*language_filters))
+		language_filter = func.lower(Question.language).in_(languages)
+		filters.append(and_(*language_filter))
 
-	# Sub-category filter
+	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+
+	sub_category_filters = []
 	if sub_category:
-		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-		sub_category_filters = [
-				func.lower(Question.animal_crop).in_(sub_categories)
-		]
+		sub_category_filters = []
+		
+		for sub_category_name in sub_categories:
+			sub_category_list = sub_category_map.get(sub_category_name)
+			if sub_category_list:
+				for item in sub_category_list:
+					is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
+					sub_category_filters.append(is_matching_subcategory)
+			else:
+				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
+				sub_category_filters.append(is_matching_subcategory)
+		
 		filters.append(or_(*sub_category_filters))
-
-	# Apply all filters
-	if filters:
-		random_questions = random_questions.filter(and_(*filters))
-
-	# Retrieve filtered questions
-	random_question_data = random_questions.all()
-	print(random_questions)
-	print(random_question_data)
-
-	# random_question_data = None
-
-	# category_filter = func.lower(Question.category) == category
-
-	# if language:
-	# 	languages = [lang.strip().lower() for lang in language.split(",")]
-	# 	language_filter = func.lower(Question.language).in_(languages)
-	# 	filters.append(language_filter)
-
-	# sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-
-	# sub_category_filters = []
-	# if sub_category:
-		
-	# 	for sub_category_name in sub_categories:
-	# 		sub_category_list = sub_category_map.get(sub_category_name)
-	# 		if sub_category_list:
-	# 			for item in sub_category_list:
-	# 				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-	# 				sub_category_filters.append(is_matching_subcategory)
-	# 		else:
-	# 			is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-	# 			sub_category_filters.append(is_matching_subcategory)
-		
-		# if sub_category_filters:
-		# 	filters.append(or_(*sub_category_filters))
 		
 
-	# random_questions = (
-	# 	Question.query.filter(
-  #   	Question.answered.is_(True),
-  #   	Question.finished.is_not(True),
-	# 		(~Question.answers.any(Answer.user_id == current_user)),
-	# 		Question.rank_expert_one != current_user,
-	# 		Question.ranking_count < 2)
-	# 		# and_(*filters),
-	# 		# or_(*sub_category_filters))
-	# 	.all()
-	# )
+	random_questions = (
+		Question.query.filter(
+    	Question.answered.is_(True),
+    	Question.finished.is_not(True),
+			(~Question.answers.any(Answer.user_id == current_user)),
+			Question.rank_expert_one != current_user,
+			Question.ranking_count < 2,
+			and_(*filters))
+			# or_(*sub_category_filters))
+		.all()
+	)
 	
-	# matching_questions = None
-	# # print(len(random_questions))
-	# if random_questions:
-	# 	partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
+	matching_questions = None
+	print(len(random_questions))
+	if random_questions:
+		partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
 
-	# 	if partial_ranked_qns:
-	# 		matching_questions = random.choice(partial_ranked_qns)
-	# 	else:
-	# 		matching_questions = random.choice(random_questions)
+		if partial_ranked_qns:
+			matching_questions = random.choice(partial_ranked_qns)
+		else:
+			matching_questions = random.choice(random_questions)
 	
-	# if matching_questions:
-	# 	random_question_data = {
-	# 		"id": matching_questions.id,
-	# 		"sentence": matching_questions.sentence,
-	# 		"language": matching_questions.language,
-	# 		"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-	# 		"topic": matching_questions.topic,
-	# 		"sub_topic": matching_questions.sub_topic,
-	# 		"category": matching_questions.category,
-	# 		"animal_crop": matching_questions.animal_crop,
-	# 		"location": matching_questions.location,
-	# 		"filename": matching_questions.filename,
-	# 	}
+	if matching_questions:
+		random_question_data = {
+			"id": matching_questions.id,
+			"sentence": matching_questions.sentence,
+			"language": matching_questions.language,
+			"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+			"topic": matching_questions.topic,
+			"sub_topic": matching_questions.sub_topic,
+			"category": matching_questions.category,
+			"animal_crop": matching_questions.animal_crop,
+			"location": matching_questions.location,
+			"filename": matching_questions.filename,
+		}
 
-	#     # Create a list to store answer data for each associated answer
-	# 	answer_list = []
-	# 	for answer in matching_questions.answers:
-	# 		answer_data = {
-	# 			"id": answer.id,
-	# 			"answer_text": answer.answer_text,
-	# 			"source": answer.source,
-	# 			"relevance": answer.relevance,
-	# 			"coherence": answer.coherence,
-	# 			"fluency": answer.fluency,
-	# 			"rank": answer.rank,
-	# 			"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-	# 		}
-	# 		answer_list.append(answer_data)
+	    # Create a list to store answer data for each associated answer
+		answer_list = []
+		for answer in matching_questions.answers:
+			answer_data = {
+				"id": answer.id,
+				"answer_text": answer.answer_text,
+				"source": answer.source,
+				"relevance": answer.relevance,
+				"coherence": answer.coherence,
+				"fluency": answer.fluency,
+				"rank": answer.rank,
+				"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+			}
+			answer_list.append(answer_data)
 
-	# 	random_question_data["answers"] = answer_list
+		random_question_data["answers"] = answer_list
 
 	if random_question_data:
 		result_object = {"random_question_data": random_question_data}
