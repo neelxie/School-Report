@@ -1455,8 +1455,10 @@ def main_question_rank():
 		language_filter = func.lower(Question.language).in_(languages)
 		filters.append(language_filter)
 
+	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+
 	if sub_category:
-		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+		# sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 		sub_category_filters = []
 		
 		for sub_category_name in sub_categories:
@@ -1469,9 +1471,10 @@ def main_question_rank():
 		if sub_category_filters:
 			filters.append(or_(*sub_category_filters))
 
+	
+
 	random_questions = (
 		Question.query.filter(
-			Question.rephrased == "actual",
     	Question.answered.is_(True),
     	Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
@@ -1480,6 +1483,14 @@ def main_question_rank():
 			*filters)
 		.all()
 	)
+	print(Question.query.filter(
+    	Question.answered.is_(True),
+    	Question.finished.is_not(True),
+			(~Question.answers.any(Answer.user_id == current_user)),
+			Question.rank_expert_one != current_user,
+			Question.ranking_count < 2,
+			*filters)
+		.all())
 
 	matching_questions = None
 	print(len(random_questions))
