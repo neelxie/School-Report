@@ -1433,7 +1433,7 @@ def main_question_rank():
 		"fruits": ["watermelon", "pineapple", "mango", "sugarcane", "orange", "avocado", "passion fruit", "jack fruit", "paw paw", "guava", "lemon"],
 		"cereals": ["maize", "sorghum", "millet", "rice", "wheat", "sim sim", "sesame"],
 		"legumes": [ "soya beans", "beans", "peas", "groundnuts", "Gnuts", "ground nuts"],
-		"piggery": ["pigs", 'animal', 'animals, Pigs']
+		"piggery": ["pigs", 'animal', 'animals']
   }
 
 	data = request.get_json()
@@ -1465,9 +1465,9 @@ def main_question_rank():
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
 				for item in sub_category_list:
-					sub_category_filters.append( func.lower(Question.animal_crop) == item)
+					sub_category_filters.append( func.lower(Question.animal_crop) == item.lower())
 			else:
-				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
+				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name.lower())
 		
 		if sub_category_filters:
 			filters.append(or_(*sub_category_filters))
