@@ -1520,7 +1520,7 @@ def main_question_rank():
 	# )
 	
 	matching_questions = None
-	print(len(random_questions))
+	# print(len(random_questions))
 	if random_questions:
 		partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
 
