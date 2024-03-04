@@ -1498,7 +1498,7 @@ def main_question_rank():
 	filtered_objects =[]
 
 	for obj in langua_filtered:
-		obj_subcategory = obj["subcategory"].lower()
+		obj_subcategory = obj.animal_crop.lower()
 		matched = False
 		for subcat in sub_categories:
 			if subcat in sub_category_map:
