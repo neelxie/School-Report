@@ -1489,6 +1489,12 @@ def main_question_rank():
 	
 	matching_questions = None
 	print(len(random_questions))
+	langua_filtered = []
+	for item in random_questions:
+		if any(item_lang == lang for item_lang in item.language.lower().split(",") for lang in languages):
+			langua_filtered.append(item)
+
+	print(len(langua_filtered))
 	if random_questions:
 		partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
 
