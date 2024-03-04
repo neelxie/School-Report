@@ -1500,7 +1500,7 @@ def main_question_rank():
 	print(len(sub_sub))
 	
 	filtered_objects =[]
-	filtered_objects = [item for item in langua_filtered if any(subcat.lower() in sub_category_map[new_category] for subcat in item.subcategory.lower().split())]
+	filtered_objects = [item for item in langua_filtered if any(subcat.lower() in sub_category_map[new_category] for subcat in item.animal_crop.lower().split())]
 	print(len(filtered_objects))
 	# if new_category.strip().lower() in sub_category_map:
 	# 	filtered_objects = [obj for obj in langua_filtered if obj.animal_crop.lower() in sub_category_map[langua_filtered]]
