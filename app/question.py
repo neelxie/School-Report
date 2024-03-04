@@ -1513,6 +1513,14 @@ def main_question_rank():
 	
 	print(len(filtered_objects))
 
+	not_ranked_by_me = [obj for obj in filtered_objects if obj.rank_expert_one != current_user ]
+
+	print(len(not_ranked_by_me))
+
+	not_answered = [obj for obj in not_ranked_by_me if not any(cls['user_id'] == current_user for cls in obj.answers)]
+
+	print(len(not_answered))
+
 	# if new_category.strip().lower() in sub_category_map:
 	# 	filtered_objects = [obj for obj in langua_filtered if obj.animal_crop.lower() in sub_category_map[langua_filtered]]
 	# 	print(filtered_objects)
