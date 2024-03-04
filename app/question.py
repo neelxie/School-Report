@@ -1468,10 +1468,11 @@ def main_question_rank():
 					sub_category_filters.append(is_matching_subcategory)
 			else:
 				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-				sub_category_filters.append(func.lower(Question.animal_crop) == item.lower())
+				sub_category_filters.append(is_matching_subcategory)
 		
 		# if sub_category_filters:
 		# 	filters.append(or_(*sub_category_filters))
+		
 
 	random_questions = (
 		Question.query.filter(
