@@ -1471,7 +1471,9 @@ def main_question_rank():
 		if sub_category_filters:
 			filters.append(or_(*sub_category_filters))
 
-	
+	for f in filters:
+		print(f)
+
 
 	random_questions = (
 		Question.query.filter(
