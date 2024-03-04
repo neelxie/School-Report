@@ -1466,7 +1466,7 @@ def main_question_rank():
 	if sub_category:
 		sub_categories = [sc.strip().lower() for sc in sub_category.split(",")]
 		sub_category_filters = [
-				func.lower(Question.sub_category).in_(sub_categories)
+				func.lower(Question.animal_crop).in_(sub_categories)
 		]
 		filters.append(or_(*sub_category_filters))
 
