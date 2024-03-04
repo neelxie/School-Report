@@ -1519,46 +1519,46 @@ def main_question_rank():
 	# 	.all()
 	# )
 	
-	matching_questions = None
-	# print(len(random_questions))
-	if random_questions:
-		partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
+	# matching_questions = None
+	# # print(len(random_questions))
+	# if random_questions:
+	# 	partial_ranked_qns = [q for q in random_questions if q.ranking_count == 1]
 
-		if partial_ranked_qns:
-			matching_questions = random.choice(partial_ranked_qns)
-		else:
-			matching_questions = random.choice(random_questions)
+	# 	if partial_ranked_qns:
+	# 		matching_questions = random.choice(partial_ranked_qns)
+	# 	else:
+	# 		matching_questions = random.choice(random_questions)
 	
-	if matching_questions:
-		random_question_data = {
-			"id": matching_questions.id,
-			"sentence": matching_questions.sentence,
-			"language": matching_questions.language,
-			"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-			"topic": matching_questions.topic,
-			"sub_topic": matching_questions.sub_topic,
-			"category": matching_questions.category,
-			"animal_crop": matching_questions.animal_crop,
-			"location": matching_questions.location,
-			"filename": matching_questions.filename,
-		}
+	# if matching_questions:
+	# 	random_question_data = {
+	# 		"id": matching_questions.id,
+	# 		"sentence": matching_questions.sentence,
+	# 		"language": matching_questions.language,
+	# 		"created_at": matching_questions.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+	# 		"topic": matching_questions.topic,
+	# 		"sub_topic": matching_questions.sub_topic,
+	# 		"category": matching_questions.category,
+	# 		"animal_crop": matching_questions.animal_crop,
+	# 		"location": matching_questions.location,
+	# 		"filename": matching_questions.filename,
+	# 	}
 
-	    # Create a list to store answer data for each associated answer
-		answer_list = []
-		for answer in matching_questions.answers:
-			answer_data = {
-				"id": answer.id,
-				"answer_text": answer.answer_text,
-				"source": answer.source,
-				"relevance": answer.relevance,
-				"coherence": answer.coherence,
-				"fluency": answer.fluency,
-				"rank": answer.rank,
-				"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-			}
-			answer_list.append(answer_data)
+	#     # Create a list to store answer data for each associated answer
+	# 	answer_list = []
+	# 	for answer in matching_questions.answers:
+	# 		answer_data = {
+	# 			"id": answer.id,
+	# 			"answer_text": answer.answer_text,
+	# 			"source": answer.source,
+	# 			"relevance": answer.relevance,
+	# 			"coherence": answer.coherence,
+	# 			"fluency": answer.fluency,
+	# 			"rank": answer.rank,
+	# 			"created_at": answer.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+	# 		}
+	# 		answer_list.append(answer_data)
 
-		random_question_data["answers"] = answer_list
+	# 	random_question_data["answers"] = answer_list
 
 	if random_question_data:
 		result_object = {"random_question_data": random_question_data}
