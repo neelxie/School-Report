@@ -1482,7 +1482,7 @@ def main_question_rank():
 			Question.rank_expert_one != current_user,
 			Question.ranking_count < 2,
 			# and_(*filters),
-			or_(*sub_category_filters))
+			# or_(*sub_category_filters))
 		.all()
 	)
 	# base_filters = [
