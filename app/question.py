@@ -1454,7 +1454,7 @@ def main_question_rank():
 	if language:
 		languages = [lang.strip().lower() for lang in language.split(",")]
 		language_filter = func.lower(Question.language).in_(languages)
-		filters.append(and_(*language_filter))
+		filters.append(or_(*language_filter))
 
 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 
@@ -1481,8 +1481,8 @@ def main_question_rank():
     	Question.finished.is_not(True),
 			(~Question.answers.any(Answer.user_id == current_user)),
 			Question.rank_expert_one != current_user,
-			Question.ranking_count < 2,
-			or_(*filters))
+			Question.ranking_count < 2)
+			# or_(*filters))
 			# or_(*sub_category_filters))
 		.all()
 	)
