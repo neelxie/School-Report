@@ -1450,7 +1450,7 @@ def main_question_rank():
 	random_question_data = None
 
 	category_filter = func.lower(Question.category) == category
-
+	languages = [lang.strip().lower() for lang in language.split(",")]
 	# if language:
 	# 	languages = [lang.strip().lower() for lang in language.split(",")]
 	# 	language_filter = func.lower(Question.language).in_(languages)
@@ -1491,7 +1491,7 @@ def main_question_rank():
 	print(len(random_questions))
 	langua_filtered = []
 	for item in random_questions:
-		if any(item_lang == lang for item_lang in item.language.lower().split(",") for lang in languages):
+		if any(lang == item.language.lower() for lang in languages):
 			langua_filtered.append(item)
 
 	print(len(langua_filtered))
