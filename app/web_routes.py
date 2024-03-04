@@ -93,7 +93,7 @@ def main_answer():
     category = session.get("category")
     sub_category = session.get("sub_category")
     new_category = session.get("new_category")
-    my_id = session.get("role")
+    my_id = session.get("my_id")
     return render_template(
         "mainAnswer.html",
         token=access_token,
@@ -103,6 +103,7 @@ def main_answer():
         category=category,
         sub_category=sub_category,
         new_category = new_category,
+        my_id = my_id
     )
 
 @web_bp.route("/main_rank")
@@ -114,7 +115,7 @@ def main_rank():
     category = session.get("category")
     sub_category = session.get("sub_category")
     new_category = session.get("new_category")
-    my_id = session.get("role")
+    my_id = session.get("my_id")
     return render_template(
         "mainRank.html",
         token=access_token,
@@ -191,7 +192,7 @@ def answer_page():
     category = session.get("category")
     sub_category = session.get("sub_category")
     new_category = session.get("new_category")
-    my_id = session.get("role")
+    my_id = session.get("my_id")
     return render_template(
         "answer_page.html",
                 token=access_token,
@@ -214,7 +215,7 @@ def expert_answers():
     category = session.get("category")
     sub_category = session.get("sub_category")
     new_category = session.get("new_category")
-    my_id = session.get("role")
+    my_id = session.get("my_id")
     return render_template(
         "expert_answers.html",
         token=access_token,
