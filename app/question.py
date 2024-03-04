@@ -1517,11 +1517,13 @@ def main_question_rank():
 	# )
 	if new_category:
 		sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+		print(sub_categories)
 		for sub_category_name in sub_categories:
 			sub_category_list = sub_category_map.get(sub_category_name)
 			if sub_category_list:
 				sub_category_filters.append(func.lower(Question.animal_crop).in_(sub_category_list))
 			else:
+				print("should be here")
 				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
 				
 	filters = base_filters + sub_category_filters
