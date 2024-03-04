@@ -1525,6 +1525,8 @@ def main_question_rank():
 				sub_category_filters.append(func.lower(Question.animal_crop) == sub_category_name)
 				
 	filters = base_filters + sub_category_filters
+	print(new_category)
+	print(filters)
 	random_questions = (
 		Question.query.filter(and_(*base_filters), or_(*sub_category_filters))
 		.all()
