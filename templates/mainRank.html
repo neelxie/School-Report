@@ -292,6 +292,7 @@ block content %}
   const token = getValueFromLocalStorage("token", "{{ token }}");
   const user = getValueFromLocalStorage("user", "{{ user }}");
   const role = getValueFromLocalStorage("role", "{{ role }}");
+  const my_id = getValueFromLocalStorage("my_id", "{{ my_id }}");
   const language = getValueFromLocalStorage("language", "{{ language }}");
   const category = getValueFromLocalStorage("category", "{{ category }}");
   const sub_category = getValueFromLocalStorage(
@@ -305,6 +306,7 @@ block content %}
 
   // Update localStorage with the current values
   localStorage.setItem("token", token);
+  localStorage.setItem("my_id", my_id);
   localStorage.setItem("user", user);
   localStorage.setItem("role", role);
   localStorage.setItem("language", language);
