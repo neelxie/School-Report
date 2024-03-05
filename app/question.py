@@ -1897,6 +1897,7 @@ def upload_json_answers():
 				dup_count += 1
 				duplicates.append({"sentence": sentence})
 				existing_qn.animal_crop = animal_crop
+				existing_qn.sub_topic = sub_topic
 				db.session.commit()
 
 		else:
