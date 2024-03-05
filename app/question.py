@@ -2002,7 +2002,8 @@ def add_excel_answers():
 			answer_text = answer_data.get('Answer')
 
 			existing_question = Question.query.filter_by(id=question_id).first()
-			if existing_question:
+			
+			if existing_question and not existing_question.answered:
 				new_answer = Answer(
 						question_id=question_id,
 						user_id=user_id,
