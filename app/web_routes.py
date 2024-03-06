@@ -84,6 +84,26 @@ def main_review():
         new_category = new_category,
     )
 
+@web_bp.route("/my-answers")
+def my_answers():
+    access_token = session.get("token")
+    role = session.get("role")
+    username = session.get("username")
+    language = session.get("language")
+    category = session.get("category")
+    sub_category = session.get("sub_category")
+    new_category = session.get("new_category")
+    return render_template(
+        "myanswers.html", 
+        token=access_token,
+        role=role,
+        user=username,
+        language=language,
+        category=category,
+        sub_category=sub_category,
+        new_category = new_category,
+    )
+
 @web_bp.route("/main_answer")
 def main_answer():
     access_token = session.get("token")
@@ -296,16 +316,6 @@ def audios():
     username = session.get("username")
     return render_template(
         "audios.html", token=access_token, role=role, user=username
-    )
-
-
-@web_bp.route("/my-answers")
-def my_answers():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template(
-        "myanswers.html", token=access_token, role=role, user=username
     )
 
 
