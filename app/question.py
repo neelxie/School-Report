@@ -1426,7 +1426,7 @@ def main_question_rank():
 
 	data = request.get_json()
 	
-	category = (data.get("category", None)).title()
+	category = (data.get("category", None)).lower()
 	language = data.get("language", None)
 	sub_category = data.get("sub_category", None)
 	new_category = data.get("new_category", None)
@@ -1439,34 +1439,14 @@ def main_question_rank():
 
 	category_filter = func.lower(Question.category) == category
 	languages = [lang.strip().lower() for lang in language.split(",")]
-	# if language:
-	# 	languages = [lang.strip().lower() for lang in language.split(",")]
-	# 	language_filter = func.lower(Question.language).in_(languages)
-	# 	filters.append(or_(*language_filter))
 
 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
-
-	# sub_category_filters = []
-	# if sub_category:
-	# 	sub_category_filters = []
-		
-	# 	for sub_category_name in sub_categories:
-	# 		sub_category_list = sub_category_map.get(sub_category_name)
-	# 		if sub_category_list:
-	# 			for item in sub_category_list:
-	# 				is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-	# 				sub_category_filters.append(is_matching_subcategory)
-	# 		else:
-	# 			is_matching_subcategory = func.lower(Question.animal_crop) == item.lower()
-	# 			sub_category_filters.append(is_matching_subcategory)
-		
-	# 	filters.append(and_(*sub_category_filters))
-		
 
 	random_questions = (
 		Question.query.filter(
     	Question.answered.is_(True),
-    	Question.finished.is_not(True))
+    	Question.finished.is_not(True)),
+			func.lower(Question.category) == category
 			# (~Question.answers.any(Answer.user_id == current_user)),
 			# Question.rank_expert_one != current_user)
 			# Question.ranking_count < 2)
