@@ -1440,7 +1440,12 @@ def main_question_rank():
 	category_filter = func.lower(Question.category) == category
 	languages = [lang.strip().lower() for lang in language.split(",")]
 
+	print("languages")
+	print(languages)
+
 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
+	print("sub_categories")
+	print(sub_categories)
 
 	random_questions = (
 		Question.query.filter(
@@ -1459,9 +1464,14 @@ def main_question_rank():
 
 	filtered_objects = []
 	for obj in random_questions:
+		print("object")
+		print(type(obj))
+		print(obj)
 		obj_subcategory = obj.animal_crop.lower()
+
 		matched = False
 		for subcat in sub_categories:
+			print(subcat)
 			if subcat in sub_category_map:
 				if obj_subcategory in map(str.lower, sub_category_map[subcat]):
 					matched = True
