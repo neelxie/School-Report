@@ -1477,15 +1477,9 @@ def main_question_rank():
 	
 	matching_questions = None
 	print(len(random_questions))
-	langua_filtered = []
-	for item in random_questions:
-		if any(lang == item.language.lower() for lang in languages):
-			langua_filtered.append(item)
 
-	print(len(langua_filtered))
-	filtered_objects =[]
-
-	for obj in langua_filtered:
+	filtered_objects = []
+	for obj in random_questions:
 		obj_subcategory = obj.animal_crop.lower()
 		matched = False
 		for subcat in sub_categories:
@@ -1501,7 +1495,15 @@ def main_question_rank():
 	
 	print(len(filtered_objects))
 
-	not_ranked_by_me = [obj for obj in filtered_objects if obj.rank_expert_one != current_user ]
+	langua_filtered = []
+	for item in filtered_objects:
+		if any(lang == item.language.lower() for lang in languages):
+			langua_filtered.append(item)
+
+	print(len(langua_filtered))
+	
+
+	not_ranked_by_me = [obj for obj in langua_filtered if obj.rank_expert_one != current_user ]
 
 	print(len(not_ranked_by_me))
 
