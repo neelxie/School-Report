@@ -1443,10 +1443,12 @@ def main_question_rank():
 	sub_categories = [sc.strip().lower() for sc in new_category.split(",")]
 
 	random_questions = (
-		Question.query.filter(
+		Question.query
+		.filter(
     	Question.answered.is_(True),
-    	Question.finished.is_not(True)),
-			func.lower(Question.category) == category
+    	Question.finished.is_not(True)
+		)
+		.filter(func.lower(Question.category) == category.lower())
 			# (~Question.answers.any(Answer.user_id == current_user)),
 			# Question.rank_expert_one != current_user)
 			# Question.ranking_count < 2)
