@@ -276,28 +276,14 @@ block content %}
 </div>
 
 <script>
-  function getValueFromLocalStorage(key, defaultValue) {
-    const storedValue = localStorage.getItem(key);
-    return storedValue ? storedValue : defaultValue;
-  }
-
-  // Retrieve values from localStorage or use default values
-  const token = getValueFromLocalStorage("token", "{{ token }}");
-  const user = getValueFromLocalStorage("user", "{{ user }}");
-  const role = getValueFromLocalStorage("role", "{{ role }}");
-  const my_id = getValueFromLocalStorage("my_id", "{{ my_id }}");
-  const language = getValueFromLocalStorage("language", "{{ language }}");
-  const category = getValueFromLocalStorage("category", "{{ category }}");
-  const sub_category = getValueFromLocalStorage(
-    "sub_category",
-    "{{ sub_category }}"
-  );
-  const new_category = getValueFromLocalStorage(
-    "new_category",
-    "{{ new_category }}"
-  );
-
-
+  const token = "{{ token }}";
+  const user = "{{ user }}";
+  const role = "{{ role }}";
+  const language = "{{ language }}"
+  const category = "{{ category }}"
+  const sub_category = "{{ sub_category }}"
+  
+  const new_category = "{{ new_category }}"
   const userElement = document.getElementById("user-info");
   var currentTab = 0;
 
@@ -362,6 +348,7 @@ block content %}
       sub_category: sub_category,
       new_category: new_category,
     };
+    console.log(userDetails)
     fetch("/api/v1/questions/main_question_rank", {
       method: "POST",
       headers: {

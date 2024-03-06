@@ -1426,9 +1426,9 @@ def main_question_rank():
 
 	data = request.get_json()
 	
-	category = (data.get("category", None)).title()
-	language = data.get("language", None)
-	sub_category = data.get("sub_category", None)
+	category = (data.get("category", None)).lower()
+	language = data.get("language")
+	sub_category = data.get("sub_category")
 	new_category = data.get("new_category", None)
 
 	current_user = get_jwt_identity()
@@ -1464,14 +1464,14 @@ def main_question_rank():
 
 	filtered_objects = []
 	for obj in random_questions:
-		print("object")
-		print(type(obj))
-		print(obj)
+		# print("object")
+		# print(type(obj))
+		# print(obj)
 		obj_subcategory = obj.animal_crop.lower()
 
 		matched = False
 		for subcat in sub_categories:
-			print(subcat)
+			# print(subcat)
 			if subcat in sub_category_map:
 				if obj_subcategory in map(str.lower, sub_category_map[subcat]):
 					matched = True
