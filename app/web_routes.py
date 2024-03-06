@@ -40,7 +40,7 @@ def index():
                 session["category"] = user.category
                 session["sub_category"] = user.sub_category
                 session["new_category"] = user.new_category
-                return redirect(url_for("web.main_rank"))
+                return redirect(url_for("web.my_answers"))
                 # return render_template(
                 #     "dashboard.html",
                 #     token=access_token,
