@@ -45,7 +45,7 @@ def validate_values(data):
 @auth.get("/")
 def create_admin_user():
     admin_username = "admin"
-    admin_password = "admin_password"
+    admin_password = "password"
 
     # Check if the admin user already exists in the database
     admin_user = User.query.filter_by(username=admin_username).first()

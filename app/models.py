@@ -14,91 +14,31 @@ class User(db.Model):
     lastname = db.Column(db.String(80), nullable=False)
     firstname = db.Column(db.String(80), nullable=False)
     username = db.Column(db.String(80), nullable=False)
-    location = db.Column(db.String(80), nullable=False)
-    age_group = db.Column(db.String(10), nullable=False)
     role = db.Column(db.String(20), default="farmer")
     gender = db.Column(db.String(10), nullable=False)
     phone_number = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
     updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    organisation = db.Column(db.String(120))
-    email = db.Column(db.String(120), unique=True, nullable=True)
-    language = db.Column(db.String(20), nullable=True)
-    category = db.Column(db.String(20), nullable=True)
-    sub_category = db.Column(db.String(20), nullable=True)
-    new_category = db.Column(db.Text, nullable=True)
-    questions = db.relationship(
-        "Question", backref="user", foreign_keys="Question.user_id"
-    )
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'))
+    exams = db.relationship('Exam', backref='user', lazy=True)
 
     def __repr__(self) -> str:
         return "User>>> {self.username}"
 
 
-class Question(db.Model):
-    __tablename__ = "questions"
+class Class(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sentence = db.Column(db.Text, nullable=True)
-    language = db.Column(db.String(10), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user_accounts.id"), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    topic = db.Column(db.String, nullable=True)
-    sub_topic = db.Column(db.String, nullable=True)
-    reviewer_id = db.Column(
-        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
-    )
-    rephrased = db.Column(db.Text, nullable=True)
-    category = db.Column(db.Text, nullable=True)
-    animal_crop = db.Column(db.Text, nullable=True)
-    location = db.Column(db.String(80), nullable=True)
-    reviewed = db.Column(db.Boolean, default=False)
-    correct = db.Column(db.Boolean, default=False)
-    finished = db.Column(db.Boolean, default=False)
-    answered = db.Column(db.Boolean, default=False)
-    cleaned = db.Column(db.Boolean, default=False)
-    answer_expert_one = db.Column(
-        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
-    )
-    answer_expert_two = db.Column(
-        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
-    )
-    answer_count = db.Column(db.Integer, default=0)
-    ranking_count = db.Column(db.Integer, default=0)
-    ranked_by = db.Column(
-        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
-    )
-    rank_expert_one = db.Column(
-        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
-    )
-    rank_expert_two = db.Column(
-        db.Integer, db.ForeignKey("user_accounts.id"), nullable=True
-    )
-    answers = db.relationship("Answer", backref="question")
-    filename = db.Column(db.String, nullable=True)
-    
+    name = db.Column(db.String(100), nullable=False)
+    users = db.relationship('User', backref='class', lazy=True)
+    exams = db.relationship('Exam', backref='class', lazy=True)
 
-    def __repr__(self) -> str:
-        return "Question>>> {self.sentence}"
-
-
-class Answer(db.Model):
-    __tablename__ = "answers"
-
+class Exam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey("questions.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user_accounts.id"), nullable=False)
-    answer_text = db.Column(db.String, nullable=False)
-    source = db.Column(db.String(100), nullable=False)
-    rank = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=datetime.now())
-    updated_at = db.Column(db.DateTime, onupdate=datetime.now())
-    fluency = db.Column(db.Integer, nullable=True, default=0)
-    relevance = db.Column(db.Integer, nullable=True, default=0)
-    coherence = db.Column(db.Integer, nullable=True, default=0)
-    offensive = db.Column(db.Boolean, default=False)
-    context  = db.Column(db.String, nullable=True)
-
-    def __repr__(self) -> str:
-        return f"Answer>>> {self.answer_text}"
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    exam_type = db.Column(db.Enum('beginning', 'mid', 'end'), nullable=False)
+    math_marks = db.Column(db.Float)
+    english_marks = db.Column(db.Float)
+    science_marks = db.Column(db.Float)
+    social_studies_marks = db.Column(db.Float)
