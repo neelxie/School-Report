@@ -1,5 +1,5 @@
 from os import access
-from app.status import (
+from app.helper import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
@@ -12,12 +12,17 @@ from flask_jwt_extended import (
     jwt_required,
     create_access_token,
     create_refresh_token,
+    verify_jwt_in_request,
     get_jwt_identity,
 )
-from sqlalchemy import func
 import datetime
 from datetime import date
-from app.models import User, Question, db
+from app.models import User, Exam, db, Schoolclass
+from app.helper import admin_required
+import json
+import pandas as pd
+import random
+from sqlalchemy import func, or_, and_, not_, text
 from app.helper import admin_required
 
 
@@ -26,12 +31,9 @@ auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
 def validate_values(data):
     required_fields = [
-        "phone_number",
         "lastname",
         "firstname",
-        "location",
         "gender",
-        "age_group",
     ]
     missing_fields = [field for field in required_fields if field not in data]
 
@@ -42,7 +44,7 @@ def validate_values(data):
     return None
 
 
-@auth.get("/")
+@auth.get("/admin")
 def create_admin_user():
     admin_username = "admin"
     admin_password = "password"
@@ -56,10 +58,8 @@ def create_admin_user():
             username=admin_username,
             password=admin_password,
             phone_number="0705828612",
-            lastname="Gates",
-            firstname="Admin",
-            location="Makerere",
-            age_group="19-30",
+            lastname="Nabakooza",
+            firstname="Lydia",
             role="admin",
             gender="female",
         )
@@ -70,7 +70,7 @@ def create_admin_user():
         return jsonify({"message": "Admin already here"}), HTTP_200_OK
 
 
-@auth.post("/register")
+@auth.post("/register_student")
 def register():
     data = request.get_json()
 
@@ -79,30 +79,16 @@ def register():
         return validation_result
     # must add a validator function for phone number here
 
-    phone_number = request.json["phone_number"].strip()
     lastname = request.json["lastname"].strip()
     firstname = request.json["firstname"].strip()
-    location = request.json["location"].strip()
-    age_group = request.json["age_group"]
     gender = request.json["gender"]
-
-    if User.query.filter_by(phone_number=phone_number).first() is not None:
-        return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
 
     # Generate username by concatenating firstname and lastname
     username = f"{firstname.lower()}{lastname.lower()}"
 
-    # Use phone number as the password
-    password = phone_number
-
     user = User(
-        username=username,
-        password=password,
-        phone_number=phone_number,
         lastname=lastname,
         firstname=firstname,
-        location=location,
-        age_group=age_group,
         gender=gender,
     )
     db.session.add(user)
@@ -115,19 +101,14 @@ def register():
 
 
 @jwt_required()
-@auth.post("/register_expert")
-def register_expert():
+@auth.post("/register_teacher")
+def register_teacher():
     data = request.get_json()
 
     phone_number = data["phone_number"].strip()
     lastname = data["lastname"].strip()
     firstname = data["firstname"].strip()
-    email = data["email"].strip()
     gender = data["gender"]
-    organisation = data["organisation"].strip()
-    language = data["language"].strip()
-    category = data["category"].strip()
-    sub_category = data["sub_category"].strip()
 
     if User.query.filter_by(phone_number=phone_number).first():
         return jsonify({"error": "Phone number is already taken"}), HTTP_409_CONFLICT
@@ -136,46 +117,21 @@ def register_expert():
 
     password = phone_number
 
-    expert = User(
+    teacher = User(
         username=username,
         password=password,
         phone_number=phone_number,
         lastname=lastname,
         firstname=firstname,
-        location="Makerere",
-        age_group="19-30",
         gender=gender,
-        role="expert",
-        organisation=organisation,
-        email=email,
-        language=language,
-        category=category,
-        sub_category=sub_category,
+        role="teacher",
     )
 
-    db.session.add(expert)
+    db.session.add(teacher)
     db.session.commit()
 
-    return jsonify({"message": "Expert registered successfully"}), HTTP_201_CREATED
+    return jsonify({"message": "Teacher registered successfully"}), HTTP_201_CREATED
 
-@jwt_required()
-@auth.put("/update_expert/<int:expert_id>")
-def update_expert(expert_id):
-    expert = User.query.get(expert_id)
-
-    if not expert:
-        return jsonify({"error": "Expert not found"}), HTTP_404_NOT_FOUND
-
-    data = request.get_json()
-
-    # Update fields based on available data in the request
-    for key, value in data.items():
-        if hasattr(expert, key):
-            setattr(expert, key, value)
-
-    db.session.commit()
-
-    return jsonify({"message": "Expert details updated successfully"}), HTTP_200_OK
 
 @auth.post("/login")
 def login():
@@ -183,7 +139,6 @@ def login():
     password = request.json.get("password", "")
 
     user = User.query.filter_by(phone_number=password).first()
-    today = datetime.date.today()
 
     if user:
         is_pass_correct = user.phone_number == password
@@ -192,34 +147,11 @@ def login():
             access = create_access_token(
                 identity=user.id, expires_delta=datetime.timedelta(days=0)
             )
-            num_questions = Question.query.filter_by(user_id=user.id).count()
-            questions = (
-                Question.query.filter_by(user_id=user.id)
-                .filter(func.date(Question.created_at) == today)
-                .all()
-            )
-            num_questions_today = (
-                Question.query.filter_by(user_id=user.id)
-                .filter(func.date(Question.created_at) == date.today())
-                .count()
-            )
-
-            question_objects = []
-            for question in questions:
-                question_objects.append(
-                    {
-                        "sentence": question.sentence,
-                        "date": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    }
-                )
 
             return (
                 jsonify(
                     {
                         "access_token": access,
-                        "num_questions": num_questions,
-                        "todays_questions": question_objects,
-                        "total_questions_today": num_questions_today,
                     }
                 ),
                 HTTP_200_OK,
@@ -228,168 +160,159 @@ def login():
     return jsonify({"error": "Wrong credentials"}), HTTP_401_UNAUTHORIZED
 
 
-@auth.get("/me")
 @jwt_required()
-def me():
-    user_id = get_jwt_identity()
-    user = User.query.filter_by(id=user_id).first()
-    return (
-        jsonify(
-            {
-                "username": user.username,
-                "phone_number": user.phone_number,
-                "lastname": user.lastname,
-                "firstname": user.firstname,
-                "location": user.location,
-                "role": user.role,
-                "gender": user.gender,
-            }
-        ),
-        HTTP_200_OK,
-    )
-
-
-@jwt_required()
-@auth.get("/farmers")
-def farmers():
+@auth.get("/students")
+def students():
     users = (
-        User.query.filter_by(role="farmer")
-        .join(Question, User.id == Question.user_id, isouter=True)
-        .group_by(User.id)
-        .order_by(func.count(Question.id).desc())
+        User.query.filter_by(role="student")
         .all()
     )
-    farmers = User.query.filter_by(role="farmer").all()
-    farmer_objects = []
-    for farmer in users:
-        farmer_objects.append(
+    students = User.query.filter_by(role="student").all()
+    student_objects = []
+    for student in users:
+        student_objects.append(
             {
-                "user_id": farmer.id,
-                "username": farmer.username,
-                "phone_number": farmer.phone_number,
-                "lastname": farmer.lastname,
-                "firstname": farmer.firstname,
-                "location": farmer.location,
-                "questions": len(farmer.questions),
-                "gender": farmer.gender,
+                "user_id": student.id,
+                "lastname": student.lastname,
+                "firstname": student.firstname,
+                "gender": student.gender,
             }
         )
     return (
-        jsonify(farmer_objects),
+        jsonify(student_objects),
         HTTP_200_OK,
     )
 
 
 @jwt_required()
-@auth.get("/experts")
-def get_experts():
-    experts = User.query.filter_by(role="expert").all()
-    farmer_objects = []
-    for farmer in experts:
-        farmer_objects.append(
+@auth.get("/teachers")
+def get_teachers():
+    teachers = User.query.filter_by(role="teacher").all()
+    student_objects = []
+    for student in teachers:
+        student_objects.append(
             {
-                "user_id": farmer.id,
-                "username": farmer.username,
-                "phone_number": farmer.phone_number,
-                "lastname": farmer.lastname,
-                "firstname": farmer.firstname,
-                "organisation": farmer.organisation,
-                "gender": farmer.gender,
-                "email": farmer.email,
-                "language":farmer.language,
-                "expertise":farmer.category,
-                "sub_category":farmer.sub_category
+                "user_id": student.id,
+                "username": student.username,
+                "phone_number": student.phone_number,
+                "lastname": student.lastname,
+                "firstname": student.firstname,
+                "gender": student.gender,
             }
         )
     return (
-        jsonify(farmer_objects),
+        jsonify(student_objects),
         HTTP_200_OK,
     )
 
-
-@auth.get("/token/refresh")
-@jwt_required(refresh=True)
-def refresh_users_token():
-    identity = get_jwt_identity()
-    access = create_access_token(identity=identity)
-
-    return jsonify({"access": access}), HTTP_200_OK
-
-
 @jwt_required()
-@auth.get("/user_stats")
-def user_statistics():
-    # Fetch all locations and count the total number of locations
-    all_locations = (
-        User.query.filter_by(role="farmer")
-        .with_entities(User.location)
-        .distinct()
-        .all()
-    )
-    locations_data = [dict(location=row[0]) for row in all_locations]
-    total_locations = len(all_locations)
-
-    # Count the total number of male and female users
-    # total_male_users = User.query.filter_by(gender="male", role="farmer").count()
-    total_male_users = User.query.filter(
-        func.lower(User.gender) == "male", User.role == "farmer"
-    ).count()
-    total_female_users = User.query.filter(
-        func.lower(User.gender) == "female", User.role == "farmer"
-    ).count()
-
-    agricExperts = User.query.filter_by(role="expert").count()
-
-    # Count the total number of users
-    total_users = User.query.filter_by(role="farmer").count()
-
-    # Count the number of users per location
-    users_per_location = []
-    for location in all_locations:
-        location_name = location[0]
-        user_count = User.query.filter_by(location=location_name, role="farmer").count()
-        users_per_location.append({"location": location_name, "user_count": user_count})
-
-    # Count the number of users per age group
-    age_groups = ["10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70-79"]
-    users_per_age_group = []
-    for age_group in age_groups:
-        user_count = User.query.filter_by(age_group=age_group, role="farmer").count()
-        users_per_age_group.append({"age_group": age_group, "user_count": user_count})
-
-    # Prepare the response data
-    response_data = {
-        "locations": locations_data,
-        "total_locations": total_locations,
-        "total_male_users": total_male_users,
-        "total_female_users": total_female_users,
-        "total_users": total_users,
-        "users_per_location": users_per_location,
-        "users_per_age_group": users_per_age_group,
-        "experts": agricExperts,
-    }
-    return jsonify({"data": response_data}), HTTP_200_OK
-
-@jwt_required()
-@auth.post('/add_data/<int:user_id>')
-def add_data(user_id):
+@auth.post("/create_class")
+def create_class():
     data = request.get_json()
-    
-    user = User.query.get(user_id)
-    
-    if not user:
-        return jsonify({'error': 'User not found'}), HTTP_404_NOT_FOUND
-    
-    if 'language' in data:
-        user.language = data['language']
 
-    if 'category' in data:
-        user.category = data['category']
+    class_name = data.get("class_name")
 
-    if 'sub_category' in data:
-        user.sub_category = data['sub_category']
-    
+    if not class_name:
+        return jsonify({"error": "Class name is required"}), HTTP_400_BAD_REQUEST
+
+    new_class = Schoolclass(name=class_name)
+    db.session.add(new_class)
     db.session.commit()
-    
-    return jsonify({'message': 'User updated successfully'}), HTTP_200_OK
+
+    return jsonify({"message": "Class created successfully"}), HTTP_201_CREATED
+
+@jwt_required()
+@auth.post("/create_exam")
+def create_exam():
+    data = request.get_json()
+
+    student_id = data.get("student_id")
+    class_id = data.get("class_id")
+    exam_type = data.get("exam_type")
+    math_marks = data.get("math_marks")
+    english_marks = data.get("english_marks")
+    science_marks = data.get("science_marks")
+    social_studies_marks = data.get("social_studies_marks")
+
+    if not all([student_id, class_id, exam_type, math_marks, english_marks, science_marks, social_studies_marks]):
+        return jsonify({"error": "Incomplete data provided"}), HTTP_400_BAD_REQUEST
+
+    exam = Exam(
+        user_id=student_id,
+        class_id=class_id,
+        exam_type=exam_type,
+        math_marks=math_marks,
+        english_marks=english_marks,
+        science_marks=science_marks,
+        social_studies_marks=social_studies_marks,
+    )
+    db.session.add(exam)
+    db.session.commit()
+
+    return jsonify({"message": "Exam recorded successfully"}), HTTP_201_CREATED
+
+@auth.get("/generate_report/<int:student_id>")
+@jwt_required()
+def generate_report(student_id):
+    # Retrieve student
+    student = User.query.get(student_id)
+    if not student:
+        return jsonify({"error": "Student not found"}), HTTP_404_NOT_FOUND
+
+    # Retrieve exams for the student
+    exams = Exam.query.filter_by(user_id=student_id).all()
+
+    if not exams:
+        return jsonify({"message": "No exams found for this student"}), HTTP_404_NOT_FOUND
+
+    # Calculate total marks for each subject and overall marks
+    total_marks = {"math": 0, "english": 0, "science": 0, "social_studies": 0}
+    total_exams = {"beginning": 0, "mid": 0, "end": 0}
+
+    for exam in exams:
+        total_marks["math"] += exam.math_marks
+        total_marks["english"] += exam.english_marks
+        total_marks["science"] += exam.science_marks
+        total_marks["social_studies"] += exam.social_studies_marks
+
+        total_exams[exam.exam_type] += (
+            exam.math_marks
+            + exam.english_marks
+            + exam.science_marks
+            + exam.social_studies_marks
+        )
+
+    # Calculate total percentage for each subject
+    total_percentage = {}
+    for subject, marks in total_marks.items():
+        total_percentage[subject] = (marks / (len(exams) * 100 * 4)) * 100
+
+    # Calculate total marks and percentage for each exam type
+    total_marks_percentage = {}
+    for exam_type, marks in total_exams.items():
+        total_marks_percentage[exam_type] = (marks / (len(exams) * 400)) * 100
+
+    # Calculate overall remarks based on total marks
+    total_marks_percentage["overall"] = sum(total_marks_percentage.values())
+    remarks = ""
+
+    if total_marks_percentage["overall"] >= 370:
+        remarks = "This is excellent work, continue excelling."
+    elif 300 <= total_marks_percentage["overall"] < 370:
+        remarks = "There is still room to improve, aim higher."
+    elif 200 <= total_marks_percentage["overall"] < 300:
+        remarks = "Aim for a better grade and pay closer attention."
+    else:
+        remarks = "Very poor performance. You are encouraged to come with your parent to talk to your teacher to devise a way to improve."
+
+    # Generate report
+    report = {
+        "student_id": student_id,
+        "student_name": f"{student.firstname} {student.lastname}",
+        "subject_breakdown": total_percentage,
+        "exam_details": total_marks_percentage,
+        "teacher_remarks": remarks
+    }
+
+    return jsonify(report), HTTP_201_CREATED
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from app.models import User, Question, db
+from app.models import User, Exam, db, Schoolclass
 import datetime
 from flask_jwt_extended import (
     create_access_token,

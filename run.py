@@ -1,12 +1,11 @@
 from flask.json import jsonify
-from app.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
+from app.helper import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 from flask import Flask, render_template, request
 import os
 import secrets
 from datetime import timedelta
 from flask_cors import CORS
 from app.auth import auth, db
-from app.question import questions
 from app.web_routes import web_bp
 from flask_jwt_extended import JWTManager
 
@@ -20,8 +19,8 @@ def create_app(test_config=None):
     if test_config is None:
         app.config.from_mapping(
             SECRET_KEY=os.environ.get("SECRET_KEY"),
-            SQLALCHEMY_DATABASE_URI='postgresql://postgres:password@localhost:5432/gates',
-            # SQLALCHEMY_DATABASE_URI="postgresql://neelxie:password@localhost:5433/gates",
+            # SQLALCHEMY_DATABASE_URI='postgresql://postgres:password@localhost:5432/kizito',
+            SQLALCHEMY_DATABASE_URI="postgresql://neelxie:password@localhost:5433/kizito",
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JWT_SECRET_KEY="1bSR#Nw00Y3axSjcjrXrU9Cs%_wJ7S",
         )
@@ -42,7 +41,6 @@ def create_app(test_config=None):
 
     app.register_blueprint(web_bp)
     app.register_blueprint(auth)
-    app.register_blueprint(questions)
 
     @app.errorhandler(404)
     def handle_404(e):
