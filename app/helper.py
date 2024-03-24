@@ -4,12 +4,17 @@ from functools import wraps
 from flask import request, jsonify, current_app
 from app.models import User, db
 from flask_jwt_extended import decode_token
+import random
 
 
 def clean_token(token):
     if token.startswith("Bearer "):
         token = token.split(" ")[1]
     return token
+
+def generate_registration():
+    """Generate a new student registration number."""
+    return 'U002342024' + ''.join(random.choices('0123456789', k=5))
 
 
 def get_authenticated_user():

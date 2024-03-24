@@ -30,17 +30,13 @@ def index():
                 return redirect(url_for("web.admin"))
                 # return render_template('admin.html', token=access_token, role=user.role, user=user.username)
 
-            elif user.role == "expert":
+            elif user.role == "teacher":
                 flash("Access granted.")
                 session["token"] = access_token
                 session["role"] = user.role
                 session["my_id"] = user.id
                 session["username"] = user.username
-                session["language"] = user.language
-                session["category"] = user.category
-                session["sub_category"] = user.sub_category
-                session["new_category"] = user.new_category
-                return redirect(url_for("web.my_answers"))
+                return redirect(url_for("web.teacher"))
                 # return render_template(
                 #     "dashboard.html",
                 #     token=access_token,
@@ -64,28 +60,20 @@ def admin():
     return render_template("admin.html", token=access_token, role=role, user=username)
 
 
-@web_bp.route("/main_review")
-def main_review():
+@web_bp.route("/teacher")
+def teacher():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    new_category = session.get("new_category")
     return render_template(
-        "mainReview.html",
+        "teach.html",
         token=access_token,
         role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-        new_category = new_category,
+        user=username
     )
 
 @web_bp.route("/my-answers")
-def my_answers():
+def exam():
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")

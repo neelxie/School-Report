@@ -23,17 +23,53 @@ import json
 import pandas as pd
 import random
 from sqlalchemy import func, or_, and_, not_, text
-from app.helper import admin_required
+from app.helper import admin_required, generate_registration
 
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
 
-def validate_values(data):
+def validate_student(data):
     required_fields = [
         "lastname",
         "firstname",
         "gender",
+        "age",
+        "nationality",
+        "house"
+    ]
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        error_message = {"error": f'Missing fields: {", ".join(missing_fields)}'}
+        return jsonify(error_message), HTTP_400_BAD_REQUEST
+
+    return None
+
+def validate_teacher(data):
+    required_fields = [
+        "lastname",
+        "firstname",
+        "gender",
+        "phone_number"
+    ]
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        error_message = {"error": f'Missing fields: {", ".join(missing_fields)}'}
+        return jsonify(error_message), HTTP_400_BAD_REQUEST
+
+    return None
+
+def validate_exam(data):
+    required_fields = [
+        "user_id",
+        "class_id",
+        "exam_type",
+        "math_marks",
+        "english_marks",
+        "science_marks",
+        "sst_marks"
     ]
     missing_fields = [field for field in required_fields if field not in data]
 
@@ -57,7 +93,7 @@ def create_admin_user():
         admin_user = User(
             username=admin_username,
             password=admin_password,
-            phone_number="0705828612",
+            phone_number="0707467195",
             lastname="Nabakooza",
             firstname="Lydia",
             role="admin",
@@ -74,14 +110,22 @@ def create_admin_user():
 def register():
     data = request.get_json()
 
-    validation_result = validate_values(data)
+    validation_result = validate_student(data)
     if validation_result:
         return validation_result
     # must add a validator function for phone number here
+    registration = generate_registration()
+
+    while User.query.filter_by(registration=registration).first():
+        registration = generate_registration()
+
 
     lastname = request.json["lastname"].strip()
     firstname = request.json["firstname"].strip()
     gender = request.json["gender"]
+    nationality = request.json["nationality"]
+    house = request.json["house"]
+    age = request.json["age"]
 
     # Generate username by concatenating firstname and lastname
     username = f"{firstname.lower()}{lastname.lower()}"
@@ -90,6 +134,10 @@ def register():
         lastname=lastname,
         firstname=firstname,
         gender=gender,
+        nationality=nationality,
+        house=house,
+        age=age,
+        registration=registration
     )
     db.session.add(user)
     db.session.commit()
@@ -104,6 +152,10 @@ def register():
 @auth.post("/register_teacher")
 def register_teacher():
     data = request.get_json()
+
+    validation_result = validate_teacher(data)
+    if validation_result:
+        return validation_result
 
     phone_number = data["phone_number"].strip()
     lastname = data["lastname"].strip()
@@ -140,6 +192,7 @@ def login():
 
     user = User.query.filter_by(phone_number=password).first()
 
+
     if user:
         is_pass_correct = user.phone_number == password
 
@@ -147,11 +200,13 @@ def login():
             access = create_access_token(
                 identity=user.id, expires_delta=datetime.timedelta(days=0)
             )
+            role = user.role
 
             return (
                 jsonify(
                     {
                         "access_token": access,
+                        "role": role
                     }
                 ),
                 HTTP_200_OK,
@@ -206,6 +261,22 @@ def get_teachers():
     )
 
 @jwt_required()
+@auth.get("/allclasses")
+def get_allclasses():
+    allclasses = Schoolclass.query.all()
+    student_objects = []
+    for student in allclasses:
+        student_objects.append(
+            {
+                "id": student.id,
+                "class": student.name
+            }
+        )
+    return (
+        jsonify(student_objects),
+        HTTP_200_OK,
+    )
+@jwt_required()
 @auth.post("/create_class")
 def create_class():
     data = request.get_json()
@@ -232,7 +303,7 @@ def create_exam():
     math_marks = data.get("math_marks")
     english_marks = data.get("english_marks")
     science_marks = data.get("science_marks")
-    social_studies_marks = data.get("social_studies_marks")
+    social_studies_marks = data.get("sst_marks")
 
     if not all([student_id, class_id, exam_type, math_marks, english_marks, science_marks, social_studies_marks]):
         return jsonify({"error": "Incomplete data provided"}), HTTP_400_BAD_REQUEST
@@ -251,6 +322,7 @@ def create_exam():
 
     return jsonify({"message": "Exam recorded successfully"}), HTTP_201_CREATED
 
+
 @auth.get("/generate_report/<int:student_id>")
 @jwt_required()
 def generate_report(student_id):
@@ -264,55 +336,131 @@ def generate_report(student_id):
 
     if not exams:
         return jsonify({"message": "No exams found for this student"}), HTTP_404_NOT_FOUND
-
-    # Calculate total marks for each subject and overall marks
-    total_marks = {"math": 0, "english": 0, "science": 0, "social_studies": 0}
-    total_exams = {"beginning": 0, "mid": 0, "end": 0}
+    
+    exam_results = {
+        "math": {"exams": [], "total": 0, "average": 0, "grade": "", "remark": ""},
+        "english": {"exams": [], "total": 0, "average": 0, "grade": "", "remark": ""},
+        "science": {"exams": [], "total": 0, "average": 0, "grade": "", "remark": ""},
+        "social_studies": {"exams": [], "total": 0, "average": 0, "grade": "", "remark": ""}
+    }
 
     for exam in exams:
-        total_marks["math"] += exam.math_marks
-        total_marks["english"] += exam.english_marks
-        total_marks["science"] += exam.science_marks
-        total_marks["social_studies"] += exam.social_studies_marks
+        exam_info = {
+            "exam_type": exam.exam_type,
+            "math_marks": exam.math_marks,
+            "english_marks": exam.english_marks,
+            "science_marks": exam.science_marks,
+            "social_studies_marks": exam.social_studies_marks,
+            "total_marks": exam.math_marks + exam.english_marks + exam.science_marks + exam.social_studies_marks
+        }
+        exam_results["math"]["exams"].append(exam_info)
+        exam_results["math"]["total"] += exam.math_marks
+        exam_results["english"]["exams"].append(exam_info)
+        exam_results["english"]["total"] += exam.english_marks
+        exam_results["science"]["exams"].append(exam_info)
+        exam_results["science"]["total"] += exam.science_marks
+        exam_results["social_studies"]["exams"].append(exam_info)
+        exam_results["social_studies"]["total"] += exam.social_studies_marks
 
-        total_exams[exam.exam_type] += (
-            exam.math_marks
-            + exam.english_marks
-            + exam.science_marks
-            + exam.social_studies_marks
-        )
+    # Calculate average marks for each subject
+    for subject, subject_data in exam_results.items():
+        subject_data["average"] = round((subject_data["total"] / len(subject_data["exams"])), 1) if subject_data["exams"] else 0
 
-    # Calculate total percentage for each subject
-    total_percentage = {}
-    for subject, marks in total_marks.items():
-        total_percentage[subject] = (marks / (len(exams) * 100 * 4)) * 100
+    # Assign grades based on average marks
+    grade_mapping = {
+        "D1": (80, 100),
+        "D2": (75, 79),
+        "C3": (70, 74),
+        "C4": (65, 69),
+        "C5": (60, 64),
+        "C6": (55, 59),
+        "C7": (45, 54),
+        "C8": (35, 44),
+        "F9": (0, 34)
+    }
 
-    # Calculate total marks and percentage for each exam type
-    total_marks_percentage = {}
-    for exam_type, marks in total_exams.items():
-        total_marks_percentage[exam_type] = (marks / (len(exams) * 400)) * 100
+    for subject, subject_data in exam_results.items():
+        for exam in subject_data["exams"]:
+            total_marks = exam["total_marks"]
+            for grade, (lower_bound, upper_bound) in grade_mapping.items():
+                if lower_bound <= subject_data["average"] <= upper_bound:
+                    subject_data["grade"] = grade
+                    break
+            else:
+                subject_data["grade"] = "Unknown"
 
-    # Calculate overall remarks based on total marks
-    total_marks_percentage["overall"] = sum(total_marks_percentage.values())
-    remarks = ""
-
-    if total_marks_percentage["overall"] >= 370:
-        remarks = "This is excellent work, continue excelling."
-    elif 300 <= total_marks_percentage["overall"] < 370:
-        remarks = "There is still room to improve, aim higher."
-    elif 200 <= total_marks_percentage["overall"] < 300:
-        remarks = "Aim for a better grade and pay closer attention."
-    else:
-        remarks = "Very poor performance. You are encouraged to come with your parent to talk to your teacher to devise a way to improve."
+            if subject_data["average"] >= 80:
+                subject_data["remark"] = "This is excellent work, continue excelling."
+            elif 70 <= subject_data["average"] < 80:
+                subject_data["remark"] = "There is still room to improve, aim higher."
+            elif 60 <= subject_data["average"] < 70:
+                subject_data["remark"] = "Aim for a better grade and pay closer attention."
+            else:
+                subject_data["remark"] = "Very poor performance. You are encouraged to come with your parent to talk to your teacher to devise a way to improve."
 
     # Generate report
     report = {
-        "student_id": student_id,
+        "student_id": student.id,
         "student_name": f"{student.firstname} {student.lastname}",
-        "subject_breakdown": total_percentage,
-        "exam_details": total_marks_percentage,
-        "teacher_remarks": remarks
+        "gender": student.gender,
+        "registration": student.registration,
+        "gender": student.gender,
+        "age": student.age,
+        "nationality": student.nationality,
+        # "overall_remarks": overall_remarks,
+        "exam_results": exam_results
     }
 
+
     return jsonify(report), HTTP_201_CREATED
+
+
+@auth.get('/class_results')
+def get_exams_results_by_class():
+    """
+    Get all students' exam results divided by class.
+    """
+    # Query all classes
+    all_classes = Schoolclass.query.all()
+
+    # Create a dictionary to store exam results by class
+    exams_results_by_class = {}
+
+    # Iterate through each class
+    for school_class in all_classes:
+        class_name = school_class.name
+
+        # Query exam results for students in the current class
+        class_exam_results = db.session.query(
+            User.firstname,
+            User.lastname,
+            Exam.exam_type,
+            Exam.math_marks,
+            Exam.english_marks,
+            Exam.science_marks,
+            Exam.social_studies_marks
+        ).join(Exam).join(Schoolclass).filter(
+            Schoolclass.id == school_class.id,
+            User.role == 'student'
+        ).all()
+
+        # Construct a list containing exam results for students in the current class
+        class_results = []
+        for result in class_exam_results:
+            exam_info = {
+                "student_name": f"{result.firstname} {result.lastname}",
+                "exam_type": result.exam_type,
+                "math_marks": result.math_marks,
+                "english_marks": result.english_marks,
+                "science_marks": result.science_marks,
+                "social_studies_marks": result.social_studies_marks
+            }
+            class_results.append(exam_info)
+
+        # Add the class results to the dictionary
+        exams_results_by_class[class_name] = class_results
+
+    # Return the exam results by class in JSON format
+    return jsonify(exams_results_by_class)
+
 
