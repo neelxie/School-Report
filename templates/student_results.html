@@ -1,0 +1,270 @@
+{% extends "base.html" %} {% block title %}Experts Review Question Page{%
+endblock %} {% block content %}
+
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+  <div class="app-header header-shadow">
+    <div class="app-header__logo">
+      <div class="" id=""></div>
+      <div class="header__pane ml-auto"></div>
+    </div>
+    <div class="app-header__mobile-menu"></div>
+    <div class="app-header__menu"></div>
+    <div class="app-header__content">
+      <div class="app-header-right">
+        <div class="header-btn-lg pr-0">
+          <div class="widget-content p-0">
+            <div class="widget-content-wrapper">
+              <div class="widget-content-left ml-3 header-user-info">
+                <div class="widget-heading" id="user-info"></div>
+                <div class="widget-subheading">Teacher</div>
+              </div>
+              <div class="widget-content-right header-user-info ml-3">
+                <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm" id="logoutButton">
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui-theme-settings">
+    <div class="theme-settings__inner">
+      <div class="scrollbar-container">
+        <div class="theme-settings__options-wrapper">
+          <h3 class="themeoptions-heading">Layout Options</h3>
+          <div class="p-3">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div class="widget-content p-0">
+                  <div class="widget-content-wrapper">
+                    <div class="widget-content-left mr-3">
+                      <div class="switch has-switch switch-container-class" data-class="fixed-header">
+                        <div class="switch-animate switch-on">
+                          <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left">
+                      <div class="widget-heading">Fixed Header</div>
+                      <div class="widget-subheading">
+                        Makes the header top fixed, always visible!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="list-group-item">
+                <div class="widget-content p-0">
+                  <div class="widget-content-wrapper">
+                    <div class="widget-content-left mr-3">
+                      <div class="switch has-switch switch-container-class" data-class="fixed-footer">
+                        <div class="switch-animate switch-off">
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="widget-content-left">
+                      <div class="widget-heading">Fixed Footer</div>
+                      <div class="widget-subheading">
+                        Makes the app footer bottom fixed, always visible!
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="p-3">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <h5 class="pb-2">Page Section Tabs</h5>
+                <div class="theme-settings-swatches">
+                  <div role="group" class="mt-2 btn-group">
+                    <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-line">
+                      Line
+                    </button>
+                    <button type="button"
+                      class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-shadow">
+                      Shadow
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="app-main text-responsive">
+    <div class="app-main__outer">
+      <div class="app-main__inner">
+        <div class="row justify-content-between px-2">
+          <a type="button" class="btn btn-success mb-3" href="{{ url_for('web.teacher') }}">
+            Dashboard
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z">
+              </path>
+            </svg>
+          </a>
+        </div>
+        <div class="row">
+          <div class="col-12 card">
+            <table>
+              <thead>
+                <tr>
+                  <td>End of Term</td>
+                </tr>
+                <tr>
+                  <td >Course </td>
+                  <td > Semester </td>
+                  <td > Credits </td>
+                  <td> Grade </td>
+                  <td >Course </td>
+                  <td > Semester </td>
+                  <td > Credits </td>
+                  <td> Grade </td>
+                  <td> Grade </td>
+                </tr>
+                <tr>
+                  <td>Code </td>
+                  <td colspan="2"> Name </td>
+                  <td> Letter </td>
+                  <td> Points </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CS 225 </td>
+                  <td colspan="2">Data Structures </td>
+                  <td> Fall 2015</td>
+                  <td> 3.0 </td>
+                  <td> A </td>
+                  <td> 12.0 </td>
+                </tr>
+                <tr>
+                  <td>PHIL 105 </td>
+                  <td colspan="2">Ethics </td>
+                  <td> Fall 2015</td>
+                  <td> 3.0 </td>
+                  <td> A- </td>
+                  <td> 10.98 </td>
+                </tr>
+                <tr>
+                  <td>ECE 310 </td>
+                  <td colspan="2">Digital Signal Processing </td>
+                  <td> Fall 2015</td>
+                  <td> 3.0 </td>
+                  <td> A </td>
+                  <td> 12 </td>
+                </tr>
+                <tr>
+                  <td>CS 373 </td>
+                  <td colspan="2">Combinatorial Algorithms </td>
+                  <td> Fall 2015</td>
+                  <td> 3.0 </td>
+                  <td> B+ </td>
+                  <td> 9.99</td>
+                </tr>
+                <tr>
+                  <td>MATH 225 </td>
+                  <td colspan="2">Multi-Variable Calculus </td>
+                  <td> Fall 2015</td>
+                  <td> 3.0 </td>
+                  <td> A- </td>
+                  <td> 10.98 </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" class="footer">Total</td>
+                  <td> 15.0 </td>
+                  <td colspan="2">55.95 </td>
+                </tr>
+                <tr>
+                  <td colspan="4" class="footer">GPA</td>
+                  <td colspan="3">3.73 / 4.0 </td>
+                </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="app-wrapper-footer">
+        <div class="app-footer">
+          <div class="app-footer__inner">
+            <div class="app-footer-left">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function getValueFromLocalStorage(key, defaultValue) {
+    const storedValue = localStorage.getItem(key);
+    return storedValue ? storedValue : defaultValue;
+  }
+
+  // Retrieve values from localStorage or use default values
+  const token = getValueFromLocalStorage("token", "{{ token }}");
+  const user = getValueFromLocalStorage("user", "{{ user }}");
+  const role = getValueFromLocalStorage("role", "{{ role }}");
+  
+
+  // Update localStorage with the current values
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", user);
+  localStorage.setItem("role", role);
+
+  const userElement = document.getElementById("user-info");
+  var currentTab = 0;
+
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser) {
+    userElement.textContent = storedUser;
+  } else {
+    userElement.textContent = Expert;
+  }
+
+  if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
+    logout();
+  }
+  function logout() {
+    localStorage.clear();
+
+    window.location.href = "/";
+  }
+
+  function reload() {
+    window.location.reload();
+  }
+
+  // Attach the logout function to the logout button/link
+  const logoutButton = document.getElementById("logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", logout);
+  }
+
+
+
+</script>
+<style>
+  table, th, td {
+    border: 2px solid #00001f ;
+    border-collapse: separate !important;
+    color: black;
+  }
+  
+
+</style>
+{% endblock %}

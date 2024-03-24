@@ -72,167 +72,18 @@ def teacher():
         user=username
     )
 
-@web_bp.route("/my-answers")
-def exam():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    new_category = session.get("new_category")
-    return render_template(
-        "myanswers.html", 
-        token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-        new_category = new_category,
-    )
-
-@web_bp.route("/main_answer")
-def main_answer():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    new_category = session.get("new_category")
-    my_id = session.get("my_id")
-    return render_template(
-        "mainAnswer.html",
-        token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-        new_category = new_category,
-        my_id = my_id
-    )
-
-@web_bp.route("/main_rank")
-def main_rank():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    new_category = session.get("new_category")
-    my_id = session.get("my_id")
-    return render_template(
-        "mainRank.html",
-        token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-        new_category = new_category,
-        my_id = my_id
-    )
-
-@web_bp.route("/expert_english")
-def expert_english():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    return render_template(
-        "expertEnglish.html",
-        token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-    )
-
-@web_bp.route("/expert_luganda")
-def expert_luganda():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    return render_template(
-        "expertLuganda.html",
-        token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-    )
-
-@web_bp.route("/expert_runyankole")
-def expert_runyankole():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    return render_template(
-        "expertRunyankole.html",
-        token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-    )
-
-
-@web_bp.route("/answer_page.html")
-def answer_page():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    new_category = session.get("new_category")
-    my_id = session.get("my_id")
-    return render_template(
-        "answer_page.html",
-                token=access_token,
-        role=role,
-        user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-        new_category = new_category,
-        my_id = my_id
-    )
-
-@web_bp.route("/expert_answers.html")
-def expert_answers():
+@web_bp.route("/student_results.html")
+def student_results():
     
     access_token = session.get("token")
     role = session.get("role")
     username = session.get("username")
-    language = session.get("language")
-    category = session.get("category")
-    sub_category = session.get("sub_category")
-    new_category = session.get("new_category")
     my_id = session.get("my_id")
     return render_template(
-        "expert_answers.html",
+        "student_results.html",
         token=access_token,
         role=role,
         user=username,
-        language=language,
-        category=category,
-        sub_category=sub_category,
-        new_category = new_category,
         my_id =my_id
     )
 
@@ -270,46 +121,3 @@ def experts():
     role = session.get("role")
     username = session.get("username")
     return render_template("experts.html", token=access_token, role=role, user=username)
-
-
-@web_bp.route("/luganda")
-def luganda():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("luganda.html", token=access_token, role=role, user=username)
-
-
-@web_bp.route("/english")
-def english():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("english.html", token=access_token, role=role, user=username)
-
-
-@web_bp.route("/runyankole")
-def runyankole():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template(
-        "runyankole.html", token=access_token, role=role, user=username
-    )
-
-@web_bp.route("/audios")
-def audios():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template(
-        "audios.html", token=access_token, role=role, user=username
-    )
-
-
-@web_bp.route("/dataset")
-def upload_dataset():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("dataset.html", token=access_token, role=role, user=username)

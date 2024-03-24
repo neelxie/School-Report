@@ -15,7 +15,7 @@ content %}
           <div class="widget-content p-0">
             <div class="widget-content-wrapper">
               <div class="widget-content-left ml-3 header-user-info">
-                <div class="widget-heading" id="user-info"></div>
+                <div class="widget-heading" id="user-info">{{ session.username }}</div>
                 <div class="widget-subheading">Teacher</div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
@@ -210,9 +210,9 @@ content %}
                 <table class="align-middle mb-0 table table-bordered table-striped table-hover experts">
                   <thead>
                     <tr>
-                      <th class="text-center">#</th>
-                      <th>First Name</th>
-                      <th class="text-center">Last Name</th>
+                      <th class="text-left">#</th>
+                      <th>Name</th>
+                      <!-- <th class="text-center">Last Name</th> -->
                       <th class="text-center">Age</th>
                       <th class="text-center">Registration</th>
                       <th class="text-center">Gender</th>
@@ -289,10 +289,6 @@ content %}
         firstname: firstname,
         organisation: organisation,
         gender: gender,
-        email: email,
-        language: selectedArray,
-        category: category,
-        sub_category: commaSeparatedString,
       };
 
       const response = await fetch("/api/v1/auth/register_expert", {
@@ -438,25 +434,23 @@ content %}
   }
 </style>
 <script>
-  // const token = "{{ token }}";
+const token = "{{ token }}";
   const user = "{{ user }}";
   const role = "{{ role }}";
 
-  const userElement = document.getElementById("user-info");
-  var currentTab = 0;
-
-  // Retrieve data from local storage
-  const storedUser = localStorage.getItem("user");
-
-  if (storedUser) {
-    userElement.textContent = storedUser;
-  } else {
-    userElement.textContent = Admin;
+  // Check if the token is not empty and store it in local storage
+  if (token) {
+    localStorage.setItem("token", token);
   }
-
-  if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
-    logout();
+  if (user) {
+    localStorage.setItem("user", user);
   }
+  if (role) {
+    localStorage.setItem("role", role);
+  }  
+  // if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
+  //   logout();
+  // }
 
   function logout() {
     // Clear the user token from localStorage
@@ -484,48 +478,14 @@ content %}
       .then((response) => response.json())
       .then((topUsersData) => {
         console.log(topUsersData)
-        const allQuestions = document.getElementById("allQuestions");
-        allQuestions.textContent = topUsersData.total_cleaned;
-        const finalizedQuestions =
-          document.getElementById("finalizedQuestions");
-        finalizedQuestions.textContent = topUsersData.all_fields_true;
-        // const rankee = document.getElementById("rankee")
-        let answeredqn = topUsersData.cleaned_reviewed_and_answered;
-        document.getElementById("answeredqn").style.width = answeredqn;
-        document
-          .getElementById("answeredqn")
-          .setAttribute("aria-valuenow", answeredqn);
-        let reviewedqn = topUsersData.partial_ranked;
-        document.getElementById("reviewedqn").style.width = reviewedqn;
-        document
-          .getElementById("reviewedqn")
-          .setAttribute("aria-valuenow", reviewedqn);
-        let rankedqn = topUsersData.all_fields_true;
-        document.getElementById("rankee").style.width = rankedqn;
-        document
-          .getElementById("rankee")
-          .setAttribute("aria-valuenow", rankedqn);
-        const reviewedQuestions = document.getElementById("reviewedQuestions");
-        reviewedQuestions.textContent = reviewedqn;
-        const answeredQuestions = document.getElementById("answeredQuestions");
-        answeredQuestions.textContent = answeredqn;
-        const englishQuestions = document.getElementById("englishQuestions");
-        englishQuestions.textContent = topUsersData.english_questions;
-        const lugandaQuestions = document.getElementById("lugandaQuestions");
-        lugandaQuestions.textContent = topUsersData.luganda_questions;
-        const runyankoleQuestions = document.getElementById("runyankoleQuestions");
-        runyankoleQuestions.textContent = topUsersData.runyankole_questions;
-        topUsersData.experts.forEach((user) => {
-          user.created_at = new Date(user.created_at);
-        });
 
-        topUsersData.experts.sort((a, b) => b.created_at - a.created_at);
+        topUsersData.sort((a, b) => b.created_at - a.created_at);
         const tableBody = document.querySelector(".experts tbody");
-        topUsersData.experts.forEach((user, index) => {
+        topUsersData.forEach((user, index) => {
           const tableRow = document.createElement("tr");
           const anchor = document.createElement("a");
-          anchor.href = `/expert_answers.html?user_id=${user.id}`;
-          anchor.textContent = user.id;
+          anchor.href = `/student_results.html?user_id=${user.user_id}`;
+          anchor.textContent = user.user_id;
           const cell = document.createElement("td");
           cell.appendChild(anchor);
           tableRow.appendChild(cell);
@@ -536,22 +496,19 @@ content %}
                       <div class="widget-content-left flex2">
                         <div class="widget-heading">${user.firstname} ${user.lastname
             }</div>
-                        <div class="widget-subheading opacity-7">${user.phone_number
-            }</div>
                       </div>
                     </div>
                   </div>
                 </td>
     
-                <td class="text-center">${user.language ? user.language : "None"
+                <td class="text-center">${user.age 
             }</td>
-                <td class="text-center">${user.expertise ? user.expertise : "None"
+                <td class="text-center">${user.registration 
             }</td>
-                <td class="text-center">${user.new_category
+                <td class="text-center">${user.gender 
             }</td>
-                <td class="text-center">${user.reviewed_questions_count}</td>
-                <td class="text-center">${user.answers_count}</td>
-                <td class="text-center">${user.ranked_answers}</td>`;
+                <td class="text-center">${user.nationality
+            }</td>`;
 
           tableBody.appendChild(tableRow);
         });

@@ -206,7 +206,8 @@ def login():
                 jsonify(
                     {
                         "access_token": access,
-                        "role": role
+                        "role": role,
+                        "user": user.username
                     }
                 ),
                 HTTP_200_OK,
@@ -231,6 +232,9 @@ def students():
                 "lastname": student.lastname,
                 "firstname": student.firstname,
                 "gender": student.gender,
+                "age": student.age,
+                "nationality": student.nationality,
+                "registration": student.registration
             }
         )
     return (
