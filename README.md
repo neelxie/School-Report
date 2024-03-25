@@ -3,7 +3,7 @@
 
 2. Clone or open the folder for the project
 3. Create a virtual environment after that run the following command to install `pip install -r requirements.txt`
-4. if you added the database credentials then run `python run manage.py`
+4. if you added the database credentials then run `python run manage.py upgrade`
 5. To run the application run: python run manage.py runserver
 
 Authored by Lydia Nabakooza
