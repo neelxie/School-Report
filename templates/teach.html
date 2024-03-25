@@ -133,12 +133,8 @@ content %}
                     <div class="col">
                       <div class="form-group">
                         <label for="dropdown">Student</label>
-                        <select id="gender" name="gender" class="form-control" required>
-                          <option disabled selected value>Select</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                          <option value="other">Other</option>
-                        </select>
+                        <input type="number" class="form-control" id="student" name="student"
+                          placeholder="Student id" />
                       </div>
                       <div class="form-group">
                         <label for="dropdown">English</label>
@@ -183,13 +179,81 @@ content %}
                         <label for="dropdown">Integrated Science</label>
                         <input type="number" class="form-control" id="science" name="science" placeholder="Science" />
                       </div>
-                      
+
 
                     </div>
                   </div>
 
                   <button type="submit" class="btn btn-primary">
                     Add Exam Result
+                  </button>
+                </form>
+                {% if error_message %}
+                <div class="p-2 mt-3 d-flex justify-content-center badge badge-danger">
+                  {{ error_message }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-3">
+            <div class="card shadow-lg">
+              <div class="card-header bg-malibu-beach">Add Student</div>
+              <div class="card-body">
+                <form id="apiStudentForm" method="POST">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="dropdown">First Name</label>
+                        <input type="text" class="form-control" id="firstname" name="firstname"
+                          placeholder="First Name" />
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Last Name</label>
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name" />
+                      </div>
+
+
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="dropdown">Gender</label>
+                        <select id="gender" name="gender" class="form-control" required>
+                          <option disabled selected value>Select</option>
+                          <option value="female">Female</option>
+                          <option value="male">Male</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Nationality</label>
+                        <select id="nationality" name="nationality" class="form-control" required>
+                          <option disabled selected value>Select</option>
+                          <option value="Ugandan">Ugandan</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="dropdown">House</label>
+                        <select id="house" name="house" class="form-control" required>
+                          <option disabled selected value>Select</option>
+                          <option value="Mandela">Mandela</option>
+                          <option value="Nyerere">Nyerere</option>
+                          <option value="Lumumba">Lumumba</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Age</label>
+                        <input type="number" class="form-control" id="age" name="age" placeholder="Age" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary">
+                    Add Student
                   </button>
                 </form>
                 {% if error_message %}
@@ -229,7 +293,7 @@ content %}
       <div class="app-wrapper-footer">
         <div class="app-footer">
           <div class="app-footer__inner">
-            
+
           </div>
         </div>
       </div>
@@ -243,55 +307,79 @@ content %}
     const form = document.getElementById("apiForm");
     const errorMessage = document.getElementById("errorMessage");
     const token = localStorage.getItem("token");
-    const selectedItems = new Set();
-
-    const selectBtn = document.querySelector(".select-btn"),
-      items = document.querySelectorAll(".item");
-
-    selectBtn.addEventListener("click", () => {
-      selectBtn.classList.toggle("open");
-    });
-
-    items.forEach((item) => {
-      item.addEventListener("click", () => {
-        item.classList.toggle("checked");
-        if (item.classList.contains("checked")) {
-          selectedItems.add(item.textContent); // Add selected item to the Set
-        } else {
-          selectedItems.delete(item.textContent); // Remove deselected item from the Set
-        }
-      });
-    });
-
-
     apiForm.addEventListener("submit", async function (event) {
       event.preventDefault();
 
-      const firstname = document.getElementById("firstname").value;
-      const lastname = document.getElementById("lastname").value;
-      const gender = document.getElementById("gender").value;
-      const phone = document.getElementById("phone").value;
-      const organisation = document.getElementById("organisation").value;
-      const email = document.getElementById("email").value;
-      const category = document.getElementById("expertise").value;
-      const sub_category = document.getElementById("subcategory");
-      const selectedSubcategories = Array.from(
-        subcategorySelect.selectedOptions
-      ).map((option) => option.value);
-      const selectedArray = Array.from(selectedItems)
-        .map((item) => item.trim())
-        .join(", ");
-      const commaSeparatedString = selectedSubcategories.join(", ");
+      const student = document.getElementById("student").value;
+      const schoolclass = document.getElementById("schoolclass").value;
+      const exam = document.getElementById("exam").value;
+      const math = document.getElementById("math").value;
+      const english = document.getElementById("english").value;
+      const sst = document.getElementById("sst").value;
+      const science = document.getElementById("science").value;
 
       const itemBody = {
-        phone_number: phone,
-        lastname: lastname,
-        firstname: firstname,
-        organisation: organisation,
-        gender: gender,
+        student_id: parseInt(student),
+        class_id: parseInt(schoolclass),
+        exam_type: exam,
+        math_marks: parseInt(math),
+        english_marks: parseInt(english),
+        science_marks: parseInt(science),
+        sst_marks: parseInt(sst)
       };
 
-      const response = await fetch("/api/v1/auth/register_expert", {
+      const response = await fetch("/api/v1/auth/create_exam", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(itemBody),
+      });
+
+      try {
+        const responseData = await response.json();
+        if (response.ok) {
+          window.location.reload();
+          window.location.href = window.location.href;
+        } else {
+          errorMessage.textContent = responseData.error;
+        }
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.reload();
+      }
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // document.getElementById('output').innerHTML = location.search;
+    // document.getElementByClassName("chosen-select").chosen();
+    const form = document.getElementById("apiStudentForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const token = localStorage.getItem("token");
+    apiStudentForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const student = document.getElementById("firstname").value;
+      const schoolclass = document.getElementById("lastname").value;
+      const exam = document.getElementById("age").value;
+      const math = document.getElementById("gender").value;
+      const english = document.getElementById("nationality").value;
+      const sst = document.getElementById("house").value;
+
+      const itemBody = {
+        firstname: student,
+        lastname: schoolclass,
+        age: exam,
+        gender: math,
+        nationality: english,
+        house: sst
+      };
+
+      const response = await fetch("/api/v1/auth/register_student", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -434,7 +522,7 @@ content %}
   }
 </style>
 <script>
-const token = "{{ token }}";
+  const token = "{{ token }}";
   const user = "{{ user }}";
   const role = "{{ role }}";
 
@@ -447,7 +535,7 @@ const token = "{{ token }}";
   }
   if (role) {
     localStorage.setItem("role", role);
-  }  
+  }
   // if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
   //   logout();
   // }
@@ -468,6 +556,7 @@ const token = "{{ token }}";
 
   document.addEventListener("DOMContentLoaded", function () {
     const token = localStorage.getItem("token"); // Get the token from local storage
+    localStorage.removeItem("idd")
 
     // Fetch top users data
     fetch("/api/v1/auth/students", {
@@ -501,11 +590,11 @@ const token = "{{ token }}";
                   </div>
                 </td>
     
-                <td class="text-center">${user.age 
+                <td class="text-center">${user.age
             }</td>
-                <td class="text-center">${user.registration 
+                <td class="text-center">${user.registration
             }</td>
-                <td class="text-center">${user.gender 
+                <td class="text-center">${user.gender
             }</td>
                 <td class="text-center">${user.nationality
             }</td>`;

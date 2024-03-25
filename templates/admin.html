@@ -1,9 +1,7 @@
 {% extends "base.html" %} {% block title %}Admin Page{% endblock %} {% block
 content %}
 
-<div
-  class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header"
->
+<div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
   <div class="app-header header-shadow">
     <div class="app-header__logo">
       <div class="" id=""></div>
@@ -23,11 +21,7 @@ content %}
                 <div class="widget-subheading">{{ session.role }}</div>
               </div>
               <div class="widget-content-right header-user-info ml-3">
-                <button
-                  type="button"
-                  class="btn-shadow p-1 btn btn-primary btn-sm"
-                  id="logoutButton"
-                >
+                <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm" id="logoutButton">
                   Logout
                 </button>
               </div>
@@ -48,17 +42,9 @@ content %}
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-header"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-header">
                         <div class="switch-animate switch-on">
-                          <input
-                            type="checkbox"
-                            checked
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -75,17 +61,9 @@ content %}
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-sidebar"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-sidebar">
                         <div class="switch-animate switch-on">
-                          <input
-                            type="checkbox"
-                            checked
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" checked data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -102,16 +80,9 @@ content %}
                 <div class="widget-content p-0">
                   <div class="widget-content-wrapper">
                     <div class="widget-content-left mr-3">
-                      <div
-                        class="switch has-switch switch-container-class"
-                        data-class="fixed-footer"
-                      >
+                      <div class="switch has-switch switch-container-class" data-class="fixed-footer">
                         <div class="switch-animate switch-off">
-                          <input
-                            type="checkbox"
-                            data-toggle="toggle"
-                            data-onstyle="success"
-                          />
+                          <input type="checkbox" data-toggle="toggle" data-onstyle="success" />
                         </div>
                       </div>
                     </div>
@@ -132,18 +103,13 @@ content %}
                 <h5 class="pb-2">Page Section Tabs</h5>
                 <div class="theme-settings-swatches">
                   <div role="group" class="mt-2 btn-group">
-                    <button
-                      type="button"
-                      class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
-                      data-class="body-tabs-line"
-                    >
+                    <button type="button" class="btn-wide btn-shadow btn-primary btn btn-secondary switch-theme-class"
+                      data-class="body-tabs-line">
                       Line
                     </button>
-                    <button
-                      type="button"
+                    <button type="button"
                       class="btn-wide btn-shadow btn-primary active btn btn-secondary switch-theme-class"
-                      data-class="body-tabs-shadow"
-                    >
+                      data-class="body-tabs-shadow">
                       Shadow
                     </button>
                   </div>
@@ -159,395 +125,111 @@ content %}
     <div class="app-main__outer">
       <div class="app-main__inner">
         <div class="row">
-          <div class="col-md-6 col-xl-6">
-            <a
-              class="card mb-3 widget-content bg-happy-green nav-link"
-              href="{{ url_for('web.questions') }}"
-            >
-              <div class="widget-content-wrapper text-white">
-                <div class="widget-content-left">
-                  <div class="widget-heading">Total Questions</div>
-                  <div class="widget-subheading">Questions submitted</div>
-                </div>
-                <div class="widget-content-right">
-                  <div class="widget-numbers text-white">
-                    <span id="totalQuestions"></span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-xl-6">
-            <a
-              class="card mb-3 widget-content bg-happy-itmeo nav-link"
-              href="{{ url_for('web.farmers') }}"
-            >
-              <div class="widget-content-wrapper text-white">
-                <div class="widget-content-left">
-                  <div class="widget-heading">Users</div>
-                  <div class="widget-subheading">Total number of Farmers</div>
-                </div>
-                <div class="widget-content-right">
-                  <div class="widget-numbers text-white">
-                    <span id="totalAppUsers"></span>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-xl-3">
-            <a
-              class="card mb-3 widget-content nav-link"
-              href="{{ url_for('web.luganda') }}"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Luganda</div>
-                    <div class="widget-subheading">Total Luganda Questions</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="lugandaQuestions"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-xl-3">
-            <a
-              class="card mb-3 widget-content nav-link"
-              href="{{ url_for('web.english') }}"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">English</div>
-                    <div class="widget-subheading">Total English Questions</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-danger"
-                      id="englishQuestions"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
+          <div class="col mb-3">
+            <div class="card shadow-lg">
+              <div class="card-header bg-malibu-beach">Add Teacher</div>
+              <div class="card-body">
+                <form id="apiTeacherForm" method="POST">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="dropdown">First Name</label>
+                        <input type="text" class="form-control" id="firstname" name="firstname"
+                          placeholder="First Name" />
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Last Name</label>
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Last Name" />
+                      </div>
 
-          <div class="col-md-6 col-xl-3">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Male</div>
-                    <div class="widget-subheading">Male Farmers</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="totalMales"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-xl-3">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Female</div>
-                    <div class="widget-subheading">Female Farmers</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-danger"
-                      id="totalFemales"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <!-- <div class="col-md-6 col-xl-6">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Crop Category</div>
-                    <div class="widget-subheading">
-                      Total Questions on Crops
-                    </div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-success"
-                      id="plantCategory"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <div class="col-md-6 col-xl-3">
-            <a
-              class="card mb-3 widget-content nav-link"
-              href="{{ url_for('web.runyankole') }}"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Runyankole</div>
-                    <div class="widget-subheading">Total Runyankole Questions</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="runyankoleQuestions"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-xl-3">
-            <a
-              class="card mb-3 widget-content nav-link"
-              href="{{ url_for('web.audios') }}"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Audio</div>
-                    <div class="widget-subheading">Total Audio Questions</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-danger"
-                      id="audios"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
 
-          <div class="col-md-6 col-xl-6">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Average Questions</div>
-                    <div class="widget-subheading">Average Daily Questions</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="averageDailyQuestions"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <!-- <div class="col-md-6 col-xl-6">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Animal Category</div>
-                    <div class="widget-subheading">
-                      Total Questions on Animals
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="dropdown">Gender</label>
+                        <select id="gender" name="gender" class="form-control" required>
+                          <option disabled selected value>Select</option>
+                          <option value="female">Female</option>
+                          <option value="male">Male</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="dropdown">Phone Number</label>
+                        <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Phone Number" />
+                      </div>
+                    </div>
                     </div>
                   </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-success"
-                      id="animalCategory"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <div class="col-md-6 col-xl-3">
-            <div
-              class="card mb-3 widget-content nav-link"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Crop Category</div>
-                    <div class="widget-subheading">Total Questions on Crops</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-danger"
-                      id="plantCategory"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-xl-3">
-            <div
-              class="card mb-3 widget-content nav-link"
-              
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Animal Category</div>
-                    <div class="widget-subheading">Total Questions on Animals</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-danger"
-                      id="animalCategory"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
 
-          <div class="col-md-6 col-xl-6">
-            <div class="card mb-3 widget-content">
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">User Questions</div>
-                    <div class="widget-subheading">Average User Questions</div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div
-                      class="widget-numbers text-warning"
-                      id="averageUserQuestions"
-                    ></div>
-                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Add Teacher
+                  </button>
+                </form>
+                {% if error_message %}
+                <div class="p-2 mt-3 d-flex justify-content-center badge badge-danger">
+                  {{ error_message }}
                 </div>
+                {% endif %}
               </div>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 col-xl-6">
-            <a
-              class="card mb-3 widget-content bg text-success nav-link border border-success"
-              href="{{ url_for('web.upload_dataset') }}"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Evaluated dataset</div>
-                    <div class="widget-subheading text-dark">
-                      Click here to get Experts evaluated dataset
-                    </div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div class="widget-numbers text-warning"></div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-6 col-xl-6">
-            <a
-              class="card mb-3 widget-content bg bg-tempting-azure nav-link"
-              href="{{ url_for('web.experts') }}"
-            >
-              <div class="widget-content-outer">
-                <div class="widget-content-wrapper">
-                  <div class="widget-content-left">
-                    <div class="widget-heading">Experts</div>
-                    <div class="widget-subheading">
-                      Current Agriculture Experts
-                    </div>
-                  </div>
-                  <div class="widget-content-right">
-                    <div class="widget-numbers text-white" id="totalExperts">
-                      2
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12 col-lg-6">
+          <div class="col-md-12 col-lg-4">
             <div class="mb-3 card">
-              <div
-                class="card-header-tab card-header-tab-animation card-header"
-              >
+              <div class="card-header-tab card-header-tab-animation card-header">
                 <div class="card-header-title">
-                  <i
-                    class="header-icon lnr-apartment icon-gradient bg-love-kiss"
-                  >
+                  <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
                   </i>
-                  Locations
+                  Teachers
                 </div>
               </div>
               <div class="card-body">
                 <div class="tab-content">
                   <div class="tab-pane fade show active" id="tabs-eg-77">
-                    <h6
-                      class="text-muted text-uppercase font-size-md opacity-5 font-weight-normal"
-                    >
-                      Farmers by location
-                    </h6>
-                    <div class="scroll-area-sm">
-                      <div class="scrollbar-container">
-                        <ul
-                          class="rm-list-borders rm-locations list-group list-group-flush"
-                        ></ul>
-                      </div>
+
+                    <div class="table-responsive">
+                      <table class="align-middle mb-0 table table-bordered table-striped table-hover border">
+                        <thead>
+                          <tr>
+                            <th class="text-center">#</th>
+                            <th>Name</th>
+                            <th class="text-center">Phone</th>
+                          </tr>
+                        </thead>
+                        <tbody class="bg-neutral-warning"></tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-12 col-lg-6">
+          <div class="col-md-12 col-lg-8">
             <div class="mb-3 card">
-              <div
-                class="card-header-tab card-header-tab-animation card-header"
-              >
+              <div class="card-header-tab card-header-tab-animation card-header">
                 <div class="card-header-title">
-                  <i
-                    class="header-icon lnr-apartment icon-gradient bg-love-kiss"
-                  >
+                  <i class="header-icon lnr-apartment icon-gradient bg-love-kiss">
                   </i>
-                  Age groups
+                  Students
                 </div>
               </div>
               <div class="card-body">
                 <div class="tab-content">
                   <div class="tab-pane fade show active" id="tabs-eg-77">
-                    <h6
-                      class="text-muted text-uppercase font-size-md opacity-5 font-weight-normal"
-                    >
-                      Farmer Age Groups
-                    </h6>
-                    <div class="scroll-area-sm">
-                      <div class="scrollbar-container">
-                        <ul
-                          class="rm-list-borders rm-ages list-group list-group-flush"
-                        ></ul>
-                      </div>
+                    <div class="table-responsive">
+                      <table class="align-middle mb-0 table table-bordered table-striped table-hover border">
+                        <thead>
+                          <tr>
+                            <th class="text-center">#</th>
+                            <th>Name</th>
+                            <th class="text-center">Phone</th>
+                            <th class="text-center">Location</th>
+                            <th class="text-center">Total Questions</th>
+                          </tr>
+                        </thead>
+                        <tbody class="bg-neutral-warning tablel tbodyl"></tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -556,39 +238,13 @@ content %}
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="main-card mb-3">
-              <div class="card-header">Top Farmers</div>
-              <div class="table-responsive">
-                <table
-                  class="align-middle mb-0 table table-bordered table-striped table-hover border"
-                >
-                  <thead>
-                    <tr>
-                      <th class="text-center">#</th>
-                      <th>Name</th>
-                      <th class="text-center">Phone</th>
-                      <th class="text-center">Location</th>
-                      <th class="text-center">Total Questions</th>
-                    </tr>
-                  </thead>
-                  <tbody class="bg-neutral-warning"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </div>
       <div class="app-wrapper-footer">
         <div class="app-footer">
           <div class="app-footer__inner">
             <div class="app-footer-left">
-              <ul class="nav">
-                <li class="nav-item">
-                  <a href="https://air.ug" class="nav-link"> air.ug </a>
-                </li>
-              </ul>
+
             </div>
           </div>
         </div>
@@ -632,7 +288,7 @@ content %}
     const token = localStorage.getItem("token"); // Get the token from local storage
 
     // Fetch top users data
-    fetch("/api/v1/auth/farmers", {
+    fetch("/api/v1/auth/teachers", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -655,135 +311,95 @@ content %}
               </div>
             </td>
 
-            <td class="text-center">${user.phone_number}</td>
-            <td class="text-center">${user.location}</td>
-            <td class="text-center">
-              <div class="font-weight-bold" >${user.questions} </div>
-            </td>`;
+            <td class="text-center">${user.phone_number}</td>`;
 
           tableBody.appendChild(tableRow);
         });
       })
       .catch((error) => console.error("Error fetching top users data:", error));
 
-    fetch("/api/v1/questions/stats", {
+    fetch("/api/v1/auth/students", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
-      .then((statsData) => {
-        console.log(statsData)
-        const totalQuestions = document.getElementById("totalQuestions");
-        totalQuestions.textContent = statsData.total_questions;
-        // Display other statistics data
-        const averageDailyQuestions = document.getElementById(
-          "averageDailyQuestions"
-        );
-        averageDailyQuestions.textContent = statsData.average_daily_questions;
+      .then((topUsersData) => {
+        const tableBody = document.querySelector(".tablel");
+        topUsersData.forEach((user, index) => {
+          const tableRow = document.createElement("tr");
+          tableRow.innerHTML = `
+            <td class="text-center text-muted">${user.user_id}</td>
+            <td>
+              <div class="widget-content p-0">
+                <div class="widget-content-wrapper">
+                  <div class="widget-content-left flex2">
+                    <div class="widget-heading">${user.firstname} ${user.lastname}</div>
+                    <div class="widget-subheading opacity-7">${user.age} years old</div>
+                  </div>
+                </div>
+              </div>
+            </td>
 
-        const averageUserQuestions = document.getElementById(
-          "averageUserQuestions"
-        );
-        averageUserQuestions.textContent = statsData.average_questions_per_user;
+            <td class="text-center">${user.registration}</td>
+            <td class="text-center">${user.age}</td>
+            <td class="text-center">
+              <div class="font-weight-bold" >${user.nationality} </div>
+            </td>`;
 
-        const languageCounts = {};
+          tableBody.appendChild(tableRow);
+        });
+      })
+      .catch((error) => console.error("Error fetching top students :", error));
 
-        for (const languageData of statsData.questions_per_language) {
-          languageCounts[languageData.language] = languageData.count;
+
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // document.getElementById('output').innerHTML = location.search;
+    // document.getElementByClassName("chosen-select").chosen();
+    const form = document.getElementById("apiTeacherForm");
+    const errorMessage = document.getElementById("errorMessage");
+    const token = localStorage.getItem("token");
+    apiTeacherForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const student = document.getElementById("firstname").value;
+      const schoolclass = document.getElementById("lastname").value;
+      const exam = document.getElementById("phone_number").value;
+      const math = document.getElementById("gender").value;
+
+      const itemBody = {
+        firstname: student,
+        lastname: schoolclass,
+        phone_number: exam,
+        gender: math,
+      };
+
+      const response = await fetch("/api/v1/auth/register_teacher", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(itemBody),
+      });
+
+      try {
+        const responseData = await response.json();
+        if (response.ok) {
+          window.location.reload();
+          window.location.href = window.location.href;
+        } else {
+          errorMessage.textContent = responseData.error;
         }
-
-        const lugandaCount = languageCounts["Luganda"] || 0;
-        const englishCount = languageCounts["English"] || 0;
-        const runyankoleCount = languageCounts["Runyankole"] || 0;
-
-        const lugandaQuestions = document.getElementById("lugandaQuestions");
-        lugandaQuestions.textContent = lugandaCount;
-
-        const englishQuestions = document.getElementById("englishQuestions");
-        englishQuestions.textContent = englishCount;
-
-        let plantCategory = document.getElementById("plantCategory");
-        plantCategory.textContent = statsData.plant_category;
-        let animalCategory = document.getElementById("animalCategory");
-        animalCategory.textContent = statsData.animal_category;
-        const runyankoleQuestions = document.getElementById("runyankoleQuestions");
-        runyankoleQuestions.textContent = runyankoleCount;
-      })
-      .catch((error) =>
-        console.error("Error fetching statistics data:", error)
-      );
-
-    // user stats
-    fetch("/api/v1/auth/user_stats", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((userData) => {
-        const totalAppUsers = document.getElementById("totalAppUsers");
-        totalAppUsers.textContent = userData.data.total_users;
-        const totalMales = document.getElementById("totalMales");
-        totalMales.textContent = userData.data.total_male_users;
-
-        const totalExperts = document.getElementById("totalExperts");
-        totalExperts.textContent = userData.data.experts;
-
-        const farmerages = document.querySelector(".rm-ages");
-        userData.data.users_per_age_group.forEach((ageGroup) => {
-          const listItem = document.createElement("li");
-          listItem.className = "list-group-item";
-          listItem.innerHTML = `
-                    <div class="widget-content p-0">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">${ageGroup.age_group}</div>
-                            </div>
-                            <div class="widget-content-right">
-                                <div class="font-size-xlg text-muted">
-                                    <span>${ageGroup.user_count}</span>
-                                    <small class="text-danger pl-2"><i class="fa fa-angle-down"></i></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-          farmerages.appendChild(listItem);
-        });
-
-        const farmerLocations = document.querySelector(".rm-locations");
-        userData.data.users_per_location.forEach((location) => {
-          if (location.location === "Makerere") {
-            // Skip this iteration and do not display the age group
-            return;
-          }
-          const listItem = document.createElement("li");
-          listItem.className = "list-group-item";
-          listItem.innerHTML = `
-                    <div class="widget-content p-0">
-                        <div class="widget-content-wrapper">
-                            <div class="widget-content-left">
-                                <div class="widget-heading">${location.location}</div>
-                            </div>
-                            <div class="widget-content-right">
-                                <div class="font-size-xlg text-muted">
-                                    <span>${location.user_count}</span>
-                                    <small class="text-danger pl-2"><i class="fa fa-angle-down"></i></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-          farmerLocations.appendChild(listItem);
-        });
-
-        const totalFemales = document.getElementById("totalFemales");
-        totalFemales.textContent = userData.data.total_female_users;
-        const totalLocations = document.getElementById("totalLocations");
-        totalLocations.textContent = userData.data.total_locations;
-      })
-      .catch((error) =>
-        console.error("Error fetching user statistics data:", error)
-      );
+      } catch (error) {
+        console.error("Error parsing response:");
+      } finally {
+        window.location.reload();
+      }
+    });
   });
 </script>
 

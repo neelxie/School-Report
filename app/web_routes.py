@@ -88,23 +88,6 @@ def student_results():
     )
 
 
-@web_bp.route("/farmers")
-def farmers():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("farmers.html", token=access_token, role=role, user=username)
-
-
-@web_bp.route("/questions")
-def questions():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template(
-        "questions.html", token=access_token, role=role, user=username
-    )
-
 @web_bp.route("/download")
 def download():
     access_token = session.get("token")
@@ -113,11 +96,3 @@ def download():
     return render_template(
         "download.html", token=access_token, role=role, user=username
     )
-
-
-@web_bp.route("/experts")
-def experts():
-    access_token = session.get("token")
-    role = session.get("role")
-    username = session.get("username")
-    return render_template("experts.html", token=access_token, role=role, user=username)

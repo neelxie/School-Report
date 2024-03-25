@@ -378,8 +378,8 @@ def generate_report(student_id):
         "C4": (65, 69),
         "C5": (60, 64),
         "C6": (55, 59),
-        "C7": (45, 54),
-        "C8": (35, 44),
+        "P7": (45, 54),
+        "P8": (35, 44),
         "F9": (0, 34)
     }
 
@@ -387,22 +387,21 @@ def generate_report(student_id):
         for exam in subject_data["exams"]:
             total_marks = exam["total_marks"]
             for grade, (lower_bound, upper_bound) in grade_mapping.items():
-                if lower_bound <= subject_data["average"] <= upper_bound:
+                if lower_bound <= round(subject_data["average"], 0) <= upper_bound:
                     subject_data["grade"] = grade
                     break
             else:
                 subject_data["grade"] = "Unknown"
 
-            if subject_data["average"] >= 80:
-                subject_data["remark"] = "This is excellent work, continue excelling."
-            elif 70 <= subject_data["average"] < 80:
-                subject_data["remark"] = "There is still room to improve, aim higher."
-            elif 60 <= subject_data["average"] < 70:
-                subject_data["remark"] = "Aim for a better grade and pay closer attention."
+            if round(subject_data["average"], 0) >= 80:
+                subject_data["remark"] = "Excellent"
+            elif 70 <= round(subject_data["average"], 0) < 80:
+                subject_data["remark"] = "Very Good"
+            elif 60 <= round(subject_data["average"], 0) < 70:
+                subject_data["remark"] = "Quite Good"
             else:
-                subject_data["remark"] = "Very poor performance. You are encouraged to come with your parent to talk to your teacher to devise a way to improve."
+                subject_data["remark"] = "Room for improvement"
 
-    # Generate report
     report = {
         "student_id": student.id,
         "student_name": f"{student.firstname} {student.lastname}",
@@ -411,7 +410,7 @@ def generate_report(student_id):
         "gender": student.gender,
         "age": student.age,
         "nationality": student.nationality,
-        # "overall_remarks": overall_remarks,
+        "house": student.house,
         "exam_results": exam_results
     }
 

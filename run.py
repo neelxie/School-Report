@@ -19,7 +19,6 @@ def create_app(test_config=None):
     if test_config is None:
         app.config.from_mapping(
             SECRET_KEY=os.environ.get("SECRET_KEY"),
-            # SQLALCHEMY_DATABASE_URI='postgresql://postgres:password@localhost:5432/kizito',
             SQLALCHEMY_DATABASE_URI="postgresql://neelxie:password@localhost:5433/bugolobi",
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             JWT_SECRET_KEY="1bSR#Nw00Y3axSjcjrXrU9Cs%_wJ7S",

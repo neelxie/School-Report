@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Experts Review Question Page{%
+{% extends "base.html" %} {% block title %}{%
 endblock %} {% block content %}
 
 <div class="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -10,23 +10,6 @@ endblock %} {% block content %}
     <div class="app-header__mobile-menu"></div>
     <div class="app-header__menu"></div>
     <div class="app-header__content">
-      <div class="app-header-right">
-        <div class="header-btn-lg pr-0">
-          <div class="widget-content p-0">
-            <div class="widget-content-wrapper">
-              <div class="widget-content-left ml-3 header-user-info">
-                <div class="widget-heading" id="user-info"></div>
-                <div class="widget-subheading">Teacher</div>
-              </div>
-              <div class="widget-content-right header-user-info ml-3">
-                <button type="button" class="btn-shadow p-1 btn btn-primary btn-sm" id="logoutButton">
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
   <div class="ui-theme-settings">
@@ -104,20 +87,6 @@ endblock %} {% block content %}
   <div class="app-main text-responsive">
     <div class="app-main__outer">
       <div class="app-main__inner bg-white">
-        <div class="row justify-content-between px-2">
-          <a type="button" class="btn btn-success mb-3" href="{{ url_for('web.teacher') }}">
-            Dashboard
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
-              <path fill-rule="evenodd"
-                d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8Zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5Z">
-              </path>
-            </svg>
-          </a>
-          <a type="button" class="btn btn-primary mb-3" href="{{ url_for('web.download') }}">
-            Download Report
-          </a>
-        </div>
         <div id="report">
           <div class="row bg-white">
 
@@ -226,7 +195,8 @@ endblock %} {% block content %}
                 <td id="etotale"></td>
                 <td id="sumtotale"></td>
                 <td>Avg &nbsp;&nbsp;&nbsp;<span id="avgetotale"></span></td>
-                <td colspan="3" class="text-left"> <span id="aggre" class="ml-3"></span> Aggregates &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Division <span id="diviso"></span> </td>
+                <td colspan="3" class="text-left"> <span id="aggre" class="ml-3"></span> Aggregates
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Division <span id="diviso"></span> </td>
               </tr>
 
           </table>
@@ -239,7 +209,9 @@ endblock %} {% block content %}
           <div class="container-fluid  border border-dark bg-white pt-3 pb-3">
             <div><strong>CLASS TEACHER: &nbsp;&nbsp;&nbsp;</strong><span
                 id="teachername"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              &nbsp;<strong> Signature:</strong> ..............................................................................................................</div>
+              &nbsp;<strong> Signature:</strong>
+              ..............................................................................................................
+            </div>
             <div><strong>Report: </strong>You need to aim higher than this.</div>
             <div><strong>HEADTEACHER: SR. ROSALIA JOHN</strong></div>
             <div><strong>Comment:</strong> This is a promising performance, more concetration is needed in all.</div>
@@ -309,11 +281,11 @@ endblock %} {% block content %}
   const storedUser = localStorage.getItem("user");
   teachername.textContent = storedUser.toUpperCase()
 
-  if (storedUser) {
-    userElement.textContent = storedUser;
-  } else {
-    userElement.textContent = Expert;
-  }
+  // if (storedUser) {
+  //   userElement.textContent = storedUser;
+  // } else {
+  //   userElement.textContent = Expert;
+  // }
 
   if (storedUser === null || storedUser === "None" || storedUser === "" || typeof storedUser === "undefined") {
     logout();
@@ -339,9 +311,9 @@ endblock %} {% block content %}
 
     const urlParams = new URLSearchParams(window.location.search);
     const user_id = urlParams.get("user_id");
-    localStorage.setItem("idd", user_id)
+    let wamo = localStorage.getItem("idd")
 
-    fetch(`/api/v1/auth/generate_report/${user_id}`, {
+    fetch(`/api/v1/auth/generate_report/${wamo}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -460,16 +432,16 @@ endblock %} {% block content %}
         } else if (aggregat >= 30 && aggregat <= 34) {
           divis = 3;
         } else {
-          
+
           divis = "UNKNOWN";
         }
         const diviso = document.getElementById("diviso");
         diviso.textContent = divis
+        window.print()
 
       })
       .catch((error) => console.error("Error fetching top users data:", error));
   });
-
 </script>
 <style>
   table,
