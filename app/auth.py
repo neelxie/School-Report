@@ -23,7 +23,7 @@ import json
 import pandas as pd
 import random
 from sqlalchemy import func, or_, and_, not_, text
-from app.helper import admin_required, generate_registration
+from app.helper import admin_required, generate_registration, number_class
 
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
@@ -347,8 +347,11 @@ def generate_report(student_id):
         "science": {"exams": [], "total": 0, "average": 0, "grade": "", "remark": ""},
         "social_studies": {"exams": [], "total": 0, "average": 0, "grade": "", "remark": ""}
     }
+    student_class = ''
 
     for exam in exams:
+        
+        student_class = number_class(exam.class_id)
         exam_info = {
             "exam_type": exam.exam_type,
             "math_marks": exam.math_marks,
@@ -402,6 +405,7 @@ def generate_report(student_id):
             else:
                 subject_data["remark"] = "Room for improvement"
 
+    print(student_class)
     report = {
         "student_id": student.id,
         "student_name": f"{student.firstname} {student.lastname}",
@@ -409,6 +413,7 @@ def generate_report(student_id):
         "registration": student.registration,
         "gender": student.gender,
         "age": student.age,
+        "class": student_class,
         "nationality": student.nationality,
         "house": student.house,
         "exam_results": exam_results

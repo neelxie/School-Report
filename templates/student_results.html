@@ -149,7 +149,7 @@ endblock %} {% block content %}
             <div class="col">
               <div class="form-group">
                 <div><strong>AGE: </strong><span id="agea"></span> Years old</div>
-                <div><strong>CLASS: </strong> PRIMARY SIX</div>
+                <div><strong>CLASS: </strong> <span id="studentClass"></span></div>
                 <div><strong>HOUSE: </strong> <span id="housea"></span></div>
               </div>
             </div>
@@ -447,6 +447,8 @@ endblock %} {% block content %}
         addgradesup.push(userData.exam_results.science.grade)
         addgradesup.push(userData.exam_results.math.grade)
         addgradesup.push(userData.exam_results.english.grade)
+        const studentClass = document.getElementById("studentClass");
+        studentClass.textContent = userData.class;
         const aggre = document.getElementById("aggre");
         aggregat = addgradesup.reduce((acc, grade) => acc + parseInt(grade.slice(1)), 0)
         aggre.textContent = aggregat

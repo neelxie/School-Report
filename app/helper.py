@@ -6,6 +6,25 @@ from app.models import User, db
 from flask_jwt_extended import decode_token
 import random
 
+def number_class(num):
+    if num == 1:
+        return "Primary One"
+    elif num == 2:
+        return "Primary Two"
+    elif num == 3:
+        return "Primary Three"
+    elif num == 4:
+        return "Primary Four"
+    elif num == 5:
+        return "Primary Five"
+    elif num == 6:
+        return "Primary Six"
+    elif num == 7:
+        return "Primary Seven"
+    else:
+        return "Number out of range"
+
+
 
 def clean_token(token):
     if token.startswith("Bearer "):
